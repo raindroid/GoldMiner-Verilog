@@ -2,11 +2,11 @@ module FSM(
 	clk, 
 	plot, 
 	resetn,
-	black,
+	background,
 	go,
 	
 	cout,
-	black_cout,
+	background_cout,
 	
 	enable_c,
 	resetn_c,
@@ -16,19 +16,19 @@ module FSM(
 	enable_x_adder,
 	enable_y_adder,
 	writeEn,
-	draw_black
+	draw_background
 	);
 	
 	input clk;
 	input plot;
 	input resetn;
-	input black;
+	input background;
 	input go;
 
 	input [8:0]cout;
-	input [14:0]black_cout;
+	input [16:0]background_cout;
 	
-	output reg enable_c, resetn_c, load_x, load_y, load_color, enable_x_adder, enable_y_adder, writeEn, draw_black;
+	output reg enable_c, resetn_c, load_x, load_y, load_color, enable_x_adder, enable_y_adder, writeEn, draw_background;
 	
 	reg [2:0] current_state, next_state; 
     
@@ -39,7 +39,7 @@ module FSM(
 					 DRAW            = 3'd4,
 					 WAIT2			  = 3'd5,
 					 OUT             = 3'd6,
-					 BLACK           = 3'd7;
+					 BACKGROUND          = 3'd7;
                 
 					 
     
@@ -48,41 +48,41 @@ module FSM(
     begin: state_table 
             case (current_state)
                 LOAD_X:begin
-						if(black) next_state = BLACK;
+						if(background) next_state = BACKGROUND;
 						else
 						next_state = go ? LOAD_X_WAIT : LOAD_X;
 						end // Loop in current state until value is input
                 LOAD_X_WAIT:begin
-						if(black) next_state = BLACK;
+						if(background) next_state = BACKGROUND;
 						else
 						next_state = go ? LOAD_X_WAIT : LOAD_Y_AND_COLOR; // Loop in current state until go signal goes low
 						end
 					 LOAD_Y_AND_COLOR: begin
-					   if(black) next_state = BLACK;
+					   if(background) next_state = BACKGROUND;
 						else
 						next_state = plot ? WAIT : LOAD_Y_AND_COLOR;
 						end
 					 WAIT: begin
-						if(black) next_state = BLACK;
+						if(background) next_state = BACKGROUND;
 						else
 						next_state = plot ? WAIT : DRAW;
 						end
 					 DRAW: begin
-					 if(black) next_state = BLACK;
+					 if(background) next_state = BACKGROUND;
 						else
 							next_state = (cout == 9'd256) ? OUT : WAIT2;
 						end
 					 WAIT2: begin
-					 if(black) next_state = BLACK;
+					 if(background) next_state = BACKGROUND;
 						else
 						next_state = DRAW;
 					 end
 					 OUT: begin
-					 if(black) next_state = BLACK;
+					 if(background) next_state = BACKGROUND;
 						else
 						next_state = LOAD_X;
 					 end
-					 BLACK: next_state = (black_cout == 15'b11111111111111) ? OUT : BLACK;
+					 BACKGROUND: next_state = (background_cout == 17'b1111111111111111) ? OUT : BACKGROUND;
 					 
 					 
             default:     next_state = LOAD_X;
@@ -103,7 +103,7 @@ module FSM(
 		  enable_x_adder = 1'b0;
 		  enable_y_adder = 1'b0;
 		  writeEn = 1'b0;
-		  draw_black =1'b0;
+		  draw_background =1'b0;
 
 
         case (current_state)
@@ -125,8 +125,8 @@ module FSM(
 				OUT: begin
 					resetn_c = 1'b0;
 					end
-				BLACK: begin
-					draw_black = 1'b1;
+				BACKGROUND: begin
+					draw_background = 1'b1;
 					enable_x_adder = 1'b1;
 					enable_y_adder = 1'b1;
 					writeEn = 1'b1;
