@@ -189,11 +189,12 @@ module INPUT_module(
 	wire [8:0]cout;
 	wire [14:0]black_cout;
 	
-	dataPath d0(
+	view d0(
 		.clk(clk), 
 		.resetn(resetn), 
 		
-		.position_in(position_in),  
+		.x_init(position_in),  
+		.y_init(position_in),
 		
 		.load_color(load_color), 
 		.resetn_c(resetn_c), 
