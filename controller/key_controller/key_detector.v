@@ -10,9 +10,10 @@
  *      pulse: 0 when it is unpressed, 1 when pressed and last for 'PULSE_LENGTH'
 
  * Author: Yucan Wu
- * Created: Nov 8, 2018
- * Last Updated Nov 8, 2018
- * Tested: Looks good
+ * Version: 0.0.1
+ * Created: Nov 11, 2018
+ * Last Updated: Nov 11, 2018, done simulation
+ * Tested: Looks good, modelsim passed
  **/
 
  module test_key_detector(
@@ -35,6 +36,8 @@
     reg [25: 0] counter; //Just make sure it is big enough for at least 1 frame 
                           //(around 833_333 clock cycles)
     
+//Control part
+
     //Define all the states
     localparam      S_LOAD_KEY      = 2'b0,
                     S_LOAD_KEY_WAIT = 2'b1;
@@ -47,6 +50,8 @@
             default: next_state = S_LOAD_KEY;
         endcase
     end
+
+//Datapath part
 
     //Counter logic
     always @(posedge clock, posedge current_state) begin 
