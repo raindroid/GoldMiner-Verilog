@@ -1,44 +1,50 @@
-//view module
+//view_data module
 //designed by Yifan Cui
-module view(
+module view_data(
 		clk, 
 		resetn, 
 		
-		x_init,
-		y_init,
-		
 		
 		load_stone,
-		load_color, 
 		resetn_c, 
 		enable_c, 
 		load_x,
 		load_y,
+		load_color,
 		enable_x_adder, 
 		enable_y_adder,
 		draw_background,
+		enable_gold,
+		enable_stone,
+		resetn_gold_stone,
 		
 		X_out, 
 		Y_out, 
 		Color_out,
-		cout,
-		background_cout
+		background_cout,
+		stone_cout,
+		gold_cout,
+		cout
+		
 		);
 	input clk;
 	input resetn;
 	input load_stone;//test
 	
-	input [8:0]x_init;
-	input [7:0]y_init;
 	
 	
-	input load_color, resetn_c, enable_c, load_x, load_y, enable_x_adder, enable_y_adder, draw_background;
+	
+	input resetn_c, enable_c, load_x, load_y, load_color, enable_x_adder, enable_y_adder, draw_background;
+	input enable_gold, enable_stone, resetn_gold_stone;
 	
 	output reg [8:0]X_out;
 	output reg [8:0]Y_out;
 	output reg [11:0]Color_out;
-	output reg [8:0]cout;
 	output reg [17:0]background_cout;
+	output reg [2:0]gold_cout;
+	output reg [2:0]stone_cout;
+	output reg [8:0]cout;
+	
 	
 	reg [8:0]x;
 	reg [8:0]y;
@@ -47,7 +53,6 @@ module view(
 	wire [11:0]gold_color;
 	wire [11:0]stone_color;
 	wire [11:0]background_color;
-	wire number_color;
 	reg [8:0]x_size;
 	reg [7:0]y_size;
 	reg [8:0]x_cout;
@@ -58,6 +63,58 @@ module view(
 	wire [7:0] stone_mem_address = ({y_cout[3:0], 4'd0} + {x_cout[3:0]}+1'b1);
 	
 	wire [16:0] background_mem_address = ({ background_cout[16:9], 8'd0} + { background_cout[16:9], 6'd0} + { background_cout[8:0]});
+	
+	wire [7:0]random_x;
+	wire [7:0]random_y;
+	
+	reg [8:0]x_init;
+	reg [7:0]y_init;
+	
+	//instanciate lfsr to generate random x and y;
+	lfsr l_x(
+	.out(random_x),
+	.clk(clk),
+	.rst(resetn)
+	);
+	
+	lfsr l_y(
+	.out(random_y),
+	.clk(clk),
+	.rst(resetn)
+	);
+	
+	always@(posedge clk)begin
+		if(random_x[0] != 1) begin
+			x_init[7:0] <= random_x;
+			x_init[8] <= random_x[0];
+		end
+		else begin
+			if({1'b1,random_x} <= 9'd304) begin
+				x_init[7:0] <= random_x;
+				x_init[8] <= random_x[0];
+			end
+			else begin
+				x_init[7:0] <= random_x;
+				x_init[8] <= 1'b0;
+			end
+		end
+	end
+	
+	always@(posedge clk)begin
+		if(random_y[7] != 1) begin
+			y_init[7:0] <= random_y[7:0];
+		end
+		else begin
+			if({random_y[6:0],1'b1} <= 9'd226) begin
+				y_init[7:0] <= random_y;
+			end
+			else begin
+				y_init[6:0] <= random_y[6:0];
+				y_init[7] <= 1'b0;
+			end
+		end
+	end
+	
 	
 	
 	
@@ -122,18 +179,10 @@ module view(
 	always@(posedge clk)begin
 		if(resetn == 0) Color_out <= 12'b0;
 		else if(draw_background) Color_out <= background_color;
-		else
-			if(load_stone) Color_out <= stone_color;
-			else Color_out <= gold_color;
-		  
-	end
-	
-	//9-bit counter
-	always@(posedge clk)begin
-		if((resetn == 0) | (resetn_c == 0)) cout <= 9'b0;
-		else
-			if(enable_c)
-			cout <= cout + 1'b1;
+		else if(load_color)begin
+				if(load_stone) Color_out <= stone_color;
+				else Color_out <= gold_color;
+		end
 	end
 	
 	//x counter
@@ -150,6 +199,14 @@ module view(
 			y_cout <= y_cout + 1'b1;
 	end
 	
+	//9-bit counter
+	always@(posedge clk)begin
+		if((resetn == 0) | (resetn_c == 0)) cout <= 9'b0;
+		else
+			if(enable_c)
+			cout <= cout + 1'b1;
+	end
+	
 	
 	// 17-bit black counter
 	always@(posedge clk)begin
@@ -159,27 +216,27 @@ module view(
 				background_cout <= background_cout + 1'b1;
 	end
 	
-endmodule
-
-
-//gold data
-module gold_data(
+	//gold counter
+	always@(posedge clk)begin
+		if(!resetn | (!resetn_gold_stone)) gold_cout <= 3'b0;
+		else if(enable_gold)
+			gold_cout <= gold_cout + 1'b1;
+	end
 	
-	size_x,
-	size_y,
-	score
 	
-	);	
-	output [3:0]size_x;
-	output [3:0]size_y;
-	output [2:0]score;
-		
-	assign size_x = 4'd15;
-	assign size_y = 4'd15;
-	assign score = 4'd5;
+	
+	//stone counter
+	always@(posedge clk)begin
+		if(!resetn | (!resetn_gold_stone)) stone_cout <= 3'b0;
+		else if(enable_stone)
+			stone_cout <= stone_cout + 1'b1;
+	end
+	
 	
 
 endmodule
+
+
 
 
 
