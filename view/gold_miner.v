@@ -27,10 +27,8 @@ module gold_miner(
 		
 		wire resetn;
 		assign resetn = KEY[0];
-		wire plot;
-		assign plot = ~KEY[1];
-		wire background;
-		assign background = ~KEY[2];
+
+
 		
 		fill f0
 	(
@@ -104,6 +102,8 @@ module gold_miner(
 	wire [8:0] x;
 	wire [8:0] y;
 	wire writeEn;
+	wire game_end = ~KEY[1];
+	wire drop = ~KKEY[2];
 	
 	
 
@@ -140,7 +140,8 @@ module gold_miner(
 		.resetn(resetn),
 		.go(go),
 		.background(background),
-		.plot(plot),
+		.game_end(game_end),
+		.drop(drop),
 	
 		
 		.position_in(position_in),
@@ -161,7 +162,8 @@ module INPUT_module(
 	resetn,
 	go,
 	background,
-	plot,
+	game_end,
+	drop,
 	
 	position_in,
 	
@@ -172,7 +174,7 @@ module INPUT_module(
 	);
 	
 	
-	input clk, resetn, go, background, plot;
+	input clk, resetn, go, background, game_end,drop;
 	wire load_stone;
 	
 	input [8:0] position_in;
@@ -198,7 +200,6 @@ module INPUT_module(
 	wire	resetn_gold_stone;
 	wire	[2:0]stone_cout;
 	wire	[2:0]gold_cout;
-	wire game_end = 1'b1;
 			
 	
 	view_data d0(
@@ -233,7 +234,6 @@ module INPUT_module(
 		
 	game_view_FSM f0(
 		.clk(clk), 
-		.plot(plot), 
 		.resetn(resetn),
 		.background(background),
 		.go(go),
@@ -245,6 +245,7 @@ module INPUT_module(
 		.load_stone(load_stone),
 	
 		.game_end(game_end),
+		.drop(drop),
 		
 		.enable_c(enable_c),
 		.resetn_c(resetn_c),

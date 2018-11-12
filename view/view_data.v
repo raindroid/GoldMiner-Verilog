@@ -17,6 +17,7 @@ module view_data(
 		enable_gold,
 		enable_stone,
 		resetn_gold_stone,
+		degree,
 		
 		X_out, 
 		Y_out, 
@@ -24,7 +25,12 @@ module view_data(
 		background_cout,
 		stone_cout,
 		gold_cout,
-		cout
+		cout,
+		frame,
+		clockwise,
+		drop_end,
+		drag_end,
+		degree_to_fsm
 		
 		);
 	input clk;
@@ -36,6 +42,7 @@ module view_data(
 	
 	input resetn_c, enable_c, load_x, load_y, load_color, enable_x_adder, enable_y_adder, draw_background;
 	input enable_gold, enable_stone, resetn_gold_stone;
+	input [7:0]degree;
 	
 	output reg [8:0]X_out;
 	output reg [8:0]Y_out;
@@ -44,6 +51,11 @@ module view_data(
 	output reg [2:0]gold_cout;
 	output reg [2:0]stone_cout;
 	output reg [8:0]cout;
+	output reg frame;
+	output reg clockwise;
+	output reg drop_end, drag_end;
+	output reg [7:0]degree_to_fsm;
+	
 	
 	
 	reg [8:0]x;
@@ -53,8 +65,7 @@ module view_data(
 	wire [11:0]gold_color;
 	wire [11:0]stone_color;
 	wire [11:0]background_color;
-	reg [8:0]x_size;
-	reg [7:0]y_size;
+
 	reg [8:0]x_cout;
 	reg [7:0]y_cout;
 	
@@ -232,11 +243,42 @@ module view_data(
 			stone_cout <= stone_cout + 1'b1;
 	end
 	
+	//rotation direction register
+	always@(posedge clk)begin
+		if(!resetn ) clockwise <= 1'b1;
+		else if(degree == 8'd30)
+			clockwise <= 1'b1;
+		else if(degree == 8'd150)
+			clockwise <= 1'b0;
+	end
 	
+	
+	
+	rate_divider(
+	.resetn(resetn), 
+	.clock(clk),
+	.Enable(frame));
 
 endmodule
 
 
+//rate divider
+module rate_divider(resetn, clock, Enable);
+	input clock;
+	input resetn;
+	output Enable;
+	parameter D = 23'd8333333;
+	reg [22:0]RateDivider;
+	always@(negedge resetn ,posedge clock)begin
+		if(resetn == 0)
+			RateDivider <= D;
+		else if(RateDivider == 0)
+			RateDivider <= D;
+		else
+			RateDivider <= RateDivider - 1;
+	end
+	assign Enable = (RateDivider == 0)?1:0;
+endmodule
 
 
 
