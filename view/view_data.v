@@ -1,85 +1,50 @@
 //view_data module
+// This module is the for game view data 
 //designed by Yifan Cui
-module view_data(
+module view(
 		clk, 
-		resetn, 
-		
-		
-		load_stone,
-		resetn_c, 
-		enable_c, 
-		load_x,
-		load_y,
-		load_color,
-		enable_x_adder, 
-		enable_y_adder,
-		draw_background,
-		enable_gold,
-		enable_stone,
-		resetn_gold_stone,
-		degree,
-		
-		X_out, 
-		Y_out, 
+		resetn,
+
+		X_out,
+		Y_out,
 		Color_out,
-		background_cout,
-		stone_cout,
-		gold_cout,
-		cout,
-		frame,
-		clockwise,
-		drop_end,
-		drag_end,
-		degree_to_fsm
+		writeEn
 		
 		);
-	input clk;
-	input resetn;
-	input load_stone;//test
-	
-	
-	
-	
-	input resetn_c, enable_c, load_x, load_y, load_color, enable_x_adder, enable_y_adder, draw_background;
-	input enable_gold, enable_stone, resetn_gold_stone;
-	input [7:0]degree;
-	
-	output reg [8:0]X_out;
-	output reg [8:0]Y_out;
-	output reg [11:0]Color_out;
-	output reg [17:0]background_cout;
-	output reg [2:0]gold_cout;
-	output reg [2:0]stone_cout;
-	output reg [8:0]cout;
-	output reg frame;
-	output reg clockwise;
-	output reg drop_end, drag_end;
-	output reg [7:0]degree_to_fsm;
-	
-	
-	
-	reg [8:0]x;
-	reg [8:0]y;
-	
-	wire [11:0]colour;
-	wire [11:0]gold_color;
-	wire [11:0]stone_color;
-	wire [11:0]background_color;
-
-	reg [8:0]x_cout;
-	reg [7:0]y_cout;
-	
-	
-	wire [7:0] gold_mem_address = ({y_cout[3:0], 4'd0} + {x_cout[3:0]}+1'b1);
-	wire [7:0] stone_mem_address = ({y_cout[3:0], 4'd0} + {x_cout[3:0]}+1'b1);
-	
-	wire [16:0] background_mem_address = ({ background_cout[16:9], 8'd0} + { background_cout[16:9], 6'd0} + { background_cout[8:0]});
+	input clk, resetn;
+	output reg[8:0]X_out;
+	output reg[7:0]Y_out;
+	output reg[11:0]Color_out;
+	output reg writeEn;
 	
 	wire [7:0]random_x;
 	wire [7:0]random_y;
 	
 	reg [8:0]x_init;
 	reg [7:0]y_init;
+	
+	always@(posedge clk)begin
+		if(enable_draw_gold) begin
+			X_out <= X_out_gold;
+			Y_out <= Y_out_gold;
+			Color_out <= Color_out_gold;
+			writeEn <= writeEn_gold;
+		end
+		else if(enable_draw_stone)begin
+			X_out <= X_out_stone;
+			Y_out <= Y_out_stone;
+			Color_out <= Color_out_stone;
+			writeEn <= writeEn_stone;
+		end
+		else if(enable_draw_background)begin
+			X_out <= X_out_background;
+			Y_out <= Y_out_background;
+			Color_out <= Color_out_background;
+			writeEn <= writeEn_background;
+		end
+	end
+	
+	
 	
 	//instanciate lfsr to generate random x and y;
 	lfsr l_x(
@@ -94,7 +59,11 @@ module view_data(
 	.rst(resetn)
 	);
 	
+	wire enable_random;
+	
+	
 	always@(posedge clk)begin
+	 if(enable_random)begin
 		if(random_x[0] != 1) begin
 			x_init[7:0] <= random_x;
 			x_init[8] <= random_x[0];
@@ -109,152 +78,235 @@ module view_data(
 				x_init[8] <= 1'b0;
 			end
 		end
+	 end
 	end
 	
 	always@(posedge clk)begin
-		if(random_y[7] != 1) begin
-			y_init[7:0] <= random_y[7:0];
-		end
-		else begin
-			if({random_y[6:0],1'b1} <= 9'd226) begin
-				y_init[7:0] <= random_y;
+		if(enable_random)begin
+			if(random_y[7] != 1) begin
+				y_init[7:0] <= random_y[7:0];
 			end
 			else begin
-				y_init[6:0] <= random_y[6:0];
-				y_init[7] <= 1'b0;
+				if({random_y[6:0],1'b1} <= 9'd226) begin
+					y_init[7:0] <= random_y;
+				end
+				else begin
+					y_init[6:0] <= random_y[6:0];
+					y_init[7] <= 1'b0;
+				end
 			end
 		end
 	end
 	
+	//instantiate view fsm
 	
+	game_view_FSM game_view(
+		.clk(clk), 
+		.resetn(resetn),
 	
+		.draw_gold_done(draw_gold_done),
+		.draw_stone_done(draw_stone_done),
+		.draw_background_done(draw_background_done),
 	
-	gold g0(
-	.address(gold_mem_address),
-	.clock(clk),
-	.q(gold_color));
+		.gold_count(gold_count),
+		.stone_count(stone_count),
 	
-	stone s0(
-	.address(stone_mem_address),
-	.clock(clk),
-	.q(stone_color));
+		.frame(frame),
+		.clockwise(1),
+		.drop_end(0),
+		.drag_end(0),
+		.degree_to_fsm(30),
 	
-	background b0(
-	.address(background_mem_address),
-	.clock(clk),
-	.q(background_color));
+		.game_end(0),
+		.drop(0),
 	
-	
-	//x register
-	always@(posedge clk)begin
-		if(resetn == 0) x <= 9'b0;
-		else
-			if(load_x) begin
-			x[8:0] <= x_init;
-			end
-	end
-	
-	//y register
-	always@(posedge clk)begin
-		if(resetn == 0) y <= 9'b0;
-		else
-			if(load_y) begin
-			y[8] =1'b0;
-			y[7:0] <= y_init;
-			
-			end
-	end
-	
+		.enable_draw_gold(enable_draw_gold),
+		.enable_draw_stone(enable_draw_stone),
+		.enable_draw_background(enable_draw_background),
+		.enable_random(enable_random),
+		.resetn_gold_stone(resetn_gold_stone)
 
-	//x adder
-	always@(posedge clk)begin
-		if(resetn == 0) X_out <= 9'b0;
-		else
-			if(enable_x_adder) begin
-				if(!draw_background) X_out <= x + cout[3:0];
-				else X_out <= background_cout[8:0];
-				end
-	end
-	
-	//y adder
-	always@(posedge clk)begin
-		if(resetn == 0) Y_out <= 9'b0;
-		else
-			if(enable_y_adder)begin
-				if(!draw_background) Y_out <= y + cout[7:4];
-				else Y_out <= background_cout[16:9];
-				end
-	end
-	
-	//color register
-	always@(posedge clk)begin
-		if(resetn == 0) Color_out <= 12'b0;
-		else if(draw_background) Color_out <= background_color;
-		else if(load_color)begin
-				if(load_stone) Color_out <= stone_color;
-				else Color_out <= gold_color;
-		end
-	end
-	
-	//x counter
-	always@(posedge clk)begin
-		if(!resetn | (resetn_c == 0)) x_cout <= 9'b0;
-		else if(enable_c)
-			x_cout <= x_cout + 1'b1;
-	end
-	
-	//y counter
-	always@(posedge clk)begin
-		if(!resetn | (resetn_c == 0)) y_cout <= 8'b0;
-		else if(enable_c)
-			y_cout <= y_cout + 1'b1;
-	end
-	
-	//9-bit counter
-	always@(posedge clk)begin
-		if((resetn == 0) | (resetn_c == 0)) cout <= 9'b0;
-		else
-			if(enable_c)
-			cout <= cout + 1'b1;
-	end
-	
-	
-	// 17-bit black counter
-	always@(posedge clk)begin
-		if(resetn == 0) background_cout <= 17'b0;
-		else
-			if(draw_background)
-				background_cout <= background_cout + 1'b1;
-	end
-	
-	//gold counter
-	always@(posedge clk)begin
-		if(!resetn | (!resetn_gold_stone)) gold_cout <= 3'b0;
-		else if(enable_gold)
-			gold_cout <= gold_cout + 1'b1;
-	end
+	);
 	
 	
 	
-	//stone counter
-	always@(posedge clk)begin
-		if(!resetn | (!resetn_gold_stone)) stone_cout <= 3'b0;
-		else if(enable_stone)
-			stone_cout <= stone_cout + 1'b1;
-	end
+	//instantiate all the drawing datapath and FSMs
 	
-	//rotation direction register
-	always@(posedge clk)begin
-		if(!resetn ) clockwise <= 1'b1;
-		else if(degree == 8'd30)
-			clockwise <= 1'b1;
-		else if(degree == 8'd150)
-			clockwise <= 1'b0;
-	end
+	wire resetn_c_gold, 
+		  enable_c_gold, 
+		  load_x_gold,
+		  load_y_gold,
+		  enable_x_adder_gold, 
+		  enable_y_adder_gold,
+		  enable_gold_count,
+		  resetn_gold_stone;
+		  
+	wire [8:0]X_out_gold; 
+	wire [7:0]Y_out_gold; 
+	wire [11:0]Color_out_gold;
+
+
+	wire [2:0]gold_count;
+	wire [8:0]gold_pixel_cout;
+	
+	wire enable_draw_gold;
+	wire writeEn_gold;
+	wire draw_gold_done;
 	
 	
+	draw_gold dg0(
+		.clk(clk), 
+		.resetn(resetn),
+		.x_init(x_init),
+		.y_init(y_init),
+
+		.resetn_c_gold(resetn_c_gold), 
+		.enable_c_gold(enable_c_gold), 
+		.load_x_gold(load_x_gold),
+		.load_y_gold(load_y_gold),
+
+		.enable_x_adder_gold(enable_x_adder_gold), 
+		.enable_y_adder_gold(enable_y_adder_gold),
+		.enable_gold_count(enable_gold_count),
+		.resetn_gold_stone(resetn_gold_stone),
+
+		
+		.X_out_gold(X_out_gold), 
+		.Y_out_gold(Y_out_gold), 
+		.Color_out_gold(Color_out_gold),
+
+
+		.gold_count(gold_count),
+		.gold_pixel_cout(gold_pixel_cout)
+
+	);
 	
-	rate_divider(
+	draw_gold_FSM dgf0(
+		.clk(clk), 
+		.resetn(resetn),
+		.enable_draw_gold(enable_draw_gold),
+
+		.gold_pixel_cout(gold_pixel_cout),
+		.enable_c_gold(enable_c_gold),
+		.load_x_gold(load_x_gold),
+		.load_y_gold(load_y_gold),
+		.enable_x_adder_gold(enable_x_adder_gold), 
+		.enable_y_adder_gold(enable_y_adder_gold),
+		.enable_gold_count(enable_gold_count),
+		.resetn_c_gold(resetn_c_gold),
+		.writeEn_gold(writeEn_gold),
+		.draw_gold_done(draw_gold_done)
+	);
+	
+	
+	wire resetn_c_stone, 
+		  enable_c_stone, 
+		  load_x_stone,
+		  load_y_stone,
+		  enable_x_adder_stone, 
+		  enable_y_adder_stone,
+		  enable_stone_count,
+		  resetn_stone_stone;
+		  
+	wire [8:0]X_out_stone; 
+	wire [7:0]Y_out_stone; 
+	wire [11:0]Color_out_stone;
+
+
+	wire [2:0]stone_count;
+	wire [8:0]stone_pixel_cout;
+	
+	wire enable_draw_stone;
+	wire writeEn_stone;
+	wire draw_stone_done;
+	
+	
+	draw_stone ds0(
+		.clk(clk), 
+		.resetn(resetn),
+		.x_init(x_init),
+		.y_init(y_init),
+
+		.resetn_c_stone(resetn_c_stone), 
+		.enable_c_stone(enable_c_stone), 
+		.load_x_stone(load_x_stone),
+		.load_y_stone(load_y_stone),
+
+		.enable_x_adder_stone(enable_x_adder_stone), 
+		.enable_y_adder_stone(enable_y_adder_stone),
+		.enable_stone_count(enable_stone_count),
+		.resetn_gold_stone(resetn_gold_stone),
+
+		
+		.X_out_stone(X_out_stone), 
+		.Y_out_stone(Y_out_stone), 
+		.Color_out_stone(Color_out_stone),
+
+
+		.stone_count(stone_count),
+		.stone_pixel_cout(stone_pixel_cout)
+
+	);
+	
+	draw_stone_FSM dsf0(
+		.clk(clk), 
+		.resetn(resetn),
+		.enable_draw_stone(enable_draw_stone),
+
+		.stone_pixel_cout(stone_pixel_cout),
+		.enable_c_stone(enable_c_stone),
+		.load_x_stone(load_x_stone),
+		.load_y_stone(load_y_stone),
+		.enable_x_adder_stone(enable_x_adder_stone), 
+		.enable_y_adder_stone(enable_y_adder_stone),
+		.enable_stone_count(enable_stone_count),
+		.resetn_c_stone(resetn_c_stone),
+		.writeEn_stone(writeEn_stone),
+		.draw_stone_done(draw_stone_done)
+	);
+	
+	wire enable_x_adder_background, 
+			enable_y_adder_background;
+
+		
+	wire [8:0]X_out_background;
+	wire [7:0]Y_out_background; 
+	wire [11:0]Color_out_background;
+	wire [16:0]background_cout;
+	
+	wire enable_draw_background;
+	wire writeEn_background;
+	wire draw_background_done;
+	
+	draw_background db0(
+		.clk(clk), 
+		.resetn(resetn), 
+		
+		.enable_x_adder_background(enable_x_adder_background), 
+		.enable_y_adder_background(enable_y_adder_background),
+
+		
+		.X_out_background(X_out_background), 
+		.Y_out_background(Y_out_background), 
+		.Color_out_background(Color_out_background),
+		.background_cout(background_cout)
+		);
+		
+	draw_background_FSM dbf0(
+	.clk(clk), 
+	.resetn(resetn),
+	.enable_draw_background(enable_draw_background),
+	.background_cout(background_cout),
+	
+	.enable_x_adder_background(enable_x_adder_background), 
+	.enable_y_adder_background(enable_y_adder_background),
+	.writeEn_background(writeEn_background),
+	.draw_background_done(draw_background_done)
+	);
+	
+	wire frame;
+	
+	rate_divider r0(
 	.resetn(resetn), 
 	.clock(clk),
 	.Enable(frame));
@@ -262,7 +314,7 @@ module view_data(
 endmodule
 
 
-//rate divider
+//rate divider per frame
 module rate_divider(resetn, clock, Enable);
 	input clock;
 	input resetn;
@@ -275,10 +327,12 @@ module rate_divider(resetn, clock, Enable);
 		else if(RateDivider == 0)
 			RateDivider <= D;
 		else
-			RateDivider <= RateDivider - 1;
+			RateDivider <= RateDivider - 1'b1;
 	end
-	assign Enable = (RateDivider == 0)?1:0;
+	assign Enable = (RateDivider == 1'b0)?1:0;
 endmodule
+
+
 
 
 

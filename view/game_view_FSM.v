@@ -2,16 +2,16 @@
 //designed by Yifan Cui
 module game_view_FSM(
 	clk, 
-	plot, 
 	resetn,
-	background,
-	go,
 	
+	draw_gold_done,
+	draw_stone_done,
+	draw_background_done,
 	
-	cout,
-	background_cout,
-	gold_cout,
-	stone_cout,
+	gold_count,
+	stone_count,
+
+	
 	frame,
 	clockwise,
 	drop_end,
@@ -22,31 +22,24 @@ module game_view_FSM(
 	game_end,
 	drop,
 	
-	
-	enable_c,
-	resetn_c,
-	load_x,
-	load_y,
-	load_color,
-	enable_x_adder,
-	enable_y_adder,
-	writeEn,
-	draw_background,
-	enable_gold,
-	enable_stone,
+	enable_draw_gold,
+	enable_draw_stone,
+	enable_draw_background,
+	enable_random,
 	resetn_gold_stone
-	load_stone,
-	degree
-	);
-	
-	input resetn;
-	input background;
-	input go;
 
-	input [8:0]cout;
-	input [16:0]background_cout;
-	input [2:0]gold_cout;
-	input [2:0]stone_cout;
+	);
+	input clk;
+	input resetn;
+
+
+	input draw_gold_done,
+			draw_stone_done,
+			draw_background_done;
+	
+	input [2:0]gold_count;
+	input [2:0]stone_count;
+	
 	input frame;
 	input clockwise;
 	input drop_end;
@@ -58,12 +51,12 @@ module game_view_FSM(
 	parameter max_stone = 3'd5;
 	parameter max_gold  = 3'd5;
 	
-	
-	output reg enable_c, resetn_c, load_x, load_y, load_color, enable_x_adder, enable_y_adder, writeEn, draw_background;
-	output reg enable_gold, enable_stone, resetn_gold_stone,load_stone;
-	output reg [7:0]degree;
-	
-	
+	output reg 	enable_draw_gold,
+					enable_draw_stone,
+					enable_draw_background,
+					enable_random,
+					resetn_gold_stone;
+
 	reg [6:0] current_state, next_state; 
     
    localparam   
@@ -121,19 +114,19 @@ module game_view_FSM(
     begin: state_table 
             case (current_state)
                 DRAW_BACKGROUND: begin
-						next_state = (background_cout == 17'b11111111111111111) ? DRAW_BACKGROUND_WAIT : DRAW_BACKGROUND;
+						next_state = (draw_background_done) ? DRAW_BACKGROUND_WAIT : DRAW_BACKGROUND;
 						end // Loop in current state until value is input
                 DRAW_BACKGROUND_WAIT:begin
-						next_state = ((stone_cout > max_stone) & (gold_cout > max_gold)) ? GAME : GENERATE_X; 
+						next_state = ((stone_count > max_stone) & (gold_count > max_gold)) ? GAME : GENERATE_X; 
 						end
 					 GENERATE_X: begin
 						next_state = GENERATE_Y;
 						end
 					 GENERATE_Y: begin
-						next_state = (gold_cout > max_gold) ? DRAW_STONE : DRAW_GOLD;
+						next_state = (gold_count > max_gold) ? DRAW_STONE : DRAW_GOLD;
 						end
 					 DRAW_GOLD: begin
-						next_state = (cout == 9'd256) ? DRAW_GOLD_DONE : DRAW_GOLD_WAIT;
+						next_state = (draw_gold_done) ? DRAW_GOLD_DONE : DRAW_GOLD_WAIT;
 					   end
 					 DRAW_GOLD_WAIT: begin
 						next_state = DRAW_GOLD;
@@ -143,7 +136,7 @@ module game_view_FSM(
 					 end
 					 
 					 DRAW_STONE: begin
-						next_state = (cout == 9'd256) ? DRAW_STONE_DONE : DRAW_STONE_WAIT;
+						next_state = (draw_stone_done) ? DRAW_STONE_DONE : DRAW_STONE_WAIT;
 					   end
 						
 					 DRAW_STONE_WAIT: begin
@@ -244,7 +237,7 @@ module game_view_FSM(
 					 DEGREE_100_WAIT: begin
 						if(game_end) next_state = GAME_DONE;
 						else if(drop) next_state = DROP;
-						else if(clockwise) next_state = (frame) ? DEGREE_110 : DEGREE_100_WAIT;
+						else if(clockwise) next_state = (frame) ? DEGREE_120 : DEGREE_100_WAIT;
 						else next_state = (frame) ? DEGREE_90 : DEGREE_100_WAIT;
 					 end
 					 
@@ -328,7 +321,7 @@ module game_view_FSM(
 					 
 					 DRAG_DONE: begin
 						if(game_end) next_state = GAME_DONE;
-							case(degree_to_fsm) begin
+							case(degree_to_fsm) 
 								8'd30: next_state = DEGREE_30;
 								8'd40: next_state = DEGREE_40;
 								8'd50: next_state = DEGREE_50;
@@ -341,14 +334,14 @@ module game_view_FSM(
 								8'd140: next_state = DEGREE_140;
 								8'd150: next_state = DEGREE_150;
 								default: next_state = DRAW_BACKGROUND;
-								end
+								
 							endcase
-							
 					 end
+
 					 
 					 
 					 GAME_DONE: begin
-						next_state = (go) ? DRAW_BACKGROUND : GAME_DONE;
+						next_state = DRAW_BACKGROUND;
 					 
 					 end
 
@@ -362,62 +355,29 @@ module game_view_FSM(
     begin: enable_signals
         // By default make all our signals 0 to avoid latches.
         
-        enable_c = 1'b0;
-		  resetn_c = 1'b1;
-		  load_x = 1'b0;
-		  load_y = 1'b0;
-		  load_color=1'b0;
-		  
-		  enable_x_adder = 1'b0;
-		  enable_y_adder = 1'b0;
-		  writeEn = 1'b0;
-		  draw_background =1'b0;
-		  enable_gold = 1'b0;
-		  enable_stone = 1'b0;
-		  resetn_gold_stone = 1'b1;
-		  load_stone = 1'b0;
+			enable_draw_gold = 1'b0;
+			enable_draw_stone = 1'b0;
+			enable_draw_background = 1'b0;
+			enable_random = 1'b0;
+			resetn_gold_stone = 1'b1;
 
 
         case (current_state)
 				DRAW_BACKGROUND: begin
-					draw_background = 1'b1;
-					enable_x_adder = 1'b1;
-					enable_y_adder = 1'b1;
-					writeEn = 1'b1;
+					enable_draw_background = 1'b1;
 				end
             GENERATE_X: begin
-					load_x = 1'b1; //load x
+					enable_random = 1'b1; //load x
 					end
             GENERATE_Y: begin
-					load_y = 1'b1; //load y
+					enable_random = 1'b1; //load y
 					end
             DRAW_GOLD: begin
-					enable_c = 1'b1;
-					enable_x_adder = 1'b1;
-					enable_y_adder = 1'b1;
-					load_color = 1'b1;
-					end
-				DRAW_GOLD_WAIT:begin
-					writeEn = 1'b1;
-					end
-				DRAW_GOLD_DONE: begin
-					enable_gold = 1'b1;
-					resetn_c = 1'b0;
+					enable_draw_gold = 1'b1;
 					end
 				DRAW_STONE: begin
-					enable_c = 1'b1;
-					enable_x_adder = 1'b1;
-					enable_y_adder = 1'b1;
-					load_stone = 1'b1;
-					load_color = 1'b1;
-					end
-				DRAW_STONE_WAIT:begin
-					writeEn = 1'b1;
+					enable_draw_stone = 1'b1;
 					end	
-				DRAW_STONE_DONE: begin
-					resetn_c = 1'b0;
-					enable_stone = 1'b1;
-					end
 				GAME: begin
 					resetn_gold_stone = 1'b0;
 					end
