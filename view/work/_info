@@ -1,0 +1,73 @@
+m255
+K4
+z2
+13
+!s112 1.1
+!i10d 8192
+!i10e 25
+!i10f 100
+cModel Technology
+Z0 df:/uofT/eCE241/ece241project/view
+vdraw_background_FSM
+Z1 !s110 1542073987
+!i10b 1
+!s100 =Md4dl@OF46P4@50NI?@^0
+IlEl0]09PCOA@]UQ2>5ehz0
+Z2 VDg1SIo80bB@j0V0VzS_@n1
+R0
+Z3 w1542072467
+Z4 8draw_gold_stone_FSM.v
+Z5 Fdraw_gold_stone_FSM.v
+L0 255
+Z6 OV;L;10.5b;63
+r1
+!s85 0
+31
+Z7 !s108 1542073987.000000
+Z8 !s107 draw_gold_stone_FSM.v|
+Z9 !s90 -reportprogress|300|draw_gold_stone_FSM.v|
+!i113 1
+Z10 tCvgOpt 0
+ndraw_background_@f@s@m
+vdraw_gold_FSM
+R1
+!i10b 1
+!s100 Emg4FQO_Q<OPcB6mYmRiX1
+I;:k;ZG;gh508C;ZieOb3?0
+R2
+R0
+R3
+R4
+R5
+L0 7
+R6
+r1
+!s85 0
+31
+R7
+R8
+R9
+!i113 1
+R10
+ndraw_gold_@f@s@m
+vdraw_stone_FSM
+R1
+!i10b 1
+!s100 RMQX>md@[e6`_aoT1Fff]2
+I<PfOf03`lRZfjh1`VaD3>0
+R2
+R0
+R3
+R4
+R5
+L0 130
+R6
+r1
+!s85 0
+31
+R7
+R8
+R9
+!i113 1
+R10
+ndraw_stone_@f@s@m
