@@ -3,6 +3,7 @@
 module game_view_FSM(
 	clk, 
 	resetn,
+	go,
 	
 	draw_gold_done,
 	draw_stone_done,
@@ -16,7 +17,6 @@ module game_view_FSM(
 	clockwise,
 	drop_end,
 	drag_end,
-	degree_to_fsm,
 	
 	
 	game_end,
@@ -31,6 +31,7 @@ module game_view_FSM(
 	);
 	input clk;
 	input resetn;
+	input go;
 
 
 	input draw_gold_done,
@@ -44,7 +45,7 @@ module game_view_FSM(
 	input clockwise;
 	input drop_end;
 	input drag_end;
-	input [7:0]degree_to_fsm;
+
 	
 	input game_end, drop;
 	
@@ -67,10 +68,10 @@ module game_view_FSM(
 					 GENERATE_Y           = 6'd3,
 					 RANDOM_WAIT			 = 6'd4,
 					 DRAW_GOLD            = 6'd5,
-					 DRAW_GOLD_WAIT		 = 6'd6,
+
 					 DRAW_GOLD_DONE		 = 6'd7,
 					 DRAW_STONE 			 = 6'd8,
-					 DRAW_STONE_WAIT		 = 6'd9,
+
 					 DRAW_STONE_DONE		 = 6'd10,
 					 GAME						 = 6'd11,
 					 
@@ -126,22 +127,17 @@ module game_view_FSM(
 						next_state = (gold_count > max_gold) ? DRAW_STONE : DRAW_GOLD;
 						end
 					 DRAW_GOLD: begin
-						next_state = (draw_gold_done) ? DRAW_GOLD_DONE : DRAW_GOLD_WAIT;
+						next_state = (draw_gold_done) ? DRAW_GOLD_DONE : DRAW_GOLD;
 					   end
-					 DRAW_GOLD_WAIT: begin
-						next_state = DRAW_GOLD;
-					 end
+
 					 DRAW_GOLD_DONE: begin
 						next_state = DRAW_BACKGROUND_WAIT;
 					 end
 					 
 					 DRAW_STONE: begin
-						next_state = (draw_stone_done) ? DRAW_STONE_DONE : DRAW_STONE_WAIT;
+						next_state = (draw_stone_done) ? DRAW_STONE_DONE : DRAW_STONE;
 					   end
 						
-					 DRAW_STONE_WAIT: begin
-						next_state = DRAW_STONE;
-					 end
 					 
 					 DRAW_STONE_DONE: begin
 						next_state = DRAW_BACKGROUND_WAIT;
@@ -341,7 +337,7 @@ module game_view_FSM(
 					 
 					 
 					 GAME_DONE: begin
-						next_state = DRAW_BACKGROUND;
+						next_state = (go) ? DRAW_BACKGROUND : GAME_DONE;
 					 
 					 end
 
