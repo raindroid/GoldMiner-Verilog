@@ -61,7 +61,7 @@ module draw_gold_FSM(
 						next_state = DRAW; // Loop in current state until go signal goes low
 						end
 					 DRAW: begin
-						next_state =  (gold_pixel_cout == 5'd16) ?  DRAW_DONE : DRAW_WAIT;
+						next_state =  (gold_pixel_cout == 9'd256) ?  DRAW_DONE : DRAW_WAIT;
 						end
 					 DRAW_WAIT: begin
 						next_state = DRAW;
@@ -184,7 +184,7 @@ module draw_stone_FSM(
 						next_state = DRAW; // Loop in current state until go signal goes low
 						end
 					 DRAW: begin
-					   next_state = (stone_pixel_cout == 5'd16) ?  DRAW_DONE : DRAW_WAIT;
+					   next_state = (stone_pixel_cout == 9'd256) ?  DRAW_DONE : DRAW_WAIT;
 						end
 					 DRAW_WAIT: begin
 						next_state = DRAW;
