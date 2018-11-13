@@ -4,6 +4,7 @@
 module view(
 		clk, 
 		resetn,
+		go,
 
 		X_out,
 		Y_out,
@@ -12,13 +13,15 @@ module view(
 		
 		);
 	input clk, resetn;
+	input go;
+	
 	output reg[8:0]X_out;
 	output reg[7:0]Y_out;
 	output reg[11:0]Color_out;
 	output reg writeEn;
 	
-	wire [7:0]random_x;
-	wire [7:0]random_y;
+	wire [7:0]random;
+	
 	
 	reg [8:0]x_init;
 	reg [7:0]y_init;
@@ -28,13 +31,19 @@ module view(
 			X_out <= X_out_gold;
 			Y_out <= Y_out_gold;
 			Color_out <= Color_out_gold;
-			writeEn <= writeEn_gold;
+			if(Color_out == 12'b0) 
+				writeEn <= 1'b0;
+			else
+				writeEn <= writeEn_gold;
 		end
 		else if(enable_draw_stone)begin
 			X_out <= X_out_stone;
 			Y_out <= Y_out_stone;
 			Color_out <= Color_out_stone;
-			writeEn <= writeEn_stone;
+			if(Color_out == 12'b0) 
+				writeEn <= 1'b0;
+			else
+				writeEn <= writeEn_stone;
 		end
 		else if(enable_draw_background)begin
 			X_out <= X_out_background;
@@ -47,62 +56,48 @@ module view(
 	
 	
 	//instanciate lfsr to generate random x and y;
-	lfsr l_x(
-	.out(random_x),
+	lfsr l(
+	.out(random),
 	.clk(clk),
 	.rst(resetn)
 	);
 	
-	lfsr l_y(
-	.out(random_y),
-	.clk(clk),
-	.rst(resetn)
-	);
 	
 	wire enable_random;
 	
 	
 	always@(posedge clk)begin
 	 if(enable_random)begin
-		if(random_x[0] != 1) begin
-			x_init[7:0] <= random_x;
-			x_init[8] <= random_x[0];
+		if(random[4:0] * 5'd20 <= 9'd300) begin
+			x_init[8:0] <= random[4:0] * 5'd20;
 		end
 		else begin
-			if({1'b1,random_x} <= 9'd304) begin
-				x_init[7:0] <= random_x;
-				x_init[8] <= random_x[0];
-			end
-			else begin
-				x_init[7:0] <= random_x;
-				x_init[8] <= 1'b0;
+			x_init[7:0] <= random[4:1] * 5'd20;
+			x_init[8] <= 1'b0;
 			end
 		end
-	 end
+
 	end
 	
 	always@(posedge clk)begin
-		if(enable_random)begin
-			if(random_y[7] != 1) begin
-				y_init[7:0] <= random_y[7:0];
-			end
-			else begin
-				if({random_y[6:0],1'b1} <= 9'd226) begin
-					y_init[7:0] <= random_y;
-				end
-				else begin
-					y_init[6:0] <= random_y[6:0];
-					y_init[7] <= 1'b0;
-				end
+	 if(enable_random)begin
+		if(random[7:4] * 5'd20 <= 8'd140) begin
+			y_init[7:0] <= random[5:3] * 5'd20 + 7'd80;
+		end
+		else begin
+			y_init[6:0] <= random[6:5] * 5'd20 + 7'd80;
+			y_init[7] <= 1'b0;
 			end
 		end
 	end
 	
+
 	//instantiate view fsm
 	
 	game_view_FSM game_view(
 		.clk(clk), 
 		.resetn(resetn),
+		.go(go),
 	
 		.draw_gold_done(draw_gold_done),
 		.draw_stone_done(draw_stone_done),
@@ -115,9 +110,8 @@ module view(
 		.clockwise(1),
 		.drop_end(0),
 		.drag_end(0),
-		.degree_to_fsm(30),
 	
-		.game_end(0),
+		.game_end(1),
 		.drop(0),
 	
 		.enable_draw_gold(enable_draw_gold),
@@ -277,6 +271,7 @@ module view(
 	wire enable_draw_background;
 	wire writeEn_background;
 	wire draw_background_done;
+	wire enable_c_stone_background;
 	
 	draw_background db0(
 		.clk(clk), 
@@ -284,6 +279,7 @@ module view(
 		
 		.enable_x_adder_background(enable_x_adder_background), 
 		.enable_y_adder_background(enable_y_adder_background),
+		.enable_c_stone_background(enable_c_stone_background),
 
 		
 		.X_out_background(X_out_background), 
@@ -298,6 +294,7 @@ module view(
 	.enable_draw_background(enable_draw_background),
 	.background_cout(background_cout),
 	
+	.enable_c_stone_background(enable_c_stone_background),
 	.enable_x_adder_background(enable_x_adder_background), 
 	.enable_y_adder_background(enable_y_adder_background),
 	.writeEn_background(writeEn_background),

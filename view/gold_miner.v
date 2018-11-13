@@ -138,6 +138,7 @@ module gold_miner(
 	view view(
 		.clk(CLOCK_50), 
 		.resetn(resetn),
+		.go(go),
 
 		.X_out(x),
 		.Y_out(y),

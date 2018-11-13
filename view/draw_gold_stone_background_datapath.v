@@ -50,26 +50,33 @@ module draw_gold(
 			
 	output reg [8:0]X_out_gold;
 	output reg [7:0]Y_out_gold;
-	output [11:0]Color_out_gold;
+	output reg [11:0]Color_out_gold;
 	
 	
 	output reg [2:0]gold_count;
 	output reg [8:0]gold_pixel_cout;
 	
 	
-	wire [7:0] gold_mem_address = ({y_gold_address_cout[3:0], 4'd0} + {x_gold_address_cout[3:0]}+1'b1);
+	wire [7:0] gold_mem_address = ({gold_pixel_cout[7:4]-1'b1, 4'd0} + {gold_pixel_cout[3:0]-1'b1});
 	
-	reg [8:0]x_gold_address_cout;
-	reg [7:0]y_gold_address_cout;
+
 	reg [8:0] x;
 	reg [7:0] y;
 	
+	wire [11:0] gold_color;
 	
 	//get gold color
 	gold g0(
 	.address(gold_mem_address),
 	.clock(clk),
-	.q(Color_out_gold));
+	.q(gold_color));
+	
+	//color register
+	always@(posedge clk)begin
+		if(!resetn)	Color_out_gold = 12'b0;
+		else Color_out_gold <= gold_color;
+	end
+	
 	
 	//x register
 	always@(posedge clk)begin
@@ -109,19 +116,7 @@ module draw_gold(
 				end
 	end
 	
-	//x address counter
-	always@(posedge clk)begin
-		if(!resetn | (resetn_c_gold == 0)) x_gold_address_cout <= 9'b0;
-		else if(enable_c_gold)
-			x_gold_address_cout <= x_gold_address_cout + 1'b1;
-	end
-	
-	//y address counter
-	always@(posedge clk)begin
-		if(!resetn | (resetn_c_gold == 0)) y_gold_address_cout <= 8'b0;
-		else if(enable_c_gold)
-			y_gold_address_cout <= y_gold_address_cout + 1'b1;
-	end
+
 	
 	//9-bit counter
 	always@(posedge clk)begin
@@ -193,10 +188,11 @@ module draw_stone(
 	
 	output reg [8:0]X_out_stone;
 	output reg [7:0]Y_out_stone;
-	output  [11:0]Color_out_stone;
+	output reg [11:0]Color_out_stone;
 	
+	wire [11:0] stone_color;
 	
-	wire [7:0] stone_mem_address = ({y_stone_address_cout[3:0], 4'd0} + {x_stone_address_cout[3:0]}+1'b1);
+	wire [7:0] stone_mem_address = ({stone_pixel_cout[7:4]-1'b1, 4'd0} + {stone_pixel_cout[3:0]-1'b1}+1'b1);
 	
 	reg [8:0]x_stone_address_cout;
 	reg [7:0]y_stone_address_cout;
@@ -208,7 +204,16 @@ module draw_stone(
 	stone s0(
 	.address(stone_mem_address),
 	.clock(clk),
-	.q(Color_out_stone));
+	.q(stone_color));
+	
+	
+	//color register
+	always@(posedge clk)begin
+		if(!resetn)	Color_out_stone = 12'b0;
+		else Color_out_stone <= stone_color;
+	end
+	
+	
 	
 	//x register
 	always@(posedge clk)begin
@@ -248,19 +253,7 @@ module draw_stone(
 				end
 	end
 	
-	//x address counter
-	always@(posedge clk)begin
-		if(!resetn | (resetn_c_stone == 0)) x_stone_address_cout <= 9'b0;
-		else if(enable_c_stone)
-			x_stone_address_cout <= x_stone_address_cout + 1'b1;
-	end
-	
-	//y address counter
-	always@(posedge clk)begin
-		if(!resetn | (resetn_c_stone == 0)) y_stone_address_cout <= 8'b0;
-		else if(enable_c_stone)
-			y_stone_address_cout <= y_stone_address_cout + 1'b1;
-	end
+
 	
 	//9-bit counter
 	always@(posedge clk)begin
@@ -286,6 +279,7 @@ module draw_background(
 		
 		enable_x_adder_background, 
 		enable_y_adder_background,
+		enable_c_stone_background,
 
 		
 		X_out_background, 
@@ -298,6 +292,7 @@ module draw_background(
 	input resetn;
 	
 	input   enable_x_adder_background, enable_y_adder_background;
+	input enable_c_stone_background;
 	
 	output reg [8:0]X_out_background;
 	output reg [8:0]Y_out_background;
@@ -349,7 +344,7 @@ module draw_background(
 	always@(posedge clk)begin
 		if(resetn == 0) background_cout <= 17'b0;
 		else
-				background_cout <= background_cout + 1'b1;
+			if(enable_c_stone_background) background_cout <= background_cout + 1'b1;
 	end
 	
 

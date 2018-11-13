@@ -261,6 +261,7 @@ module draw_background_FSM(
 	
 	enable_x_adder_background, 
 	enable_y_adder_background,
+	enable_c_stone_background,
 	writeEn_background,
 	draw_background_done
 
@@ -268,7 +269,7 @@ module draw_background_FSM(
 	
 	input clk;
 	input resetn;
-	input enable_draw_background;
+	input enable_draw_background ;
 	
 	input [16:0]background_cout;
 
@@ -276,7 +277,8 @@ module draw_background_FSM(
 	output reg enable_x_adder_background,
 				  enable_y_adder_background,
 				  writeEn_background,
-				  draw_background_done;
+				  draw_background_done,
+				  enable_c_stone_background;
 	
 	reg [1:0] current_state, next_state; 
     
@@ -315,12 +317,14 @@ module draw_background_FSM(
 		  enable_y_adder_background = 1'b0;
 		  writeEn_background = 1'b0;
 		  draw_background_done = 1'b0;
+		  enable_c_stone_background = 1'b0;
 
 
         case (current_state)
             DRAW_BACKGROUND: begin
-					enable_x_adder_background = 1'b0;
-					enable_y_adder_background = 1'b0;
+					enable_x_adder_background = 1'b1;
+					enable_y_adder_background = 1'b1;
+					enable_c_stone_background = 1'b1;
 					end
             DRAW_BACKGROUND_WAIT: begin
 					writeEn_background = 1'b1;
