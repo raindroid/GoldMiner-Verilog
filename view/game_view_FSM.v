@@ -74,34 +74,34 @@ module game_view_FSM(
 					 DRAW_STONE_DONE		 = 6'd10,
 					 GAME						 = 6'd11,
 					 
-					 DEGREE_30				 = 6'd12,
-					 DEGREE_30_WAIT		 = 6'd13,
-					 DEGREE_40				 = 6'd14,
-					 DEGREE_40_WAIT		 = 6'd15,
-					 DEGREE_50				 = 6'd16,
-					 DEGREE_50_WAIT		 = 6'd17,
-					 DEGREE_60				 = 6'd18,
-					 DEGREE_60_WAIT		 = 6'd19,
-					 DEGREE_80				 = 6'd20,
-					 DEGREE_80_WAIT		 = 6'd21,
-					 DEGREE_90				 = 6'd22,
-					 DEGREE_90_WAIT		 = 6'd23,
-					 DEGREE_100				 = 6'd24,
-					 DEGREE_100_WAIT		 = 6'd25,
-					 DEGREE_120				 = 6'd26,
-					 DEGREE_120_WAIT		 = 6'd27,
-					 DEGREE_130				 = 6'd28,
-					 DEGREE_130_WAIT		 = 6'd29,
-					 DEGREE_140				 = 6'd30,
-					 DEGREE_140_WAIT		 = 6'd31,
-					 DEGREE_150				 = 6'd32,
-					 DEGREE_150_WAIT		 = 6'd33,
-					 DROP						 = 6'd34,
-					 DROP_WAIT				 = 6'd35,
-					 DROP_DONE				 = 6'd36,
-					 DRAG						 = 6'd37,
-					 DRAG_WAIT				 = 6'd38,
-					 DRAG_DONE				 = 6'd39,
+//					 DEGREE_30				 = 6'd12,
+//					 DEGREE_30_WAIT		 = 6'd13,
+//					 DEGREE_40				 = 6'd14,
+//					 DEGREE_40_WAIT		 = 6'd15,
+//					 DEGREE_50				 = 6'd16,
+//					 DEGREE_50_WAIT		 = 6'd17,
+//					 DEGREE_60				 = 6'd18,
+//					 DEGREE_60_WAIT		 = 6'd19,
+//					 DEGREE_80				 = 6'd20,
+//					 DEGREE_80_WAIT		 = 6'd21,
+//					 DEGREE_90				 = 6'd22,
+//					 DEGREE_90_WAIT		 = 6'd23,
+//					 DEGREE_100				 = 6'd24,
+//					 DEGREE_100_WAIT		 = 6'd25,
+//					 DEGREE_120				 = 6'd26,
+//					 DEGREE_120_WAIT		 = 6'd27,
+//					 DEGREE_130				 = 6'd28,
+//					 DEGREE_130_WAIT		 = 6'd29,
+//					 DEGREE_140				 = 6'd30,
+//					 DEGREE_140_WAIT		 = 6'd31,
+//					 DEGREE_150				 = 6'd32,
+//					 DEGREE_150_WAIT		 = 6'd33,
+//					 DROP						 = 6'd34,
+//					 DROP_WAIT				 = 6'd35,
+//					 DROP_DONE				 = 6'd36,
+//					 DRAG						 = 6'd37,
+//					 DRAG_WAIT				 = 6'd38,
+//					 DRAG_DONE				 = 6'd39,
 					 
 					 GAME_DONE				 = 6'd40;
 					 
@@ -151,192 +151,192 @@ module game_view_FSM(
 						next_state = (game_end) ? GAME_DONE : DRAW_BACKGROUND;
 					 end
 					 
-					 DEGREE_30: begin
-						if(game_end) next_state = GAME_DONE;
-						else if(drop) next_state = DROP;
-						else next_state = DEGREE_30_WAIT;
-					 end
-					 
-					 DEGREE_30_WAIT: begin
-						if(game_end) next_state = GAME_DONE;
-						else if(drop) next_state = DROP;
-						else next_state = (frame) ? DEGREE_40 : DEGREE_30_WAIT;
-					 end
-					 
-					 DEGREE_40: begin
-						if(game_end) next_state = GAME_DONE;
-						else if(drop) next_state = DROP;
-						else next_state = DEGREE_40_WAIT;
-					 end
-					 
-					 DEGREE_40_WAIT: begin
-						if(game_end) next_state = GAME_DONE;
-						else if(drop) next_state = DROP;
-						else if(clockwise) next_state = (frame) ? DEGREE_50 : DEGREE_40_WAIT;
-						else next_state = (frame) ? DEGREE_30 : DEGREE_40_WAIT;
-					 end
-					 
-					 DEGREE_50: begin
-						if(game_end) next_state = GAME_DONE;
-						else if(drop) next_state = DROP;
-						else next_state = DEGREE_50_WAIT;
-					 end
-					 
-					 DEGREE_50_WAIT: begin
-						if(game_end) next_state = GAME_DONE;
-						else if(drop) next_state = DROP;
-						else if(clockwise) next_state = (frame) ? DEGREE_60 : DEGREE_50_WAIT;
-						else next_state = (frame) ? DEGREE_40 : DEGREE_50_WAIT;
-					 end
-					 
-					 DEGREE_60: begin
-						if(game_end) next_state = GAME_DONE;
-						else if(drop) next_state = DROP;
-						else next_state = DEGREE_60_WAIT;
-					 end
-					 
-					 DEGREE_60_WAIT: begin
-						if(game_end) next_state = GAME_DONE;
-						else if(drop) next_state = DROP;
-						else if(clockwise) next_state = (frame) ? DEGREE_80 : DEGREE_60_WAIT;
-						else next_state = (frame) ? DEGREE_50 : DEGREE_60_WAIT;
-					 end
-					 
-					 DEGREE_80: begin
-						if(game_end) next_state = GAME_DONE;
-						else if(drop) next_state = DROP;
-						else next_state = DEGREE_80_WAIT;
-					 end
-					 
-					 DEGREE_80_WAIT: begin
-						if(game_end) next_state = GAME_DONE;
-						else if(drop) next_state = DROP;
-						else if(clockwise) next_state = (frame) ? DEGREE_90 : DEGREE_80_WAIT;
-						else next_state = (frame) ? DEGREE_60 : DEGREE_80_WAIT;
-					 end
-					 
-					 DEGREE_90: begin
-						if(game_end) next_state = GAME_DONE;
-						else if(drop) next_state = DROP;
-						else next_state = DEGREE_90_WAIT;
-					 end
-					 
-					 DEGREE_90_WAIT: begin
-						if(game_end) next_state = GAME_DONE;
-						else if(drop) next_state = DROP;
-						else if(clockwise) next_state = (frame) ? DEGREE_100 : DEGREE_90_WAIT;
-						else next_state = (frame) ? DEGREE_80 : DEGREE_90_WAIT;
-					 end
-					 
-					 DEGREE_100: begin
-						if(game_end) next_state = GAME_DONE;
-						else if(drop) next_state = DROP;
-						else next_state = DEGREE_100_WAIT;
-					 end
-					 
-					 DEGREE_100_WAIT: begin
-						if(game_end) next_state = GAME_DONE;
-						else if(drop) next_state = DROP;
-						else if(clockwise) next_state = (frame) ? DEGREE_120 : DEGREE_100_WAIT;
-						else next_state = (frame) ? DEGREE_90 : DEGREE_100_WAIT;
-					 end
-					 
-					 DEGREE_120: begin
-						if(game_end) next_state = GAME_DONE;
-						else if(drop) next_state = DROP;
-						else next_state = DEGREE_120_WAIT;
-					 end
-					 
-					 DEGREE_120_WAIT: begin
-						if(game_end) next_state = GAME_DONE;
-						else if(drop) next_state = DROP;
-						else if(clockwise) next_state = (frame) ? DEGREE_130 : DEGREE_120_WAIT;
-						else next_state = (frame) ? DEGREE_100 : DEGREE_120_WAIT;
-					 end
-					 
-					 DEGREE_130: begin
-						if(game_end) next_state = GAME_DONE;
-						else if(drop) next_state = DROP;
-						else next_state = DEGREE_130_WAIT;
-					 end
-					 
-					 DEGREE_130_WAIT: begin
-						if(game_end) next_state = GAME_DONE;
-						else if(drop) next_state = DROP;
-						else if(clockwise) next_state = (frame) ? DEGREE_140 : DEGREE_130_WAIT;
-						else next_state = (frame) ? DEGREE_120 : DEGREE_130_WAIT;
-					 end
-					 
-					 DEGREE_140: begin
-						if(game_end) next_state = GAME_DONE;
-						else if(drop) next_state = DROP;
-						else next_state = DEGREE_140_WAIT;
-					 end
-					 
-					 DEGREE_140_WAIT: begin
-						if(game_end) next_state = GAME_DONE;
-						else if(drop) next_state = DROP;
-						else if(clockwise) next_state = (frame) ? DEGREE_150 : DEGREE_140_WAIT;
-						else next_state = (frame) ? DEGREE_130 : DEGREE_140_WAIT;
-					 end
-					 
-					 DEGREE_150: begin
-						if(game_end) next_state = GAME_DONE;
-						else if(drop) next_state = DROP;
-						else next_state = DEGREE_150_WAIT;
-					 end
-					 
-					 DEGREE_150_WAIT: begin
-						if(game_end) next_state = GAME_DONE;
-						else if(drop) next_state = DROP;
-						else next_state = (frame) ? DEGREE_140 : DEGREE_150_WAIT;
-					 end
-					 
-					 DROP: begin
-						if(game_end) next_state = GAME_DONE;
-						else next_state = DROP_WAIT;
-					 end
-					 
-					 DROP_WAIT: begin
-						if(game_end) next_state = GAME_DONE;
-						else if(drop_end) next_state = DROP_DONE;
-						else next_state = (frame) ? DROP : DROP_WAIT;
-					 end
-					 
-					 DROP_DONE: begin
-						if(game_end) next_state = GAME_DONE;
-						else next_state = DRAG;
-					 end
-					 
-					 DRAG: begin
-						if(game_end) next_state = GAME_DONE;
-						else next_state = DRAG_WAIT;
-					 end
-					 
-					 DRAG_WAIT: begin
-						if(game_end) next_state = GAME_DONE;
-						else if(drag_end) next_state = DRAG_DONE;
-						else next_state = (frame) ? DRAG : DRAG_WAIT;
-					 end
-					 
-					 DRAG_DONE: begin
-						if(game_end) next_state = GAME_DONE;
-							case(degree_to_fsm) 
-								8'd30: next_state = DEGREE_30;
-								8'd40: next_state = DEGREE_40;
-								8'd50: next_state = DEGREE_50;
-								8'd60: next_state = DEGREE_60;
-								8'd80: next_state = DEGREE_80;
-								8'd90: next_state = DEGREE_90;
-								8'd100: next_state = DEGREE_100;
-								8'd120: next_state = DEGREE_120;
-								8'd130: next_state = DEGREE_130;
-								8'd140: next_state = DEGREE_140;
-								8'd150: next_state = DEGREE_150;
-								default: next_state = DRAW_BACKGROUND;
-								
-							endcase
-					 end
+//					 DEGREE_30: begin
+//						if(game_end) next_state = GAME_DONE;
+//						else if(drop) next_state = DROP;
+//						else next_state = DEGREE_30_WAIT;
+//					 end
+//					 
+//					 DEGREE_30_WAIT: begin
+//						if(game_end) next_state = GAME_DONE;
+//						else if(drop) next_state = DROP;
+//						else next_state = (frame) ? DEGREE_40 : DEGREE_30_WAIT;
+//					 end
+//					 
+//					 DEGREE_40: begin
+//						if(game_end) next_state = GAME_DONE;
+//						else if(drop) next_state = DROP;
+//						else next_state = DEGREE_40_WAIT;
+//					 end
+//					 
+//					 DEGREE_40_WAIT: begin
+//						if(game_end) next_state = GAME_DONE;
+//						else if(drop) next_state = DROP;
+//						else if(clockwise) next_state = (frame) ? DEGREE_50 : DEGREE_40_WAIT;
+//						else next_state = (frame) ? DEGREE_30 : DEGREE_40_WAIT;
+//					 end
+//					 
+//					 DEGREE_50: begin
+//						if(game_end) next_state = GAME_DONE;
+//						else if(drop) next_state = DROP;
+//						else next_state = DEGREE_50_WAIT;
+//					 end
+//					 
+//					 DEGREE_50_WAIT: begin
+//						if(game_end) next_state = GAME_DONE;
+//						else if(drop) next_state = DROP;
+//						else if(clockwise) next_state = (frame) ? DEGREE_60 : DEGREE_50_WAIT;
+//						else next_state = (frame) ? DEGREE_40 : DEGREE_50_WAIT;
+//					 end
+//					 
+//					 DEGREE_60: begin
+//						if(game_end) next_state = GAME_DONE;
+//						else if(drop) next_state = DROP;
+//						else next_state = DEGREE_60_WAIT;
+//					 end
+//					 
+//					 DEGREE_60_WAIT: begin
+//						if(game_end) next_state = GAME_DONE;
+//						else if(drop) next_state = DROP;
+//						else if(clockwise) next_state = (frame) ? DEGREE_80 : DEGREE_60_WAIT;
+//						else next_state = (frame) ? DEGREE_50 : DEGREE_60_WAIT;
+//					 end
+//					 
+//					 DEGREE_80: begin
+//						if(game_end) next_state = GAME_DONE;
+//						else if(drop) next_state = DROP;
+//						else next_state = DEGREE_80_WAIT;
+//					 end
+//					 
+//					 DEGREE_80_WAIT: begin
+//						if(game_end) next_state = GAME_DONE;
+//						else if(drop) next_state = DROP;
+//						else if(clockwise) next_state = (frame) ? DEGREE_90 : DEGREE_80_WAIT;
+//						else next_state = (frame) ? DEGREE_60 : DEGREE_80_WAIT;
+//					 end
+//					 
+//					 DEGREE_90: begin
+//						if(game_end) next_state = GAME_DONE;
+//						else if(drop) next_state = DROP;
+//						else next_state = DEGREE_90_WAIT;
+//					 end
+//					 
+//					 DEGREE_90_WAIT: begin
+//						if(game_end) next_state = GAME_DONE;
+//						else if(drop) next_state = DROP;
+//						else if(clockwise) next_state = (frame) ? DEGREE_100 : DEGREE_90_WAIT;
+//						else next_state = (frame) ? DEGREE_80 : DEGREE_90_WAIT;
+//					 end
+//					 
+//					 DEGREE_100: begin
+//						if(game_end) next_state = GAME_DONE;
+//						else if(drop) next_state = DROP;
+//						else next_state = DEGREE_100_WAIT;
+//					 end
+//					 
+//					 DEGREE_100_WAIT: begin
+//						if(game_end) next_state = GAME_DONE;
+//						else if(drop) next_state = DROP;
+//						else if(clockwise) next_state = (frame) ? DEGREE_120 : DEGREE_100_WAIT;
+//						else next_state = (frame) ? DEGREE_90 : DEGREE_100_WAIT;
+//					 end
+//					 
+//					 DEGREE_120: begin
+//						if(game_end) next_state = GAME_DONE;
+//						else if(drop) next_state = DROP;
+//						else next_state = DEGREE_120_WAIT;
+//					 end
+//					 
+//					 DEGREE_120_WAIT: begin
+//						if(game_end) next_state = GAME_DONE;
+//						else if(drop) next_state = DROP;
+//						else if(clockwise) next_state = (frame) ? DEGREE_130 : DEGREE_120_WAIT;
+//						else next_state = (frame) ? DEGREE_100 : DEGREE_120_WAIT;
+//					 end
+//					 
+//					 DEGREE_130: begin
+//						if(game_end) next_state = GAME_DONE;
+//						else if(drop) next_state = DROP;
+//						else next_state = DEGREE_130_WAIT;
+//					 end
+//					 
+//					 DEGREE_130_WAIT: begin
+//						if(game_end) next_state = GAME_DONE;
+//						else if(drop) next_state = DROP;
+//						else if(clockwise) next_state = (frame) ? DEGREE_140 : DEGREE_130_WAIT;
+//						else next_state = (frame) ? DEGREE_120 : DEGREE_130_WAIT;
+//					 end
+//					 
+//					 DEGREE_140: begin
+//						if(game_end) next_state = GAME_DONE;
+//						else if(drop) next_state = DROP;
+//						else next_state = DEGREE_140_WAIT;
+//					 end
+//					 
+//					 DEGREE_140_WAIT: begin
+//						if(game_end) next_state = GAME_DONE;
+//						else if(drop) next_state = DROP;
+//						else if(clockwise) next_state = (frame) ? DEGREE_150 : DEGREE_140_WAIT;
+//						else next_state = (frame) ? DEGREE_130 : DEGREE_140_WAIT;
+//					 end
+//					 
+//					 DEGREE_150: begin
+//						if(game_end) next_state = GAME_DONE;
+//						else if(drop) next_state = DROP;
+//						else next_state = DEGREE_150_WAIT;
+//					 end
+//					 
+//					 DEGREE_150_WAIT: begin
+//						if(game_end) next_state = GAME_DONE;
+//						else if(drop) next_state = DROP;
+//						else next_state = (frame) ? DEGREE_140 : DEGREE_150_WAIT;
+//					 end
+//					 
+//					 DROP: begin
+//						if(game_end) next_state = GAME_DONE;
+//						else next_state = DROP_WAIT;
+//					 end
+//					 
+//					 DROP_WAIT: begin
+//						if(game_end) next_state = GAME_DONE;
+//						else if(drop_end) next_state = DROP_DONE;
+//						else next_state = (frame) ? DROP : DROP_WAIT;
+//					 end
+//					 
+//					 DROP_DONE: begin
+//						if(game_end) next_state = GAME_DONE;
+//						else next_state = DRAG;
+//					 end
+//					 
+//					 DRAG: begin
+//						if(game_end) next_state = GAME_DONE;
+//						else next_state = DRAG_WAIT;
+//					 end
+//					 
+//					 DRAG_WAIT: begin
+//						if(game_end) next_state = GAME_DONE;
+//						else if(drag_end) next_state = DRAG_DONE;
+//						else next_state = (frame) ? DRAG : DRAG_WAIT;
+//					 end
+//					 
+//					 DRAG_DONE: begin
+//						if(game_end) next_state = GAME_DONE;
+//							case(degree_to_fsm) 
+//								8'd30: next_state = DEGREE_30;
+//								8'd40: next_state = DEGREE_40;
+//								8'd50: next_state = DEGREE_50;
+//								8'd60: next_state = DEGREE_60;
+//								8'd80: next_state = DEGREE_80;
+//								8'd90: next_state = DEGREE_90;
+//								8'd100: next_state = DEGREE_100;
+//								8'd120: next_state = DEGREE_120;
+//								8'd130: next_state = DEGREE_130;
+//								8'd140: next_state = DEGREE_140;
+//								8'd150: next_state = DEGREE_150;
+//								default: next_state = DRAW_BACKGROUND;
+//								
+//							endcase
+//					 end
 
 					 
 					 
