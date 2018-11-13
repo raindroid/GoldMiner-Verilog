@@ -4,9 +4,9 @@ vsim test_key_detector
 log {/*}
 
 add wave -color yellow clock resetn 
+add wave -color grey k/next_state k/current_state
 add wave -color green KEY 
 add wave -color red out
-add wave -color grey k/next_state k/current_state
 
 force {clock} 0 0, 1 10ns -r 20ns
 force {resetn} 0 0, 1 20ns
