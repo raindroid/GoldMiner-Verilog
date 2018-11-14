@@ -83,39 +83,7 @@ module game_view_FSM(
 
 					 GAME						 = 6'd11,
 					 
-//					 DEGREE_30				 = 6'd12,
-//					 DEGREE_30_WAIT		 = 6'd13,
-//					 DEGREE_40				 = 6'd14,
-//					 DEGREE_40_WAIT		 = 6'd15,
-//					 DEGREE_50				 = 6'd16,
-//					 DEGREE_50_WAIT		 = 6'd17,
-//					 DEGREE_60				 = 6'd18,
-//					 DEGREE_60_WAIT		 = 6'd19,
-//					 DEGREE_80				 = 6'd20,
-//					 DEGREE_80_WAIT		 = 6'd21,
-//					 DEGREE_90				 = 6'd22,
-//					 DEGREE_90_WAIT		 = 6'd23,
-//					 DEGREE_100				 = 6'd24,
-//					 DEGREE_100_WAIT		 = 6'd25,
-//					 DEGREE_120				 = 6'd26,
-//					 DEGREE_120_WAIT		 = 6'd27,
-//					 DEGREE_130				 = 6'd28,
-//					 DEGREE_130_WAIT		 = 6'd29,
-//					 DEGREE_140				 = 6'd30,
-//					 DEGREE_140_WAIT		 = 6'd31,
-//					 DEGREE_150				 = 6'd32,
-//					 DEGREE_150_WAIT		 = 6'd33,
-//					 DROP						 = 6'd34,
-//					 DROP_WAIT				 = 6'd35,
-//					 DROP_DONE				 = 6'd36,
-//					 DRAG						 = 6'd37,
-//					 DRAG_WAIT				 = 6'd38,
-//					 DRAG_DONE				 = 6'd39,
-					 
 					 GAME_DONE				 = 6'd40;
-					 
-
-                
 					 
     
     // Next state logic aka our state table
