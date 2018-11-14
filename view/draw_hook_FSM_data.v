@@ -58,8 +58,8 @@ module draw_hook(
     end
 
     wire [15: 0] xRad = degree_counter * 314 / 1800;
-    reg [127: 0] tempX, tempY;
-    reg [127: 0] midX, interX;
+    reg [63: 0] tempX, tempY;
+    reg [63: 0] midX, interX;
 
     //Logic
     always @(posedge clock) begin
@@ -79,12 +79,12 @@ module draw_hook(
                 // xRad <= degree_counter * 314 / 1800;
                 
                 tempX = 10000 - 100 * (xRad * xRad) / 2 + xRad*xRad*xRad*xRad / (1*2*3*4);
-                outX <= centerX + RADIUS * (tempX[127] ? ~tempX : tempX) / 10000 * (tempX[127] ? -1 : 1);
-                midX = RADIUS * (tempX[127] ? ~tempX : tempX) / 10000;
-                interX = (tempX[127] ? -1 : 1);
+                outX <= centerX + RADIUS * (tempX[63] ? ~tempX : tempX) / 10000 * (tempX[63] ? -1 : 1);
+                midX = RADIUS * (tempX[63] ? ~tempX : tempX) / 10000;
+                interX = (tempX[63] ? -1 : 1);
                 
                 tempY = 10000 * xRad - 100 * xRad*xRad*xRad / 6 + xRad*xRad*xRad*xRad*xRad / 120;
-                outY <= centerY + RADIUS * tempY / 100000;
+                outY <= centerY + (RADIUS * tempY) / 100000;
 
                 if (degree_counter < degree | degree_counter > (degree + 20))
                     writeEn = 1'b1;
