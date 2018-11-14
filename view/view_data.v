@@ -335,7 +335,7 @@ module view(
 		.resetn(resetn),
 		.enable(enable_draw_hook),
 		.length(50),
-		.degree(70),
+		.degree(15),
 		.outX(X_out_hook),
 		.outY(Y_out_hook),
 		.color(Color_out_hook),
