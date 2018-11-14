@@ -35,7 +35,7 @@ module draw_hook(
 );
 
     reg [4:0] current_state, next_state;
-    reg [8:0] degree_counter;
+    reg [63:0] degree_counter;
 
     assign color = 12'hfff;
     
@@ -57,7 +57,7 @@ module draw_hook(
         endcase      
     end
 
-    wire [15: 0] xRad = degree_counter * 314 / 1800;
+    wire [63: 0] xRad = degree_counter * 64'd314 / 64'd1800;
     reg [63: 0] tempX, tempY;
     reg [63: 0] midX, interX;
 
@@ -78,13 +78,16 @@ module draw_hook(
             S_DRAW_WAIT: begin
                 // xRad <= degree_counter * 314 / 1800;
                 
-                tempX = 10000 - 100 * (xRad * xRad) / 2 + xRad*xRad*xRad*xRad / (1*2*3*4);
-                outX <= centerX + RADIUS * (tempX[63] ? ~tempX : tempX) / 10000 * (tempX[63] ? -1 : 1);
-                midX = RADIUS * (tempX[63] ? ~tempX : tempX) / 10000;
-                interX = (tempX[63] ? -1 : 1);
+                tempX = 64'd100000000 - 64'd1000000 * (xRad * xRad) / 64'd2 + 64'd10000 * xRad*xRad*xRad*xRad / 64'd24 - 
+                    64'd100 * xRad*xRad*xRad*xRad*xRad*xRad / 64'd720 + xRad*xRad*xRad*xRad*xRad*xRad*xRad*xRad / 64'd40320;
+                outX <= centerX + RADIUS * (tempX[63] ? ~tempX : tempX) / 64'd100000000 * (tempX[63] ? -64'd1 : 64'd1);
+                midX = RADIUS * (tempX[63] ? ~tempX : tempX) / 64'd100000000;
+                interX = (tempX[63] ? -64'd1 : 64'd1);
                 
-                tempY = 10000 * xRad - 100 * xRad*xRad*xRad / 6 + xRad*xRad*xRad*xRad*xRad / 120;
-                outY <= centerY + (RADIUS * tempY) / 100000;
+                tempY = 64'd100000000 * xRad - 64'd1000000 * xRad*xRad*xRad / 64'd6 + 64'd10000 * xRad*xRad*xRad*xRad*xRad / 64'd120 -
+                    64'd100 * xRad*xRad*xRad*xRad*xRad*xRad*xRad / 64'd5040 +
+                    xRad*xRad*xRad*xRad*xRad*xRad*xRad*xRad*xRad / 64'd362880;
+                outY <= centerY + RADIUS * (tempY[63] ? ~tempY : tempY) / 64'd1000000000 * (tempY[63] ? -64'd1 : 64'd1);
 
                 if (degree_counter < degree | degree_counter > (degree + 20))
                     writeEn = 1'b1;
