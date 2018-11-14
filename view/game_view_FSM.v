@@ -162,7 +162,6 @@ module game_view_FSM(
 					 GAME: begin
 						next_state = (game_end) ? GAME_DONE : DRAW_BACKGROUND;
 					 end
-
 					 GAME_DONE: begin
 						next_state = (go) ? DRAW_BACKGROUND : GAME_DONE;
 					 

@@ -146,7 +146,6 @@ module gold_miner(
 		.writeEn(writeEn)
 		);
 	
-	
 
 endmodule
 
