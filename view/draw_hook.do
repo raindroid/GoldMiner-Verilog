@@ -6,7 +6,15 @@ log {/*}
 add wave -color yellow clock resetn
 add wave -color grey -hex current_state next_state 
 
-add wave -color green enable centerX centerY degree trigAbsX trigAbsY
-add wave -color green trigSignX trigSignY
-add wave -color red outX outY
-add wave -color blue -hex delay_counter DELAY_TIME
+add wave -color green -dec enable centerX centerY degree
+add wave -color red -dec outX outY color writeEn done
+add wave -color blue -dec degree_counter xRad tempX tempY
+
+force {clock} 0 0, 1 10ns -r 20ns
+force {resetn} 0 0, 1 20ns
+force {enable} 0 0, 1 30ns, 0 50ns
+force {centerX} 100
+force {centerY} 1000
+force {degree} 1011010
+
+run 10000ns

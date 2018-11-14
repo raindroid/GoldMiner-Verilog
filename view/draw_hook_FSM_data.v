@@ -37,7 +37,7 @@ module draw_hook(
     reg [4:0] current_state, next_state;
     reg [8:0] degree_counter;
 
-    assign color = 12'h5f5f5f;
+    assign color = 12'h555;
     
     localparam  S_START     =5'd0,  //Wait for enable signal
                 S_DRAW      =5'd1,  //Prepare for drawing
@@ -57,8 +57,8 @@ module draw_hook(
         endcase      
     end
 
-    reg [15: 0] xRad;
-    reg [31: 0] temp;
+    wire [15: 0] xRad = degree_counter * 314 / 1800;
+    reg [31: 0] tempX, tempY;
 
     //Logic
     always @(posedge clock) begin
@@ -75,20 +75,20 @@ module draw_hook(
                 degree_counter <= 0;
             end
             S_DRAW_WAIT: begin
-                xRad <= degree_counter * 314 / 1800;
+                // xRad <= degree_counter * 314 / 1800;
                 
-                temp <= 10000 - 100 * (xRad * xRad) / 2 + xRad*xRad*xRad*xRad / (1*2*3*4);
-                outX <= centerX + temp / 10000;
+                tempX <= 10000 - 100 * (xRad * xRad) / 2 + xRad*xRad*xRad*xRad / (1*2*3*4);
+                outX <= centerX + RADIUS * tempX / 10000;
                 
-                temp <= 10000 * xRad - 100 * xRad*xRad*xRad / 6 + xRad*xRad*xRad*xRad*xRad / 120;
-                outY <= centerY + temp / 100000;
+                tempY <= 10000 * xRad - 100 * xRad*xRad*xRad / 6 + xRad*xRad*xRad*xRad*xRad / 120;
+                outY <= centerY + RADIUS * tempY / 100000;
 
                 if (degree_counter < degree + 30 | degree_counter > degree)
                     writeEn = 1'b1;
                 else    
                     writeEn = 1'b0;
 
-                degree_counter <= degree_counter + 2;
+                degree_counter <= degree_counter + 1;
             end
             S_DRAW_DONE: begin
                 done = 1'b1;
