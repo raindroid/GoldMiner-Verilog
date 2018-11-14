@@ -204,6 +204,9 @@ module game_view_FSM(
 			DRAW_HOOK: begin
 			  	enable_draw_hook = 1'b1;
 			end
+			DRAW_HOOK_WAIT: begin
+			  	enable_draw_hook = 1'b1;
+			end
 			GAME: begin
 				resetn_gold_stone = 1'b0;
 				end
