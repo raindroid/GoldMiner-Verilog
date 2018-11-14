@@ -51,7 +51,7 @@ R9
 R10
 ndraw_gold_@f@s@m
 vdraw_hook
-!s110 1542212180
+!s110 1542221005
 !i10b 1
 !s100 zQBB;nQS8bmH<`;c:o`NA1
 IJ`_i``AMQmKo5XOd6n<3O1
@@ -65,7 +65,7 @@ R6
 r1
 !s85 0
 31
-!s108 1542212180.000000
+!s108 1542221005.000000
 !s107 draw_hook_FSM_data.v|
 !s90 -reportprogress|300|draw_hook_FSM_data.v|
 !i113 1
@@ -91,3 +91,23 @@ R9
 !i113 1
 R10
 ndraw_stone_@f@s@m
+vrate_divider
+!s110 1542220524
+!i10b 1
+!s100 NOU4WeVRKT>Mo?caIM^OJ1
+INV?5C6fOe92Ln_>YDbRT71
+R2
+R0
+w1542165760
+8view_data.v
+Fview_data.v
+L0 347
+R6
+r1
+!s85 0
+31
+!s108 1542220524.000000
+!s107 view_data.v|
+!s90 -reportprogress|300|view_data.v|
+!i113 1
+R10

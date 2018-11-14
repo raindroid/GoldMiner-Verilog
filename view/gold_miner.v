@@ -9,7 +9,8 @@ module gold_miner(
 		VGA_SYNC_N,						//	VGA SYNC
 		VGA_R,   						//	VGA Red[9:0]
 		VGA_G,	 						//	VGA Green[9:0]
-		VGA_B
+		VGA_B,
+		LEDR
 		);
 		
 		input [9:0]SW;
@@ -24,6 +25,7 @@ module gold_miner(
 		output	[7:0]	VGA_R;   				//	VGA Red[7:0] Changed from 10 to 8-bit DAC
 		output	[7:0]	VGA_G;	 				//	VGA Green[7:0]
 		output	[7:0]	VGA_B;   				//	VGA Blue[7:0]
+		output [9:0] 	LEDR;
 		
 		wire resetn;
 		assign resetn = KEY[0];
@@ -49,32 +51,35 @@ module gold_miner(
 		.VGA_SYNC_N(VGA_SYNC_N),						//	VGA SYNC
 		.VGA_R(VGA_R),   						//	VGA Red[9:0]
 		.VGA_G(VGA_G),	 						//	VGA Green[9:0]
-		.VGA_B(VGA_B)   						//	VGA Blue[9:0]
+		.VGA_B(VGA_B),   						//	VGA Blue[9:0]
+		.LEDR(LEDR)
+
 	);
 	endmodule
 	
 	
-	module fill
-	(
-		CLOCK_50,						//	On Board 50 MHz
-		// Your inputs and outputs here
-		plot, 
-		resetn,
-		background,
-		go,
-		position_in,
-		SW,
-		KEY,							// On Board Keys
-		// The ports below are for the VGA output.  Do not change.
-		VGA_CLK,   						//	VGA Clock
-		VGA_HS,							//	VGA H_SYNC
-		VGA_VS,							//	VGA V_SYNC
-		VGA_BLANK_N,						//	VGA BLANK
-		VGA_SYNC_N,						//	VGA SYNC
-		VGA_R,   						//	VGA Red[9:0]
-		VGA_G,	 						//	VGA Green[9:0]
-		VGA_B   						//	VGA Blue[9:0]
-	);
+module fill
+(
+	CLOCK_50,						//	On Board 50 MHz
+	// Your inputs and outputs here
+	plot, 
+	resetn,
+	background,
+	go,
+	position_in,
+	SW,
+	KEY,							// On Board Keys
+	// The ports below are for the VGA output.  Do not change.
+	VGA_CLK,   						//	VGA Clock
+	VGA_HS,							//	VGA H_SYNC
+	VGA_VS,							//	VGA V_SYNC
+	VGA_BLANK_N,						//	VGA BLANK
+	VGA_SYNC_N,						//	VGA SYNC
+	VGA_R,   						//	VGA Red[9:0]
+	VGA_G,	 						//	VGA Green[9:0]
+	VGA_B,   						//	VGA Blue[9:0]
+	LEDR
+);
 
 	input			CLOCK_50;				//	50 MHz
 	input	[3:0]	KEY;		
@@ -94,6 +99,7 @@ module gold_miner(
 	output	[7:0]	VGA_R;   				//	VGA Red[7:0] Changed from 10 to 8-bit DAC
 	output	[7:0]	VGA_G;	 				//	VGA Green[7:0]
 	output	[7:0]	VGA_B;   				//	VGA Blue[7:0]
+	output [9:0] 	LEDR;
 	
 	
 	// Create the colour, x, y and writeEn wires that are inputs to the controller.
@@ -143,7 +149,8 @@ module gold_miner(
 		.X_out(x),
 		.Y_out(y),
 		.Color_out(colour),
-		.writeEn(writeEn)
+		.writeEn(writeEn),
+		.LEDR(LEDR)
 		);
 	
 

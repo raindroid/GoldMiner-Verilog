@@ -9,7 +9,8 @@ module view(
 		X_out,
 		Y_out,
 		Color_out,
-		writeEn
+		writeEn,
+		LEDR
 		
 		);
 	input clk, resetn;
@@ -19,6 +20,8 @@ module view(
 	output reg[7:0]Y_out;
 	output reg[11:0]Color_out;
 	output reg writeEn;
+
+	output [9:0] 	LEDR;
 	
 	wire [7:0]random;
 	
@@ -52,10 +55,10 @@ module view(
 			writeEn <= writeEn_background;
 		end
 		else if (enable_draw_hook) begin
-			X_out <= X_out_hook;
-			Y_out <= Y_out_hook;
-			Color_out <= Color_out_hook;
-			writeEn <= writeEn_hook;
+			X_out = X_out_hook;
+			Y_out = Y_out_hook;
+			Color_out = Color_out_hook;
+			writeEn = writeEn_hook;
 		end
 	end
 	
@@ -331,14 +334,16 @@ module view(
 		.clock(clk), 
 		.resetn(resetn),
 		.enable(enable_draw_hook),
-		.centerX(9'd180),
-		.centerY(8'd120),
-		.degree(9'd90),
+		.centerX(9'd160),
+		.centerY(8'd50),
+		.degree(90),
 		.outX(X_out_hook),
 		.outY(Y_out_hook),
 		.color(Color_out_hook),
 		.writeEn(writeEn_hook),
-		.done(draw_hook_done));
+		.done(draw_hook_done),
+		.LEDR(LEDR)
+	);
 
 endmodule
 

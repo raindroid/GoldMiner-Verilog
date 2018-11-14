@@ -156,7 +156,7 @@ module game_view_FSM(
 					end
 					
 					DRAW_HOOK_WAIT: begin
-					  	next_state = (draw_hook_done) ? DRAW_HOOK_WAIT : GAME;
+					  	next_state = (draw_hook_done) ? GAME : DRAW_HOOK_WAIT;
 					end
 					 
 					 GAME: begin

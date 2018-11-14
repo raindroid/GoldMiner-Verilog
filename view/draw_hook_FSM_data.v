@@ -31,20 +31,21 @@ module draw_hook(
     output reg [7:0] outY,
     output [11:0] color,
     output reg writeEn,
-    output reg done
+    output reg done,
+    output reg [9:0] LEDR
 );
 
     reg [4:0] current_state, next_state;
     reg [63:0] degree_counter;
 
-    assign color = 12'hfff;
+    assign color = 12'b1011_1011_1011;
     
     localparam  S_START     =5'd0,  //Wait for enable signal
                 S_DRAW      =5'd1,  //Prepare for drawing
                 S_DRAW_WAIT =5'd2,  //Drawing
                 S_DRAW_DONE =5'd3;  //Finish and send done sig
 
-    localparam RADIUS = 6'd18;
+    localparam RADIUS = 6'd4;
 
     always @(*) begin
         case (current_state)
@@ -74,10 +75,12 @@ module draw_hook(
                 //pass
             end
             S_DRAW: begin
-                writeEn = 1;
+//                writeEn = 0;
                 degree_counter <= 0;
+            LEDR = 9'b0;
             end
             S_DRAW_WAIT: begin
+                LEDR[2] = 1'b1;
                 case (degree_counter)
                     0: begin
                         cos	= 9'd100;
@@ -518,15 +521,18 @@ module draw_hook(
                 // tempX = 64'd100000000 - 64'd1000000 * (xRad * xRad) / 64'd2 + 64'd10000 * xRad*xRad*xRad*xRad / 64'd24 - 
 //                    64'd100 * xRad*xRad*xRad*xRad*xRad*xRad / 64'd720 + xRad*xRad*xRad*xRad*xRad*xRad*xRad*xRad / 64'd40320;
                 
-                tempX = RADIUS * cos / 9'd100;
-                outX = centerX + tempX[8:0] * (signCos ? 9'd1 : -9'd1);
+                 tempX = RADIUS * cos / 9'd100;
+                 outX = centerX + tempX[8:0] * (signCos ? 9'd1 : -9'd1);
                 
                 // tempY = 64'd100000000 * xRad - 64'd1000000 * xRad*xRad*xRad / 64'd6 + 64'd10000 * xRad*xRad*xRad*xRad*xRad / 64'd120 -
                     // 64'd100 * xRad*xRad*xRad*xRad*xRad*xRad*xRad / 64'd5040 +
                     // xRad*xRad*xRad*xRad*xRad*xRad*xRad*xRad*xRad / 64'd362880;
                     
-                tempY = RADIUS * sin / 9'd100;
-                outY = centerY + (signSin ? tempY[7:0] : -tempY[7:0]);
+                 tempY = RADIUS * sin / 9'd100;
+                 outY = centerY + (signSin ? tempY[7:0] : -tempY[7:0]);
+
+                //outX = centerX;
+                //outY = centerY;
 
                 if (degree_counter < degree | degree_counter > (degree + 30))
                     writeEn = 1'b1;
@@ -543,8 +549,9 @@ module draw_hook(
 
     //state changes
     always @(posedge clock) begin
-        if (!resetn)
+        if (!resetn) begin
             current_state <= S_START;
+			end
         else
             current_state <= next_state;
     end
