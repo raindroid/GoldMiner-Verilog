@@ -2,12 +2,12 @@
 //To access data (signX[degree/2] ? -1 : 1) * absX[degree / 2 * 10 + 9 : degree / 2 * 10] / 100
 module trigonometry(
     input clock, enable,
-    output [1799: 0] absX, absY,
-    output [179:0] signX, signY
+    inout [1799: 0] absX, absY,
+    inout [179:0] signX, signY
 );
 
-reg [1799: 0] rx, ry;
-reg [180:0] rsx, rsy;
+integer [1799: 0] rx, ry;
+integer [180:0] rsx, rsy;
 assign absX = rx;
 assign absY = ry;
 assign signX = rsx;

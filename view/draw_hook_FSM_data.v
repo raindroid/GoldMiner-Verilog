@@ -25,8 +25,7 @@ module draw_hook(
     input [8:0] centerX,
     input [9:0] centerY,
     input [8:0] degree,
-    input [1799: 0] trigAbsX, trigAbsY,
-    input [179:0] trigSignX, trigSignY,
+    
 
     output reg [8:0] outX,
     output reg [7:0] outY,
@@ -34,6 +33,18 @@ module draw_hook(
     output reg writeEn,
     output reg done
 );
+
+	wire [1799: 0] trigAbsX, trigAbsY;
+    wire [179:0] trigSignX, trigSignY;
+
+    degree de(
+        .clock(clock), 
+        .enable(enable),
+        .absX(trigAbsX), 
+        .absY(trigAbsY),
+        .signX(trigSignX), 
+        .signY(trigSignY)
+    )
 
     reg [4:0] current_state, next_state;
     reg [8:0] degree_counter;
@@ -59,6 +70,8 @@ module draw_hook(
     end
 
     reg [31:0] tempX, tempY;
+    reg [9:0] lsbAbsX, lsbAbsY;
+    reg lsbSignX, lsbSignY;
 
     //Logic
     always @(posedge clock) begin
@@ -75,12 +88,29 @@ module draw_hook(
                 degree_counter <= 0;
             end
             S_DRAW_WAIT: begin
-                tempX <= RADIUS * (trigSignX[degree/2] ? -1 : 1) * 
-                    trigAbsX[degree_counter / 2 * 10 + 9 : degree_counter / 2 * 10] / 100;
+                lsbAbsX <= trigAbsX[9:0];
+                lsbSignX <= trigSignX[0];
+                trigAbsX <= trigAbsX >> 10;
+                trigAbsX[1799:1790] <= lsbAbsX;
+                trigSignX <= trigSignX >> 1;
+                trigSignX[179] <= lsbSignX;
+                tempX <= RADIUS * (lsbSignX ? -1 : 1) * lsbAbsX / 100;
                 outX <= centerX[8:0] + tempX;
-                tempY <= RADIUS * (trigSignY[degree/2] ? -1 : 1) * 
-                    trigAbsY[degree_counter / 2 * 10 + 9 : degree_counter / 2 * 10] / 100;
+
+                lsbAbsY <= trigAbsY[9:0];
+                lsbSignY <= trigSignY[0];
+                trigAbsY <= trigAbsY >> 10;
+                trigAbsY[1799:1790] <= lsbAbsY;
+                trigSignY <= trigSignY >> 1;
+                trigSignY[179] <= lsbSignY;
+                tempY <= RADIUS * (lsbSignY ? -1 : 1) * lsbAbsY / 100;
                 outY <= centerY[7:0] + tempY;
+
+                if (degree_counter < degree + 30 | degree_counter > degree)
+                    writeEn = 1'b1;
+                else    
+                    writeEn = 1'b0;
+
                 degree_counter <= degree_counter + 2;
             end
             S_DRAW_DONE: begin

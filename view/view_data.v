@@ -323,7 +323,7 @@ module view(
 	wire [179: 0] trigSignX, trigSignY;
 	trigonometry trig(
 		.clock(clk), 
-		.enable(!KEY[0]),
+		.enable(!resetn),
  		.absX(trigAbsX), 
 		.absY(trigAbsY),
  		.signX(trigSignX), 
@@ -344,10 +344,6 @@ module view(
 		.centerX(9'd180),
 		.centerY(8'd120),
 		.degree(9'd90),
-		.trigAbsX(trigAbsX), 
-		.trigAbsY(trigAbsY),
-		.trigSignX(trigSignX), 
-		.trigSignY(trigSignY),
 		.outX(X_out_hook),
 		.outY(Y_out_hook),
 		.color(Color_out_hook),
