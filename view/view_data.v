@@ -319,16 +319,6 @@ module view(
 	.clock(clk),
 	.Enable(frame));
 
-	wire [1799: 0] trigAbsX, trigAbsY;
-	wire [179: 0] trigSignX, trigSignY;
-	trigonometry trig(
-		.clock(clk), 
-		.enable(!resetn),
- 		.absX(trigAbsX), 
-		.absY(trigAbsY),
- 		.signX(trigSignX), 
-		.signY(trigSignY)
-	);
 
 	wire 	[8:0] X_out_hook;
 	wire	[7:0] Y_out_hook;

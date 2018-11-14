@@ -34,18 +34,6 @@ module draw_hook(
     output reg done
 );
 
-	wire [1799: 0] trigAbsX, trigAbsY;
-    wire [179:0] trigSignX, trigSignY;
-
-    degree de(
-        .clock(clock), 
-        .enable(enable),
-        .absX(trigAbsX), 
-        .absY(trigAbsY),
-        .signX(trigSignX), 
-        .signY(trigSignY)
-    )
-
     reg [4:0] current_state, next_state;
     reg [8:0] degree_counter;
 
@@ -69,9 +57,8 @@ module draw_hook(
         endcase      
     end
 
-    reg [31:0] tempX, tempY;
-    reg [9:0] lsbAbsX, lsbAbsY;
-    reg lsbSignX, lsbSignY;
+    reg [15: 0] xRad;
+    reg [31: 0] temp;
 
     //Logic
     always @(posedge clock) begin
@@ -88,23 +75,13 @@ module draw_hook(
                 degree_counter <= 0;
             end
             S_DRAW_WAIT: begin
-                lsbAbsX <= trigAbsX[9:0];
-                lsbSignX <= trigSignX[0];
-                trigAbsX <= trigAbsX >> 10;
-                trigAbsX[1799:1790] <= lsbAbsX;
-                trigSignX <= trigSignX >> 1;
-                trigSignX[179] <= lsbSignX;
-                tempX <= RADIUS * (lsbSignX ? -1 : 1) * lsbAbsX / 100;
-                outX <= centerX[8:0] + tempX;
-
-                lsbAbsY <= trigAbsY[9:0];
-                lsbSignY <= trigSignY[0];
-                trigAbsY <= trigAbsY >> 10;
-                trigAbsY[1799:1790] <= lsbAbsY;
-                trigSignY <= trigSignY >> 1;
-                trigSignY[179] <= lsbSignY;
-                tempY <= RADIUS * (lsbSignY ? -1 : 1) * lsbAbsY / 100;
-                outY <= centerY[7:0] + tempY;
+                xRad <= degree_counter * 314 / 1800;
+                
+                temp <= 10000 - 100 * (xRad * xRad) / 2 + xRad*xRad*xRad*xRad / (1*2*3*4);
+                outX <= centerX + temp / 10000;
+                
+                temp <= 10000 * xRad - 100 * xRad*xRad*xRad / 6 + xRad*xRad*xRad*xRad*xRad / 120;
+                outY <= centerY + temp / 100000;
 
                 if (degree_counter < degree + 30 | degree_counter > degree)
                     writeEn = 1'b1;
