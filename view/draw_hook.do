@@ -19,4 +19,4 @@ force {enable} 0 0, 1 30ns, 0 50ns
 force {length} 110010
 force {degree} 1111
 
-run 100000ns
+run 24000ns

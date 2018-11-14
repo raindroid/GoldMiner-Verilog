@@ -52,10 +52,10 @@ module draw_hook(
                 S_DRAW_HOOK =5'd2,  //Draw hook
                 S_DRAW_DONE =5'd3;  //Finish and send done sig
 
-    localparam RADIUS = 6'd20;
-    localparam MAX_C = 1000;
-    localparam START_X = 63'd160,
-                START_Y = 63'd45;
+    localparam RADIUS = 64'd20;
+    localparam MAX_C = 64'd1000;
+    localparam START_X = 64'd160,
+                START_Y = 64'd45;
     reg [63:0]rope_len;
 
     trig counter_trig(
@@ -83,7 +83,7 @@ module draw_hook(
             S_DRAW:         next_state = S_DRAW_ROPE;
             S_DRAW_ROPE:    next_state = (length_counter == MAX_C) ?
                                         S_DRAW_HOOK : S_DRAW_ROPE;
-            S_DRAW_HOOK:    next_state = (degree_counter == 10'd360) ?
+            S_DRAW_HOOK:    next_state = (degree_counter == 64'd360) ?
                                         S_DRAW_DONE : S_DRAW_HOOK;
             S_DRAW_DONE:    next_state = S_START;
           default: next_state = S_START;
@@ -105,11 +105,11 @@ module draw_hook(
             end
             S_DRAW: begin
 //                writeEn = 0;
-                degree_counter <= 0;
-                length_counter <= 0;
+                degree_counter <= 64'd0;
+                length_counter <= 64'd0;
                 
-                centerX = START_X + length * deg_cos / 9'd100 * (deg_signCos ? 9'd1 : -9'd1);
-                centerY = START_Y + length * deg_sin / 9'd100;
+                centerX = START_X + length * deg_cos / 64'd100 * (deg_signCos ? 64'd1 : -64'd1);
+                centerY = START_Y + length * deg_sin / 64'd100;
                 LEDR = 9'b0;
             end
             S_DRAW_ROPE: begin
@@ -118,13 +118,13 @@ module draw_hook(
                 rope_len = length;
 
                 
-                 tempX = length_counter * deg_cos * rope_len / MAX_C;
-                 longX = START_X + tempX / 64'd100 * (deg_signCos ? 64'd1 : -64'd1);
+                 tempX = (centerX - START_X) * length_counter / MAX_C;
+                 longX = START_X + tempX;
                  outX = longX [8:0];
 
                  
-                 tempY = length_counter * deg_sin * rope_len / MAX_C;
-                 longY = START_Y + (deg_signSin ? tempY/ 64'd100 : -(tempY/ 64'd100));
+                 tempY = (centerY - START_Y) * length_counter / MAX_C;
+                 longY = START_Y + tempY;
                  outY = longY [7:0];
 
                  writeEn = 1'b1;
