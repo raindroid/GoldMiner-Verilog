@@ -38,7 +38,7 @@ module draw_hook(
     reg [4:0] current_state, next_state;
     reg [63:0] degree_counter, length_counter;
 
-    wire [63: 0] xRad = degree_counter * 64'd314 / 64'd1800;
+    // wire [63: 0] xRad = degree_counter * 64'd314 / 64'd1800;
     reg [63: 0] tempX, tempY;
     reg [63: 0] midX, interX;
     wire [63: 0] cos, sin;
@@ -53,7 +53,7 @@ module draw_hook(
                 S_DRAW_DONE =5'd3;  //Finish and send done sig
 
     localparam RADIUS = 64'd20;
-    localparam MAX_C = 64'd1000;
+    localparam MAX_C = 64'd256;
     localparam START_X = 64'd160,
                 START_Y = 64'd45;
     reg [63:0]rope_len;
@@ -118,12 +118,12 @@ module draw_hook(
                 rope_len = length;
 
                 
-                 tempX = (centerX - START_X) * length_counter / MAX_C;
+                 tempX = (centerX - START_X) * length_counter >> 8;
                  longX = START_X + tempX;
                  outX = longX [8:0];
 
                  
-                 tempY = (centerY - START_Y) * length_counter / MAX_C;
+                 tempY = (centerY - START_Y) * length_counter >> 8;
                  longY = START_Y + tempY;
                  outY = longY [7:0];
 
