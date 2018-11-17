@@ -2,6 +2,7 @@
 // Design Name : lfsr
 // File Name   : lfsr.v
 // Function    : Linear feedback shift register
+// originally posted at http://www.asic-world.com/examples/verilog/lfsr.html
 // modified by Yifan Cui
 //-----------------------------------------------------
 module lfsr (out, clk, rst);

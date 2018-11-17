@@ -26,8 +26,8 @@ module game_info(
 	
 	input [2:0]score_to_add;
 	
-	output reg [5:0]time_remain;
-	output reg [13:0]score;
+	output reg [7:0]time_remain;
+	output reg [7:0]score;
 	
 	output reg time_up;
 	output reg move_enable;
@@ -37,7 +37,7 @@ module game_info(
 	reg move_counter;
 	
 	
-	localparam time_remaining = 6'd60;
+	localparam time_remaining = 7'd60;
 	localparam frame_count = 3'd5;
 	
 	
