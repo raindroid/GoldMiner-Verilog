@@ -315,14 +315,6 @@ module view(
 	.draw_background_done(draw_background_done)
 	);
 	
-	wire frame;
-	
-	rate_divider r0(
-	.resetn(resetn), 
-	.clock(clk),
-	.Enable(frame));
-
-
 	wire 	[8:0] X_out_hook;
 	wire	[7:0] Y_out_hook;
 	wire	[11:0] Color_out_hook;
@@ -347,23 +339,6 @@ module view(
 endmodule
 
 
-//rate divider per frame
-module rate_divider(resetn, clock, Enable);
-	input clock;
-	input resetn;
-	output Enable;
-	parameter D = 23'd8333333;
-	reg [22:0]RateDivider;
-	always@(negedge resetn ,posedge clock)begin
-		if(resetn == 0)
-			RateDivider <= D;
-		else if(RateDivider == 0)
-			RateDivider <= D;
-		else
-			RateDivider <= RateDivider - 1'b1;
-	end
-	assign Enable = (RateDivider == 1'b0)?1:0;
-endmodule
 
 
 

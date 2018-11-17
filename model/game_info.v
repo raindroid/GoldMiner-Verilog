@@ -1,4 +1,6 @@
 //this module include score and time remain data
+// Input: clk, resetn, timer_enable, score_score_adder, score_to_add
+// Output: score_to_add, time_remain, score, move_enable, time_up
 //designed by Yifan Cui
 
 module game_info(
@@ -13,6 +15,7 @@ module game_info(
 	time_remain,
 	score,
 	
+	move_enable,
 	time_up
 	
 	);
@@ -24,15 +27,18 @@ module game_info(
 	input [2:0]score_to_add;
 	
 	output reg [5:0]time_remain;
-	output reg [8:0]score;
+	output reg [13:0]score;
 	
 	output reg time_up;
+	output reg move_enable;
 	
 	
 	wire time_counter_enable;
+	reg move_counter;
 	
 	
-	parameter time_remaining = 6'd60;
+	localparam time_remaining = 6'd60;
+	localparam frame_count = 3'd5;
 	
 	
 	rate_divider(
@@ -51,33 +57,34 @@ module game_info(
 	
 	//timer
 	always@(posedge clk)begin
-		if(!resetn) time_remain <= time_remaining;
-		else if(timer_enable & time_counter_enable)
-			time_remain = time_remain - 1'b1;
+		if(!resetn)begin
+			time_remain <= time_remaining;
+			move_counter <= 1'b0;
+		end
+		else if(timer_enable & time_counter_enable)begin
+			move_counter <= move_counter + 1'b1;
+			time_remain <= time_remain - 1'b1;
+			end
 	end
-	
 	assign time_up = (time_remain == 0)?1:0;
-	
-	
-	
-	
+	assign move_enable = (move_counter == frame_count) 1 : 0;
 endmodule
 
 
-//rate divider
+//rate divider per frame
 module rate_divider(resetn, clock, Enable);
 	input clock;
 	input resetn;
 	output Enable;
-	parameter D = 26'd49999999;
-	reg [25:0]RateDivider;
+	parameter D = 23'd8333333;
+	reg [22:0]RateDivider;
 	always@(negedge resetn ,posedge clock)begin
 		if(resetn == 0)
 			RateDivider <= D;
 		else if(RateDivider == 0)
 			RateDivider <= D;
 		else
-			RateDivider <= RateDivider - 1;
+			RateDivider <= RateDivider - 1'b1;
 	end
-	assign Enable = (RateDivider == 0)?1:0;
+	assign Enable = (RateDivider == 1'b0)?1:0;
 endmodule
