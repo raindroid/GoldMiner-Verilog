@@ -1,4 +1,4 @@
-<p style="color: blue;font-size:80%">Version 0.0.1
+<p style="color: blue;font-size:80%">Version 0.0.2
 
 # Gold Miner
 - Main
@@ -15,6 +15,8 @@
         - data_reset_DONE
     - output:
         - mode_DATA
+        (DNE(00) /1-player(01) /2-player-co(10) /2-player-op(11) game
+                MSB indicates whether it is 1 or 2 player)
 - InputName
   (有点难搞，以后再说，现在跳过)
 - Game
