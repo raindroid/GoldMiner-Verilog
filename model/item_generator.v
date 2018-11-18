@@ -122,11 +122,11 @@
     integer k;
     reg isCovered;
     reg isMoving;
-    reg [31:0] usedData [31:0];
+    reg [63:0] usedData [63:0];
 
     wire [13:0] testX, testY;
     reg [31:0] tempData, tempOld;
-    always @(posedge clock, negedge generateEn) begin
+    always @(posedge clock) begin
         if (!generateEn) begin
             counter = 0;
         end
@@ -134,8 +134,7 @@
         if (!resetn) begin
             data = 0;
             counter = 0;
-            isMoving = 0;
-            
+            isMoving = 0;            
         end
         else if (generateEn & counter < quantity) begin
             isCovered <= 0;
@@ -143,6 +142,15 @@
             for (index = 0; index < counter; index = index + 1) begin
 
                 tempOld = usedData[index];
+                // tempOld = (usedData[index][31] << 31) + 
+                //         (usedData[index][30] << 30) + 
+                //         (usedData[index][29] << 29) + 
+                //         (usedData[index][28] << 28) + 
+                //         (usedData[index][27] << 27) +
+                //         (usedData[index][18] << 18) + 
+                //         (usedData[index][17] << 17) + 
+                //         (usedData[index][16] << 16) + 
+                //         (usedData[index][15] << 15);
                 if (tempOld[31:0] == tempData[31:0]) isCovered <= 1;
                 
             end
