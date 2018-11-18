@@ -4,6 +4,7 @@
  * INPUT:
  *      clock
  *      resetn: syn low active reset
+ *      writeEn
  *      buy
  *      used //avoid duplication of name `use`
  *
@@ -20,7 +21,7 @@
  **/
 
  module Bomb(
-    input clock, resetn,
+    input clock, resetn, writeEn,
     input buy, used,
     output reg [7:0] quantity
  );
@@ -29,10 +30,10 @@
         if (!resetn) begin
             quantity = 0;
         end
-        else if (buy) begin
+        else if (writeEn & buy) begin
             quantity = quantity + 1;
         end
-        else if (used) begin
+        else if (writeEn & used) begin
             quantity = quantity - 1;
         end
     end

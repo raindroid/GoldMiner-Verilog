@@ -2,9 +2,9 @@
  * This is the module for generating new item list
  * List Format:
  *      At most 30 items in the list
- *      0  - 9  : golds
- *      10 - 19 ：stones
- *      20 - 29 : diamonds 
+ *      0  - 7  : golds
+ *      8 -  15：stones
+ *      16 - : diamonds 
  *      For item n: 
             d[n * 32 + 31 : n * 32 + 19] >> 4 == left  when drawing
             d[n * 32 + 18 : n * 32 + 7] >> 4 == top 
@@ -17,6 +17,19 @@
  *      resetn: syn low active reset
  *      quantity
  *      item
+
+        moveEn,
+        moveIndex,
+        moveX,      //please multiple by << 4
+        moveY,   
+        moveEn2,
+        moveIndex2,
+        moveX2,      //please multiple by << 4
+        moveY2,   
+        moveState2,
+        visible2,
+        moveState,
+        visible,
  *
  * PARAMETER:
  *
@@ -56,15 +69,23 @@
      clock,
      resetn, 
      generateEn, 
-    //  quantity, 
      size,
      data,
      counter,
+     quantity,
 
     moveEn,
     moveIndex,
     moveX,      //please multiple by << 4
     moveY,   
+
+    moveEn2,
+    moveIndex2,
+    moveX2,      //please multiple by << 4
+    moveY2,   
+
+    moveState2,
+    visible2,
     moveState,
     visible,
  );
@@ -78,7 +99,13 @@
     input [10:0]moveX;      //please multiple by << 4
     input [10:0]moveY;   
     input moveState, visible;
+    input [5:0] quantity;
     output reg [5:0] counter;
+    input moveEn2;
+    input [5:0]moveIndex2;
+    input [10:0]moveX2;      //please multiple by << 4
+    input [10:0]moveY2;   
+    input moveState2, visible2;
 
     reg regO[31:0];
     wire [4:0]x;
@@ -96,7 +123,7 @@
     reg isMoving;
     reg [31:0] usedData [31:0];
 
-    reg [13:0] testX, testY;
+    wire [13:0] testX, testY;
     reg [31:0] tempData, tempOld;
     always @(posedge clock, negedge generateEn) begin
         if (!generateEn) begin
@@ -109,10 +136,8 @@
             isMoving = 0;
             
         end
-        else if (generateEn) begin
+        else if (generateEn & counter < quantity) begin
             isCovered <= 0;
-            testX <= x % 20 << 8;
-            testY <= y % 10 << 8;
             tempData <=  ((x%20) << 27) + ((y%10) << 15);
             for (index = 0; index < counter; index = index + 1) begin
 
@@ -126,38 +151,97 @@
                 counter <= counter + 1;
             end
         end
-        else if (moveEn) begin
-            isMoving = 1;
-            data[moveIndex * 32 + 1] <= visible;
-            data[moveIndex * 32] <= moveState;
-            data <= data + (moveX[10]? -1: 1) * ((moveX[9:0]) << (moveIndex * 32 + 19)) + 
-                (moveY[10]? -1: 1) * ((moveY[9:0]) << (moveIndex * 32 + 7));
-        end 
+        else begin 
+            if (moveEn & moveEn2) begin
+                isMoving = 1;
+                isMoving = 1;
+                data <= data + (moveX[10]? -1: 1) * ((moveX[9:0]) << (moveIndex * 32 + 19)) + 
+                    (moveY[10]? -1: 1) * ((moveY[9:0]) << (moveIndex * 32 + 7)) +
+                    (moveX2[10]? -1: 1) * ((moveX2[9:0]) << (moveIndex2 * 32 + 19)) + 
+                    (moveY2[10]? -1: 1) * ((moveY2[9:0]) << (moveIndex2 * 32 + 7));
+                data[moveIndex2 * 32 + 1] <= visible2;
+                data[moveIndex2 * 32] <= moveState2;
+                data[moveIndex * 32 + 1] <= visible;
+                data[moveIndex * 32] <= moveState;
+            end 
+            else if (moveEn) begin
+                isMoving = 1;
+                data <= data + (moveX[10]? -1: 1) * ((moveX[9:0]) << (moveIndex * 32 + 19)) + 
+                    (moveY[10]? -1: 1) * ((moveY[9:0]) << (moveIndex * 32 + 7));
+                data[moveIndex * 32 + 1] <= visible;
+                data[moveIndex * 32] <= moveState;
+            end
+            else if (moveEn2) begin
+                isMoving = 1;
+                data <= data + (moveX2[10]? -1: 1) * ((moveX2[9:0]) << (moveIndex2 * 32 + 19)) + 
+                    (moveY2[10]? -1: 1) * ((moveY2[9:0]) << (moveIndex2 * 32 + 7));
+                data[moveIndex2 * 32 + 1] <= visible2;
+                data[moveIndex2 * 32] <= moveState2;
+            end
+        end
     end
-    assign tempX = (data[moveIndex * 26 + 31] << 12) + 
-            (data[moveIndex * 26 + 30] << 11) + 
-            (data[moveIndex * 26 + 29] << 10) + 
-            (data[moveIndex * 26 + 28] << 9) + 
-            (data[moveIndex * 26 + 27] << 8) + 
-            (data[moveIndex * 26 + 26] << 7) + 
-            (data[moveIndex * 26 + 25] << 6) + 
-            (data[moveIndex * 26 + 24] << 5) + 
-            (data[moveIndex * 26 + 23] << 4) + 
-            (data[moveIndex * 26 + 22] << 3) + 
-            (data[moveIndex * 26 + 21] << 2) + 
-            (data[moveIndex * 26 + 20] << 1) + 
-            (data[moveIndex * 26 + 19] << 0);
+    assign tempX = (data[moveIndex * 32 + 31] << 12) + 
+            (data[moveIndex * 32 + 30] << 11) + 
+            (data[moveIndex * 32 + 29] << 10) + 
+            (data[moveIndex * 32 + 28] << 9) + 
+            (data[moveIndex * 32 + 27] << 8) + 
+            (data[moveIndex * 32 + 26] << 7) + 
+            (data[moveIndex * 32 + 25] << 6) + 
+            (data[moveIndex * 32 + 24] << 5) + 
+            (data[moveIndex * 32 + 23] << 4) + 
+            (data[moveIndex * 32 + 22] << 3) + 
+            (data[moveIndex * 32 + 21] << 2) + 
+            (data[moveIndex * 32 + 20] << 1) + 
+            (data[moveIndex * 32 + 19] << 0);
 
-    assign  tempY = (data[moveIndex * 26 + 18] << 11) + 
-            (data[moveIndex * 26 + 17] << 10) + 
-            (data[moveIndex * 26 + 16] << 9) + 
-            (data[moveIndex * 26 + 15] << 8) + 
-            (data[moveIndex * 26 + 14] << 7) + 
-            (data[moveIndex * 26 + 13] << 6) + 
-            (data[moveIndex * 26 + 12] << 5) + 
-            (data[moveIndex * 26 + 11] << 4) + 
-            (data[moveIndex * 26 + 10] << 3) + 
-            (data[moveIndex * 26 + 9] << 2) + 
-            (data[moveIndex * 26 + 8] << 1) + 
-            (data[moveIndex * 26 + 7] << 0);
+    assign  tempY = (data[moveIndex * 32 + 18] << 11) + 
+            (data[moveIndex * 32 + 17] << 10) + 
+            (data[moveIndex * 32 + 16] << 9) + 
+            (data[moveIndex * 32 + 15] << 8) + 
+            (data[moveIndex * 32 + 14] << 7) + 
+            (data[moveIndex * 32 + 13] << 6) + 
+            (data[moveIndex * 32 + 12] << 5) + 
+            (data[moveIndex * 32 + 11] << 4) + 
+            (data[moveIndex * 32 + 10] << 3) + 
+            (data[moveIndex * 32 + 9] << 2) + 
+            (data[moveIndex * 32 + 8] << 1) + 
+            (data[moveIndex * 32 + 7] << 0);
+
+    assign testX = (data[moveIndex2 * 32 + 31] << 12) + 
+            (data[moveIndex2 * 32 + 30] << 11) + 
+            (data[moveIndex2 * 32 + 29] << 10) + 
+            (data[moveIndex2 * 32 + 28] << 9) + 
+            (data[moveIndex2 * 32 + 27] << 8) + 
+            (data[moveIndex2 * 32 + 26] << 7) + 
+            (data[moveIndex2 * 32 + 25] << 6) + 
+            (data[moveIndex2 * 32 + 24] << 5) + 
+            (data[moveIndex2 * 32 + 23] << 4) + 
+            (data[moveIndex2 * 32 + 22] << 3) + 
+            (data[moveIndex2 * 32 + 21] << 2) + 
+            (data[moveIndex2 * 32 + 20] << 1) + 
+            (data[moveIndex2 * 32 + 19] << 0);
+
+    assign  testY = (data[moveIndex2 * 32 + 18] << 11) + 
+            (data[moveIndex2 * 32 + 17] << 10) + 
+            (data[moveIndex2 * 32 + 16] << 9) + 
+            (data[moveIndex2 * 32 + 15] << 8) + 
+            (data[moveIndex2 * 32 + 14] << 7) + 
+            (data[moveIndex2 * 32 + 13] << 6) + 
+            (data[moveIndex2 * 32 + 12] << 5) + 
+            (data[moveIndex2 * 32 + 11] << 4) + 
+            (data[moveIndex2 * 32 + 10] << 3) + 
+            (data[moveIndex2 * 32 + 9] << 2) + 
+            (data[moveIndex2 * 32 + 8] << 1) + 
+            (data[moveIndex2 * 32 + 7] << 0);
+    //sample use
+    // assign testX = (data[moveIndex * 32 + 31] << 4) + 
+    //                 (data[moveIndex * 32 + 30] << 3) + 
+    //                 (data[moveIndex * 32 + 29] << 2) + 
+    //                 (data[moveIndex * 32 + 28] << 1) + 
+    //                 (data[moveIndex * 32 + 27] << 0);
+    // assign testY = (data[moveIndex * 32 + 18] << 3) + 
+    //                 (data[moveIndex * 32 + 17] << 2) + 
+    //                 (data[moveIndex * 32 + 16] << 1) + 
+    //                 (data[moveIndex * 32 + 15] << 0);
+    
  endmodule // ItemGenerator

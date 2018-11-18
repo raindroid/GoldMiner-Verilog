@@ -6,3 +6,5 @@ wlft*
 *.qdb
 _info
 _vmake
+*.qpg
+*.qtl

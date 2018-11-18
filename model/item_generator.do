@@ -16,10 +16,18 @@ force {clock} 0 0, 1 10ns -r 20ns
 force {resetn} 0 0, 1 20ns
 force {size} 10000
 force {generateEn} 0 0, 1 10ns, 0 260ns
+force {quantity} 101
 force {moveIndex} 0
 run 390ns
 force {moveEn} 1
 force {moveX} 10000000010
 force {moveY} 10
 force {moveState} 1
+force {moveIndex2} 1
+force {moveEn2} 1
+force {moveX2} 0000000010
+force {moveY2} 10
+force {moveState2} 1
+force {visible} 1
+force {visible2} 1 
 run 80ns
