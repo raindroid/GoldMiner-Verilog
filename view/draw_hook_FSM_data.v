@@ -52,7 +52,7 @@ module draw_hook(
                 S_DRAW_HOOK =5'd2,  //Draw hook
                 S_DRAW_DONE =5'd3;  //Finish and send done sig
 
-    localparam RADIUS = 64'd20;
+    localparam RADIUS = 64'd4;
     localparam MAX_C = 64'd256;
     localparam START_X = 64'd160,
                 START_Y = 64'd45;

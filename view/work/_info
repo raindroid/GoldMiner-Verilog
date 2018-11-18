@@ -28,50 +28,90 @@ Z6 !s107 bin_to_decb.v|num9.v|num8.v|num7.v|num6.v|num5.v|num4.v|num3.v|num2.v|n
 Z7 !s90 -reportprogress|300|score_and_time_display.v|num0.v|num1.v|num2.v|num3.v|num4.v|num5.v|num6.v|num7.v|num8.v|num9.v|bin_to_decb.v|
 !i113 1
 Z8 tCvgOpt 0
+vdiamond
+Z9 !s110 1542521570
+!i10b 1
+!s100 lMKadBS3H=B<7RHLQnaa41
+IORh:L0GW41cJRM8NUD[Z60
+R2
+R3
+w1542518306
+8diamond.v
+Fdiamond.v
+Z10 L0 39
+R4
+r1
+!s85 0
+31
+Z11 !s108 1542521570.000000
+Z12 !s107 diamond.v|../view/draw_diamond.v|
+Z13 !s90 -reportprogress|300|../view/draw_diamond.v|diamond.v|
+!i113 1
+R8
 vdraw_background_FSM
-Z9 !s110 1542073987
+Z14 !s110 1542073987
 !i10b 1
 !s100 =Md4dl@OF46P4@50NI?@^0
 IlEl0]09PCOA@]UQ2>5ehz0
 R2
 R0
-Z10 w1542072467
-Z11 8draw_gold_stone_FSM.v
-Z12 Fdraw_gold_stone_FSM.v
+Z15 w1542072467
+Z16 8draw_gold_stone_FSM.v
+Z17 Fdraw_gold_stone_FSM.v
 L0 255
 R4
 r1
 !s85 0
 31
-Z13 !s108 1542073987.000000
-Z14 !s107 draw_gold_stone_FSM.v|
-Z15 !s90 -reportprogress|300|draw_gold_stone_FSM.v|
+Z18 !s108 1542073987.000000
+Z19 !s107 draw_gold_stone_FSM.v|
+Z20 !s90 -reportprogress|300|draw_gold_stone_FSM.v|
 !i113 1
 R8
 ndraw_background_@f@s@m
-vdraw_gold_FSM
+vdraw_diamond
 R9
+!i10b 1
+!s100 bXEnc5i5Ca?f;@]aEkVRo3
+Ij7C_6glXWAk93RA9]UcHT2
+R2
+R3
+w1542520044
+8../view/draw_diamond.v
+F../view/draw_diamond.v
+L0 4
+R4
+r1
+!s85 0
+31
+R11
+R12
+R13
+!i113 1
+R8
+vdraw_gold_FSM
+R14
 !i10b 1
 !s100 Emg4FQO_Q<OPcB6mYmRiX1
 I;:k;ZG;gh508C;ZieOb3?0
 R2
 R0
-R10
-R11
-R12
+R15
+R16
+R17
 L0 7
 R4
 r1
 !s85 0
 31
-R13
-R14
-R15
+R18
+R19
+R20
 !i113 1
 R8
 ndraw_gold_@f@s@m
 vdraw_hook
-Z16 !s110 1542405038
+Z21 !s110 1542405038
 !i10b 1
 !s100 198@eF7:l<HoF9A`8h=0O0
 I@Q?EDAoNc@N[dhKS`:h1K0
@@ -85,29 +125,29 @@ R4
 r1
 !s85 0
 31
-Z17 !s108 1542405038.000000
-Z18 !s107 draw_hook_FSM_data.v|../model/degree.v|
-Z19 !s90 -reportprogress|300|../model/degree.v|draw_hook_FSM_data.v|
+Z22 !s108 1542405038.000000
+Z23 !s107 draw_hook_FSM_data.v|../model/degree.v|
+Z24 !s90 -reportprogress|300|../model/degree.v|draw_hook_FSM_data.v|
 !i113 1
 R8
 vdraw_stone_FSM
-R9
+R14
 !i10b 1
 !s100 RMQX>md@[e6`_aoT1Fff]2
 I<PfOf03`lRZfjh1`VaD3>0
 R2
 R0
-R10
-R11
-R12
+R15
+R16
+R17
 L0 130
 R4
 r1
 !s85 0
 31
-R13
-R14
-R15
+R18
+R19
+R20
 !i113 1
 R8
 ndraw_stone_@f@s@m
@@ -121,7 +161,7 @@ R3
 w1542493103
 8num0.v
 Fnum0.v
-Z20 L0 39
+R10
 R4
 r1
 !s85 0
@@ -141,7 +181,7 @@ R3
 w1542485838
 8num1.v
 Fnum1.v
-R20
+R10
 R4
 r1
 !s85 0
@@ -161,7 +201,7 @@ R3
 w1542493185
 8num2.v
 Fnum2.v
-R20
+R10
 R4
 r1
 !s85 0
@@ -181,7 +221,7 @@ R3
 w1542493213
 8num3.v
 Fnum3.v
-R20
+R10
 R4
 r1
 !s85 0
@@ -201,7 +241,7 @@ R3
 w1542493280
 8num4.v
 Fnum4.v
-R20
+R10
 R4
 r1
 !s85 0
@@ -221,7 +261,7 @@ R3
 w1542493321
 8num5.v
 Fnum5.v
-R20
+R10
 R4
 r1
 !s85 0
@@ -241,7 +281,7 @@ R3
 w1542493393
 8num6.v
 Fnum6.v
-R20
+R10
 R4
 r1
 !s85 0
@@ -261,7 +301,7 @@ R3
 w1542493427
 8num7.v
 Fnum7.v
-R20
+R10
 R4
 r1
 !s85 0
@@ -281,7 +321,7 @@ R3
 w1542493463
 8num8.v
 Fnum8.v
-R20
+R10
 R4
 r1
 !s85 0
@@ -301,7 +341,7 @@ R3
 w1542495481
 8num9.v
 Fnum9.v
-R20
+R10
 R4
 r1
 !s85 0
@@ -352,7 +392,7 @@ R7
 !i113 1
 R8
 vtrig
-R16
+R21
 !i10b 1
 !s100 `IEkodL:P7Tii`^?TjY1[2
 Id^aVOeU6c00Ih`F1d?OaV1
@@ -366,8 +406,8 @@ R4
 r1
 !s85 0
 31
-R17
-R18
-R19
+R22
+R23
+R24
 !i113 1
 R8
