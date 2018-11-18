@@ -65,10 +65,12 @@ module game_view_FSM(
     
    localparam   
 	
+					 GENERATE_X_Y         = 6'd3,
 					 DRAW_BACKGROUND      = 6'd0,
+					 
+
 					 DRAW_BACKGROUND_WAIT = 6'd1,
-					 GENERATE_X        	 = 6'd2,
-					 GENERATE_Y           = 6'd3,
+					 
 					 RANDOM_WAIT			 = 6'd4,
 					 DRAW_GOLD            = 6'd5,
 					 DRAW_GOLD_DONE		 = 6'd7,
@@ -90,21 +92,21 @@ module game_view_FSM(
     always@(*)
     begin: state_table 
             case (current_state)
-                DRAW_BACKGROUND: begin
+					GENERATE_X_Y: begin
+						next_state = DRAW_BACKGROUND;
+					end
+                	DRAW_BACKGROUND: begin
 						next_state = (draw_background_done) ? DRAW_BACKGROUND_WAIT : DRAW_BACKGROUND;
 						end // Loop in current state until value is input
-                DRAW_BACKGROUND_WAIT:begin
-						next_state = ((stone_count > max_stone) & (gold_count > max_gold) & (diamond_count > max_diamond)) ? DRAW_HOOK : GENERATE_X; 
-						end
-					 GENERATE_X: begin
-						next_state = GENERATE_Y;
-						end
-					 GENERATE_Y: begin
-					 	if((gold_count > max_gold) & (stone_count > max_stone))
+                	DRAW_BACKGROUND_WAIT:begin
+						if ((stone_count > max_stone) & (gold_count > max_gold) & (diamond_count > max_diamond))
+							next_state = DRAW_HOOK;
+						else if((gold_count > max_gold) & (stone_count > max_stone))
 							next_state = DRAW_DIAMOND;
 						else
 							next_state = ((gold_count > max_gold)) ? DRAW_STONE : DRAW_GOLD;
 						end
+					 
 					 DRAW_GOLD: begin
 						next_state = (draw_gold_done) ? DRAW_GOLD_DONE : DRAW_GOLD;
 					   end
@@ -169,24 +171,21 @@ module game_view_FSM(
 
 
         case (current_state)
-				DRAW_BACKGROUND: begin
-					enable_draw_background = 1'b1;
-				end
-            GENERATE_X: begin
-					enable_random = 1'b1; //load x
-					end
-            GENERATE_Y: begin
-					enable_random = 1'b1; //load y
-					end
+			GENERATE_X_Y: begin
+			  	enable_random = 1'b1;
+			end
+			DRAW_BACKGROUND: begin
+				enable_draw_background = 1'b1;
+			end
             DRAW_GOLD: begin
-					enable_draw_gold = 1'b1;
-					end
+				enable_draw_gold = 1'b1;
+			end
 			DRAW_STONE: begin
 				enable_draw_stone = 1'b1;
-				end	
+			end	
 			DRAW_DIAMOND: begin
 				enable_draw_diamond = 1'b1;
-				end	
+			end	
 			DRAW_HOOK: begin
 			  	enable_draw_hook = 1'b1;
 			end
@@ -198,7 +197,7 @@ module game_view_FSM(
 			end
 			GAME: begin
 				resetn_gold_stone_diamond = 1'b0;
-				end
+			end
 				
         // default:    // don't need default since we already made sure all of our outputs were assigned a value at the start of the always block
         endcase

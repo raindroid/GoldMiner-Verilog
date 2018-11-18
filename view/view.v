@@ -147,15 +147,65 @@ module view(
     .moveState(0),
     .visible(0),
  );
-	assign x_init = (data[moveIndex * 32 + 31] << 4) + 
-                    (data[moveIndex * 32 + 30] << 3) + 
-                    (data[moveIndex * 32 + 29] << 2) + 
-                     (data[moveIndex * 32 + 28] << 1) + 
-                     (data[moveIndex * 32 + 27] << 0);
-     assign y_init = (data[moveIndex * 32 + 18] << 3) + 
-                     (data[moveIndex * 32 + 17] << 2) + 
-                    (data[moveIndex * 32 + 16] << 1) + 
-                    (data[moveIndex * 32 + 15] << 0);
+	wire [8:0] x_init_gold,x_init_stone,x_init_diamond;
+	wire [7:0] y_init_gold,y_init_stone,y_init_diamond;
+
+	assign x_init_gold = (data[gold_count * 32 + 31] << 8) + 
+                    (data[gold_count * 32 + 30] << 7) + 
+                    (data[gold_count * 32 + 29] << 6) + 
+                    (data[gold_count * 32 + 28] << 5) + 
+                    (data[gold_count * 32 + 27] << 4) + 
+                    (data[gold_count * 32 + 26] << 3) + 
+                    (data[gold_count * 32 + 25] << 2) + 
+                    (data[gold_count * 32 + 24] << 1) + 
+	                (data[gold_count * 32 + 23] << 0);
+
+	assign y_init_gold = (data[gold_count * 32 + 18] << 7) + 
+                     (data[gold_count * 32 + 17] << 6) + 
+                     (data[gold_count * 32 + 16] << 5) + 
+                     (data[gold_count * 32 + 15] << 4) + 
+                     (data[gold_count * 32 + 14] << 3) + 
+                     (data[gold_count * 32 + 13] << 2) + 
+                     (data[gold_count * 32 + 12] << 1) + 
+                     (data[gold_count * 32 + 11] << 0) + 80;
+
+	assign x_init_stone = (data[(stone_count+8) * 32 + 31] << 8) + 
+                    (data[(stone_count+8)  * 32 + 30] << 7) + 
+                    (data[(stone_count+8)  * 32 + 29] << 6) + 
+                    (data[(stone_count+8)  * 32 + 28] << 5) + 
+                    (data[(stone_count+8)  * 32 + 27] << 4) + 
+                    (data[(stone_count+8)  * 32 + 26] << 3) + 
+                    (data[(stone_count+8)  * 32 + 25] << 2) + 
+                    (data[(stone_count+8)  * 32 + 24] << 1) + 
+	                 (data[(stone_count+8)  * 32 + 23] << 0);
+	
+    assign y_init_stone = (data[(stone_count+8) * 32 + 18] << 7) + 
+                     (data[(stone_count+8) * 32 + 17] << 6) + 
+                     (data[(stone_count+8) * 32 + 16] << 5) + 
+                     (data[(stone_count+8) * 32 + 15] << 4) + 
+                     (data[(stone_count+8) * 32 + 14] << 3) + 
+                     (data[(stone_count+8) * 32 + 13] << 2) + 
+                     (data[(stone_count+8) * 32 + 12] << 1) + 
+                     (data[(stone_count+8) * 32 + 11] << 0) + 80;
+
+	assign x_init_diamond = (data[(diamond_count+16) * 32 + 31] << 8) + 
+                    (data[(diamond_count+16)  * 32 + 30] << 7) + 
+                    (data[(diamond_count+16)  * 32 + 29] << 6) + 
+                    (data[(diamond_count+16)  * 32 + 28] << 5) + 
+                    (data[(diamond_count+16)  * 32 + 27] << 4) + 
+                    (data[(diamond_count+16)  * 32 + 26] << 3) + 
+                    (data[(diamond_count+16)  * 32 + 25] << 2) + 
+                    (data[(diamond_count+16)  * 32 + 24] << 1) + 
+	                 (data[(diamond_count+16)  * 32 + 23] << 0);
+	
+    assign y_init_diamond= (data[(diamond_count+16) * 32 + 18] << 7) + 
+                     (data[(diamond_count+16) * 32 + 17] << 6) + 
+                     (data[(diamond_count+16) * 32 + 16] << 5) + 
+                     (data[(diamond_count+16) * 32 + 15] << 4) + 
+                     (data[(diamond_count+16) * 32 + 14] << 3) + 
+                     (data[(diamond_count+16) * 32 + 13] << 2) + 
+                     (data[(diamond_count+16) * 32 + 12] << 1) + 
+                     (data[(diamond_count+16) * 32 + 11] << 0) + 80;
 
 
 	//instantiate view fsm
@@ -221,8 +271,8 @@ module view(
 	draw_gold dg0(
 		.clk(clk), 
 		.resetn(resetn),
-		.x_init(x_init),
-		.y_init(y_init),
+		.x_init(x_init_gold),
+		.y_init(y_init_gold),
 
 		.resetn_c_gold(resetn_c_gold), 
 		.enable_c_gold(enable_c_gold), 
@@ -288,8 +338,8 @@ module view(
 	draw_stone ds0(
 		.clk(clk), 
 		.resetn(resetn),
-		.x_init(x_init),
-		.y_init(y_init),
+		.x_init(x_init_stone),
+		.y_init(y_init_stone),
 
 		.resetn_c_stone(resetn_c_stone), 
 		.enable_c_stone(enable_c_stone), 
@@ -347,8 +397,8 @@ module view(
 		.enable_draw_diamond(enable_draw_diamond),
 		.resetn_gold_stone_diamond(resetn_gold_stone_diamond),
 
-    	.x_init(x_init),
-    	.y_init(y_init),
+    	.x_init(x_init_diamond),
+    	.y_init(y_init_diamond),
 
 		.X_out_diamond(X_out_diamond),
     	.Y_out_diamond(Y_out_diamond),
