@@ -1,0 +1,30 @@
+m255
+K4
+z2
+13
+!s112 1.1
+!i10d 8192
+!i10e 25
+!i10f 100
+cModel Technology
+Z0 dE:/ece241/project/ece241project/model
+vbin_dec
+!s110 1542504994
+!i10b 1
+!s100 bLfJ5W]zhU4]YhU^JRGA31
+Ia8B>k`lN;KhTRj6jn3F?S2
+VDg1SIo80bB@j0V0VzS_@n1
+R0
+w1542504623
+8bin_to_decb.v
+Fbin_to_decb.v
+L0 18
+OV;L;10.5b;63
+r1
+!s85 0
+31
+!s108 1542504994.000000
+!s107 bin_to_decb.v|
+!s90 -reportprogress|300|bin_to_decb.v|
+!i113 1
+tCvgOpt 0

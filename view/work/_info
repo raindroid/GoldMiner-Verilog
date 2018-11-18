@@ -8,50 +8,70 @@ z2
 !i10f 100
 cModel Technology
 Z0 df:/uofT/eCE241/ece241project/view
-vdraw_background_FSM
-Z1 !s110 1542073987
+vbin_dec
+Z1 !s110 1542504314
 !i10b 1
-!s100 =Md4dl@OF46P4@50NI?@^0
-IlEl0]09PCOA@]UQ2>5ehz0
+!s100 adS;N<d6D^lj@DE=000@o2
+IL[=2>3:@l@f^<Nf>TQfg00
 Z2 VDg1SIo80bB@j0V0VzS_@n1
-R0
-Z3 w1542072467
-Z4 8draw_gold_stone_FSM.v
-Z5 Fdraw_gold_stone_FSM.v
-L0 255
-Z6 OV;L;10.5b;63
+Z3 dE:/ece241/project/ece241project/view
+w1542503555
+8bin_to_decb.v
+Fbin_to_decb.v
+L0 18
+Z4 OV;L;10.5b;63
 r1
 !s85 0
 31
-Z7 !s108 1542073987.000000
-Z8 !s107 draw_gold_stone_FSM.v|
-Z9 !s90 -reportprogress|300|draw_gold_stone_FSM.v|
+Z5 !s108 1542504314.000000
+Z6 !s107 bin_to_decb.v|num9.v|num8.v|num7.v|num6.v|num5.v|num4.v|num3.v|num2.v|num1.v|num0.v|score_and_time_display.v|
+Z7 !s90 -reportprogress|300|score_and_time_display.v|num0.v|num1.v|num2.v|num3.v|num4.v|num5.v|num6.v|num7.v|num8.v|num9.v|bin_to_decb.v|
 !i113 1
-Z10 tCvgOpt 0
+Z8 tCvgOpt 0
+vdraw_background_FSM
+Z9 !s110 1542073987
+!i10b 1
+!s100 =Md4dl@OF46P4@50NI?@^0
+IlEl0]09PCOA@]UQ2>5ehz0
+R2
+R0
+Z10 w1542072467
+Z11 8draw_gold_stone_FSM.v
+Z12 Fdraw_gold_stone_FSM.v
+L0 255
+R4
+r1
+!s85 0
+31
+Z13 !s108 1542073987.000000
+Z14 !s107 draw_gold_stone_FSM.v|
+Z15 !s90 -reportprogress|300|draw_gold_stone_FSM.v|
+!i113 1
+R8
 ndraw_background_@f@s@m
 vdraw_gold_FSM
-R1
+R9
 !i10b 1
 !s100 Emg4FQO_Q<OPcB6mYmRiX1
 I;:k;ZG;gh508C;ZieOb3?0
 R2
 R0
-R3
-R4
-R5
+R10
+R11
+R12
 L0 7
-R6
+R4
 r1
 !s85 0
 31
-R7
-R8
-R9
+R13
+R14
+R15
 !i113 1
-R10
+R8
 ndraw_gold_@f@s@m
 vdraw_hook
-Z11 !s110 1542405038
+Z16 !s110 1542405038
 !i10b 1
 !s100 198@eF7:l<HoF9A`8h=0O0
 I@Q?EDAoNc@N[dhKS`:h1K0
@@ -61,36 +81,236 @@ w1542405016
 8draw_hook_FSM_data.v
 Fdraw_hook_FSM_data.v
 L0 23
-R6
+R4
 r1
 !s85 0
 31
-Z12 !s108 1542405038.000000
-Z13 !s107 draw_hook_FSM_data.v|../model/degree.v|
-Z14 !s90 -reportprogress|300|../model/degree.v|draw_hook_FSM_data.v|
+Z17 !s108 1542405038.000000
+Z18 !s107 draw_hook_FSM_data.v|../model/degree.v|
+Z19 !s90 -reportprogress|300|../model/degree.v|draw_hook_FSM_data.v|
 !i113 1
-R10
+R8
 vdraw_stone_FSM
-R1
+R9
 !i10b 1
 !s100 RMQX>md@[e6`_aoT1Fff]2
 I<PfOf03`lRZfjh1`VaD3>0
 R2
 R0
-R3
-R4
-R5
+R10
+R11
+R12
 L0 130
-R6
+R4
 r1
 !s85 0
 31
-R7
-R8
-R9
+R13
+R14
+R15
 !i113 1
-R10
+R8
 ndraw_stone_@f@s@m
+vnum0
+R1
+!i10b 1
+!s100 n]5L2PEH@NZkGJ^Z28RRM1
+I[6NlCYoI0SLk;QRh0MnO83
+R2
+R3
+w1542493103
+8num0.v
+Fnum0.v
+Z20 L0 39
+R4
+r1
+!s85 0
+31
+R5
+R6
+R7
+!i113 1
+R8
+vnum1
+R1
+!i10b 1
+!s100 3EOa:JA0LVk=1c<6TokA@0
+I:23FmmmQgfD;EdA]j_aeN2
+R2
+R3
+w1542485838
+8num1.v
+Fnum1.v
+R20
+R4
+r1
+!s85 0
+31
+R5
+R6
+R7
+!i113 1
+R8
+vnum2
+R1
+!i10b 1
+!s100 <8J6nCnI=LXfa@8gQoXCA1
+I1^AZFWU[Q49f[DeedKa]n1
+R2
+R3
+w1542493185
+8num2.v
+Fnum2.v
+R20
+R4
+r1
+!s85 0
+31
+R5
+R6
+R7
+!i113 1
+R8
+vnum3
+R1
+!i10b 1
+!s100 >`iRCNfgJDAK85GCiFIN23
+I7`DO=BAOC:K<0e82d:=@g2
+R2
+R3
+w1542493213
+8num3.v
+Fnum3.v
+R20
+R4
+r1
+!s85 0
+31
+R5
+R6
+R7
+!i113 1
+R8
+vnum4
+R1
+!i10b 1
+!s100 N6F>?Y9O5:CK=Y2SJZ[Cz1
+IMDAURO7Ta5LCmN4f:iOLg0
+R2
+R3
+w1542493280
+8num4.v
+Fnum4.v
+R20
+R4
+r1
+!s85 0
+31
+R5
+R6
+R7
+!i113 1
+R8
+vnum5
+R1
+!i10b 1
+!s100 Y8LUz=AG2CXCldKViRj3U3
+I2O0`iL:=@6i9Lb1hk?gYh3
+R2
+R3
+w1542493321
+8num5.v
+Fnum5.v
+R20
+R4
+r1
+!s85 0
+31
+R5
+R6
+R7
+!i113 1
+R8
+vnum6
+R1
+!i10b 1
+!s100 UiPne`A;9fb1ED?I12SX80
+I0BKOe_Nz6cMUM2ZBR=RN_0
+R2
+R3
+w1542493393
+8num6.v
+Fnum6.v
+R20
+R4
+r1
+!s85 0
+31
+R5
+R6
+R7
+!i113 1
+R8
+vnum7
+R1
+!i10b 1
+!s100 XC2j0^Q9G;]Jm4oFEJN0k3
+IVk8Y:>2^N9Q`ISdo`gf9X0
+R2
+R3
+w1542493427
+8num7.v
+Fnum7.v
+R20
+R4
+r1
+!s85 0
+31
+R5
+R6
+R7
+!i113 1
+R8
+vnum8
+R1
+!i10b 1
+!s100 a^==`HX7_HzfYm=I153QG0
+I><I<1<bQ1A:JLKMIGYR>n3
+R2
+R3
+w1542493463
+8num8.v
+Fnum8.v
+R20
+R4
+r1
+!s85 0
+31
+R5
+R6
+R7
+!i113 1
+R8
+vnum9
+R1
+!i10b 1
+!s100 NVQc_FZ^;A?N4M230SKIJ2
+Iz?NI1:6c0OlKVOHDLT73o0
+R2
+R3
+w1542495481
+8num9.v
+Fnum9.v
+R20
+R4
+r1
+!s85 0
+31
+R5
+R6
+R7
+!i113 1
+R8
 vrate_divider
 !s110 1542220524
 !i10b 1
@@ -102,7 +322,7 @@ w1542165760
 8view_data.v
 Fview_data.v
 L0 347
-R6
+R4
 r1
 !s85 0
 31
@@ -110,9 +330,29 @@ r1
 !s107 view_data.v|
 !s90 -reportprogress|300|view_data.v|
 !i113 1
-R10
+R8
+vscore_and_time_display
+R1
+!i10b 1
+!s100 da[X>H51Wm2oG_ZA4GIZ@3
+I1[I:Ea56MH`GPJACBEDlh0
+R2
+R3
+w1542504191
+8score_and_time_display.v
+Fscore_and_time_display.v
+L0 22
+R4
+r1
+!s85 0
+31
+R5
+R6
+R7
+!i113 1
+R8
 vtrig
-R11
+R16
 !i10b 1
 !s100 `IEkodL:P7Tii`^?TjY1[2
 Id^aVOeU6c00Ih`F1d?OaV1
@@ -122,12 +362,12 @@ w1542230592
 8../model/degree.v
 F../model/degree.v
 L0 1
-R6
+R4
 r1
 !s85 0
 31
-R12
-R13
-R14
+R17
+R18
+R19
 !i113 1
-R10
+R8

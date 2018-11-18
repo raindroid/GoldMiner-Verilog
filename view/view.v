@@ -60,6 +60,15 @@ module view(
 			Color_out = Color_out_hook;
 			writeEn = writeEn_hook;
 		end
+		else if (enable_draw_num) begin
+		  	X_out = X_out_num;
+			Y_out = Y_out_num;
+			Color_out = Color_out_num;
+			if(Color_out == 12'hFFF)
+				writeEn <= 1'b0;
+			else
+				writeEn <= writeEn_num;
+		end
 	end
 	
 	
@@ -113,23 +122,19 @@ module view(
 		.draw_background_done(draw_background_done),
 		
 		.draw_hook_done(draw_hook_done), 
+		.draw_num_done(draw_num_done),
 	
 		.gold_count(gold_count),
 		.stone_count(stone_count),
 	
-		.frame(frame),
-		.clockwise(1),
-		.drop_end(0),
-		.drag_end(0),
-	
 		.game_end(1),
-		.drop(0),
 	
 		.enable_draw_gold(enable_draw_gold),
 		.enable_draw_stone(enable_draw_stone),
 		.enable_draw_background(enable_draw_background),
 		.enable_draw_hook(enable_draw_hook),
 		.enable_random(enable_random),
+		.enable_draw_num(enable_draw_num),
 		.resetn_gold_stone(resetn_gold_stone)
 
 	);
@@ -335,6 +340,29 @@ module view(
 		.done(draw_hook_done),
 		.LEDR(LEDR)
 	);
+
+	wire 	[8:0] X_out_num;
+	wire	[7:0] Y_out_num;
+	wire	[11:0] Color_out_num;
+	wire	writeEn_num,
+		draw_num_done,
+		enable_draw_num;
+
+	score_and_time_display display_num(
+    	.clk(clk),
+    	.resetn(resetn),
+    	.score_to_display(1035),
+    	.time_remained(25),
+    	.enable_score_and_time_display(enable_draw_num),
+
+    	.outX(X_out_num),
+    	.outY(Y_out_num),
+    	.color(Color_out_num),
+    	.writeEn(writeEn_num),
+
+    	.display_score_and_time_done(draw_num_done)
+    );
+
 
 endmodule
 

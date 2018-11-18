@@ -9,25 +9,21 @@ module game_view_FSM(
 	draw_stone_done,
 	draw_background_done,
 	draw_hook_done,
+	draw_num_done,
 	
 	gold_count,
 	stone_count,
 
 	
-	frame,
-	clockwise,
-	drop_end,
-	drag_end,
-	
 	
 	game_end,
-	drop,
 	
 	enable_draw_gold,
 	enable_draw_stone,
 	enable_draw_background,
 	enable_random,
 	enable_draw_hook,
+	enable_draw_num,
 	resetn_gold_stone
 
 	);
@@ -39,18 +35,14 @@ module game_view_FSM(
 	input draw_gold_done,
 			draw_stone_done,
 			draw_background_done,
-			draw_hook_done;
+			draw_hook_done,
+			draw_num_done;
 	
 	input [2:0]gold_count;
 	input [2:0]stone_count;
 	
-	input frame;
-	input clockwise;
-	input drop_end;
-	input drag_end;
-
 	
-	input game_end, drop;
+	input game_end;
 	
 	parameter max_stone = 3'd5;
 	parameter max_gold  = 3'd5;
@@ -60,6 +52,7 @@ module game_view_FSM(
 					enable_draw_background,
 					enable_random,
 					enable_draw_hook,
+					enable_draw_num,
 					resetn_gold_stone;
 
 	reg [6:0] current_state, next_state; 
@@ -81,9 +74,10 @@ module game_view_FSM(
 					DRAW_HOOK			= 6'd12,
 					DRAW_HOOK_WAIT		= 6'd13,
 
-					 GAME						 = 6'd11,
+					DRAW_NUM 			= 6'd14,
+					GAME						 = 6'd11,
 					 
-					 GAME_DONE				 = 6'd40;
+					GAME_DONE				 = 6'd40;
 					 
     
     // Next state logic aka our state table
@@ -124,9 +118,12 @@ module game_view_FSM(
 					end
 					
 					DRAW_HOOK_WAIT: begin
-					  	next_state = (draw_hook_done) ? GAME : DRAW_HOOK_WAIT;
+					  	next_state = (draw_hook_done) ? DRAW_NUM : DRAW_HOOK_WAIT;
 					end
-					 
+
+					DRAW_NUM : begin
+					  	next_state = (draw_num_done) ? GAME : DRAW_NUM;
+					end
 					 GAME: begin
 						next_state = (game_end) ? GAME_DONE : DRAW_BACKGROUND;
 					 end
@@ -150,6 +147,7 @@ module game_view_FSM(
 			enable_draw_background = 1'b0;
 			enable_random = 1'b0;
 			enable_draw_hook = 1'b0;
+			enable_draw_num = 1'b0;
 			resetn_gold_stone = 1'b1;
 
 
@@ -174,6 +172,9 @@ module game_view_FSM(
 			end
 			DRAW_HOOK_WAIT: begin
 			  	enable_draw_hook = 1'b1;
+			end
+			DRAW_NUM: begin
+			  	enable_draw_num = 1'b1;
 			end
 			GAME: begin
 				resetn_gold_stone = 1'b0;
