@@ -120,7 +120,7 @@ module view(
 	*/
 	localparam MAX_SIZE = 32 << 5; //1024
 	wire [MAX_SIZE - 1: 0] data;
-	wire [4:0]counter;
+	wire [5:0]memory_counter;
 	wire [63:0]moveIndex;
 	assign moveIndex = 0;
 	 ItemMap item_map(
@@ -129,8 +129,8 @@ module view(
     .generateEn(enable_random), 
     .size(16),
     .data(data),
-    .counter(counter),
-    .quantity(0),
+    .counter(memory_counter),
+    .quantity(31),
 
     .moveEn(0),
     .moveIndex(moveIndex),
@@ -226,6 +226,7 @@ module view(
 		.gold_count(gold_count),
 		.stone_count(stone_count),
 		.diamond_count(diamond_count),
+		.memory_counter(memory_counter),
 	
 		.game_end(1),
 	
@@ -482,8 +483,8 @@ module view(
     	.clk(clk),
     	.resetn(resetn),
     	.score_to_display(1035),
-    	.time_remained(25),
-		.goal(500),
+    	.time_remained(45),
+		.goal(560),
     	.enable_score_and_time_display(enable_draw_num),
 
     	.outX(X_out_num),

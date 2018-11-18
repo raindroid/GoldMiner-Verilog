@@ -103,7 +103,7 @@ module score_and_time_display(
     reg [1:0]decimal_bit_count;
 
 
-     wire [4:0]num_mem_address = ({num_pixel[4:2], 2'd0} + {num_pixel[1:0]+1'b1});
+    wire [4:0]num_mem_address = ({num_pixel[4:2], 2'd0} + {num_pixel[1:0]+1'b1});
     
     num0 num0(
         .address(num_mem_address),
@@ -229,6 +229,8 @@ module score_and_time_display(
     always@(*)begin
       if(dec_done_time & dec_done_score & dec_done_goal)
         dec_done = 1'b1;
+        else 
+            dec_done = 1'b0;
     end
 
     reg [2:0] time_bit;
