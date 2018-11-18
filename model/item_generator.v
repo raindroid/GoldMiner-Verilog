@@ -189,6 +189,8 @@
             end
         end
     end
+
+    //The rest is only for test purpose
     assign tempX = (data[moveIndex * 32 + 31] << 12) + 
             (data[moveIndex * 32 + 30] << 11) + 
             (data[moveIndex * 32 + 29] << 10) + 

@@ -38,10 +38,12 @@
  module RopeController(
     input clock, resetn, enable,
     input [1023: 0] itemp_map,
-    input up_KEY, down_KEY,
+    input go_KEY, bomb_KEY,
+    input bomb_quantity,
 
-    output reg[9:0] rotation_speed, line_speed, endX, endY, rope_len, degree,
-    output reg[]
+    output reg[9:0] rotation_speed, line_speed, endX, endY, degree,
+    output [9:0]rope_len,
+    output bomb_use
 
  );
     PARAMETER mode = 1'b0;
@@ -57,5 +59,16 @@
      * 11 - up
      **/
     reg [1:0] state; 
-    reg []
+    reg rCW;
+    reg [17: 0] length;
+    assign rope_len = length[17:8];
+    
+    reg [3:0] current_state, next_state;
+    
+    localparam 
+        S_CCW   =
+
+    always @(posedge clock) begin
+
+    end 
  endmodule // RopeController
