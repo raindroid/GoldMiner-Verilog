@@ -44,46 +44,34 @@ begin
 		shift_reg=0;
 	else if (count==0)
 		shift_reg={15'b000_0000_0000_0000,bin};
-	else if ( count<=13) //shift 12 times
+	else if ( count<=13) //shift 8times
 		begin
 			if(shift_reg[15:12]>=5)//check if >5，if yes +3 
-			    begin
+			begin
 				if(shift_reg[19:16]>=5) //check if the 10's bit >5，if yes +3 
-					if(shift_reg[23:20]>=5)
-                        begin //check if the 100's bit >5，if yes +3 
-						shift_reg[23:20]=shift_reg[23:20]+2'b11;
-						shift_reg[19:16]=shift_reg[19:16]+2'b11;
-						shift_reg[15:12]=shift_reg[15:12]+2'b11;
-						shift_reg=shift_reg<<1; //after finishing 100's bit, 10's bit and 1's bit，shift left
+						if(shift_reg[23:20]>=5)begin //check if the 100's bit >5，if yes +3 
+							 shift_reg[23:20]=shift_reg[23:20]+2'b11;
+							 shift_reg[19:16]=shift_reg[19:16]+2'b11;
+							 shift_reg[15:12]=shift_reg[15:12]+2'b11;
+							 shift_reg=shift_reg<<1; //after finishing 100's bit, 10's bit and 1's bit，shift left
 						end
-					else 
-                        begin
-						shift_reg[23:20]=shift_reg[23:20];
-						shift_reg[19:16]=shift_reg[19:16]+2'b11;
-						shift_reg[15:12]=shift_reg[15:12]+2'b11;
-						shift_reg=shift_reg<<1; //after finishing 10's bit and 1's bit，shift left
+						else begin
+							 shift_reg[23:20]=shift_reg[23:20];
+							 shift_reg[19:16]=shift_reg[19:16]+2'b11;
+							 shift_reg[15:12]=shift_reg[15:12]+2'b11;
+							 shift_reg=shift_reg<<1; //after finishing 10's bit and 1's bit，shift left
 						end
-				else
-                    begin
-					if(shift_reg[23:20]>=5)
-                        begin
-						shift_reg[23:20]=shift_reg[23:20]+2'b11;
-						shift_reg[19:16]=shift_reg[19:16];
-						shift_reg[15:12]=shift_reg[15:12]+2'b11;
-						shift_reg=shift_reg<<1;
+				else begin
+						if(shift_reg[23:20]>=5)begin
+							 shift_reg[23:20]=shift_reg[23:20]+2'b11;
+							 shift_reg[19:16]=shift_reg[19:16];
+							 shift_reg[15:12]=shift_reg[15:12]+2'b11;
+							 shift_reg=shift_reg<<1;
 						end
-
-                    else
-                        begin
-                        shift_reg[23:20]=shift_reg[23:20];
-						shift_reg[19:16]=shift_reg[19:16];
-						shift_reg[15:12]=shift_reg[15:12]+2'b11;
-						shift_reg=shift_reg<<1;
-                        end
-                    end
-			    end
+				end
+			end
 			else
-			    begin
+			begin
 				if(shift_reg[19:16]>=5) //check if the 10's bit >5，if yes +3 
 						if(shift_reg[23:20]>=5)
 							begin //check if the 100's bit >5，if yes +3 
@@ -101,22 +89,14 @@ begin
 							end
 				 else 
 					begin
-						if(shift_reg[23:20]>=5)
-                            begin
+						if(shift_reg[23:20]>=5)begin
 							 shift_reg[23:20]=shift_reg[23:20]+2'b11;
 							 shift_reg[19:16]=shift_reg[19:16];
 							 shift_reg[15:12]=shift_reg[15:12];
 							 shift_reg=shift_reg<<1;
-						    end
-                        else
-                            begin
-                            shift_reg[23:20]=shift_reg[23:20];
-							shift_reg[19:16]=shift_reg[19:16];
-							shift_reg[15:12]=shift_reg[15:12];
-							shift_reg=shift_reg<<1;
-                            end
+						end
 					end
-			    end
+			end
 		end
 end
 
@@ -128,8 +108,8 @@ begin
 		one<=0;
 		ten<=0;
 		hun<=0;
-        tho<=0;
-        done <=0;
+      tho<=0;
+      done = 1'b0;
 		end
 	else if (count==13)	//finish shifting, set 100's, 10's, and 1's
 		begin
@@ -137,7 +117,7 @@ begin
 		ten<=shift_reg[19:16];
 		hun<=shift_reg[23:20];
       tho<=shift_reg[26:24];
-      done <= 1'b1;
+      done = 1'b1;
 	   end
 end
 endmodule

@@ -3,3 +3,6 @@
 vsim*
 vsim
 wlft*
+*.qdb
+_info
+_vmake

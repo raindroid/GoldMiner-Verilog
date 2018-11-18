@@ -29,8 +29,8 @@ module game_info(
 	output reg [7:0]time_remain;
 	output reg [7:0]score;
 	
-	output time_up;
-	output move_enable;
+	output reg time_up;
+	output reg move_enable;
 	
 	
 	wire time_counter_enable;
@@ -41,7 +41,7 @@ module game_info(
 	localparam frame_count = 3'd5;
 	
 	
-	rate_divider r0(
+	rate_divider(
 	.resetn(resetn), 
 	.clock(clk), 
 	.Enable(time_counter_enable)
@@ -67,7 +67,7 @@ module game_info(
 			end
 	end
 	assign time_up = (time_remain == 0)?1:0;
-	assign move_enable = (move_counter == frame_count) ? 1 : 0;
+	assign move_enable = (move_counter == frame_count) 1 : 0;
 endmodule
 
 

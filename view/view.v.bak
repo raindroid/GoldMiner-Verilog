@@ -95,11 +95,11 @@ module view(
 	
 	always@(posedge clk)begin
 	 if(enable_random)begin
-		if(random[3:0] * 5'd20 <= 9'd300) begin
-			x_init[8:0] <= random[3:0] * 5'd20;
+		if(random[4:0] * 5'd20 <= 9'd300) begin
+			x_init[8:0] <= random[4:0] * 5'd20;
 		end
 		else begin
-			x_init[7:0] <= random[6:4] * 5'd20;
+			x_init[7:0] <= random[4:1] * 5'd20;
 			x_init[8] <= 1'b0;
 			end
 		end
@@ -108,7 +108,7 @@ module view(
 	
 	always@(posedge clk)begin
 	 if(enable_random)begin
-		if(random[5:3] * 5'd20 <= 8'd140) begin
+		if(random[7:4] * 5'd20 <= 8'd140) begin
 			y_init[7:0] <= random[5:3] * 5'd20 + 7'd80;
 		end
 		else begin
@@ -128,7 +128,6 @@ module view(
 	
 		.draw_gold_done(draw_gold_done),
 		.draw_stone_done(draw_stone_done),
-		.draw_diamond_done(draw_diamond_done),
 		.draw_background_done(draw_background_done),
 		
 		.draw_hook_done(draw_hook_done), 
@@ -136,18 +135,16 @@ module view(
 	
 		.gold_count(gold_count),
 		.stone_count(stone_count),
-		.diamond_count(diamond_count),
 	
 		.game_end(1),
 	
 		.enable_draw_gold(enable_draw_gold),
 		.enable_draw_stone(enable_draw_stone),
-		.enable_draw_diamond(enable_draw_diamond),
 		.enable_draw_background(enable_draw_background),
 		.enable_draw_hook(enable_draw_hook),
 		.enable_random(enable_random),
 		.enable_draw_num(enable_draw_num),
-		.resetn_gold_stone_diamond(resetn_gold_stone_diamond)
+		.resetn_gold_stone(resetn_gold_stone)
 
 	);
 	
@@ -162,7 +159,7 @@ module view(
 		  enable_x_adder_gold, 
 		  enable_y_adder_gold,
 		  enable_gold_count,
-		  resetn_gold_stone_diamond;
+		  resetn_gold_stone;
 		  
 	wire [8:0]X_out_gold; 
 	wire [7:0]Y_out_gold; 
@@ -193,7 +190,7 @@ module view(
 		.enable_x_adder_gold(enable_x_adder_gold), 
 		.enable_y_adder_gold(enable_y_adder_gold),
 		.enable_gold_count(enable_gold_count),
-		.resetn_gold_stone(resetn_gold_stone_diamond),
+		.resetn_gold_stone(resetn_gold_stone),
 
 		
 		.X_out_gold(X_out_gold), 
@@ -260,7 +257,7 @@ module view(
 		.enable_x_adder_stone(enable_x_adder_stone), 
 		.enable_y_adder_stone(enable_y_adder_stone),
 		.enable_stone_count(enable_stone_count),
-		.resetn_gold_stone(resetn_gold_stone_diamond),
+		.resetn_gold_stone(resetn_gold_stone),
 
 		
 		.X_out_stone(X_out_stone), 
@@ -306,7 +303,6 @@ module view(
     	.clk(clk), 
 		.resetn(resetn),
 		.enable_draw_diamond(enable_draw_diamond),
-		.resetn_gold_stone_diamond(resetn_gold_stone_diamond),
 
     	.x_init(x_init),
     	.y_init(y_init),

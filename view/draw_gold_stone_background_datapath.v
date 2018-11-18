@@ -57,7 +57,7 @@ module draw_gold(
 	output reg [8:0]gold_pixel_cout;
 	
 	
-	wire [7:0] gold_mem_address = ({gold_pixel_cout[7:4]-1'b1, 4'd0} + {gold_pixel_cout[3:0]-1'b1});
+	wire [7:0] gold_mem_address = ({gold_pixel_cout[7:4], 4'd0} + {gold_pixel_cout[3:0]+1'b1});
 	
 
 	reg [8:0] x;
@@ -192,7 +192,7 @@ module draw_stone(
 	
 	wire [11:0] stone_color;
 	
-	wire [7:0] stone_mem_address = ({stone_pixel_cout[7:4]-1'b1, 4'd0} + {stone_pixel_cout[3:0]-1'b1}+1'b1);
+	wire [7:0] stone_mem_address = ({stone_pixel_cout[7:4], 4'd0} + {stone_pixel_cout[3:0]-1'b1}+1'b1);
 	
 	reg [8:0]x_stone_address_cout;
 	reg [7:0]y_stone_address_cout;
