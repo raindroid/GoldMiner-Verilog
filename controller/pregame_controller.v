@@ -1,4 +1,6 @@
 /**
+ * NOT IN USE !
+ *
  * THis is the module for controller part before the game scene
  * Including functions:
  *      send signal to MODEL to reset data
@@ -25,7 +27,7 @@
  * Version: 0.0.1
  * Created: Nov 12, 2018
  * Last Updated: Nov 12, 2018, seems work
- * Tested: Done
+ * Tested: N/A
  **/
 
 module test_pregame_controller(
@@ -34,7 +36,7 @@ module test_pregame_controller(
 
 endmodule // test_pregame_controller
 
-module pregame_controller(
+module PreGame(
     input clock, resetn, 
     input start,
     input cbk_from_reset, cbk_from_view, cbk_from_end_confirm,
@@ -68,14 +70,15 @@ module pregame_controller(
             S_RESET:        next_state = S_RESET_WAIT;
             S_RESET_WAIT:   next_state = (cbk_from_reset) ? S_WAIT_MODE : S_RESET_WAIT;
             S_WAIT_MODE:    next_state = (mode[0] | mode[1]) ? S_1st_DELAY : S_WAIT_MODE;
-            S_1st_DELAY:    next_state = (delay_counter == DELAY_TIME) ? S_REQ_1st : S_1st_DELAY;
-            S_REQ_1st:      next_state = S_WAIT_1st;
-            S_WAIT_1st:     next_state = (cbk_from_view) ? S_2nd_DELAY : S_WAIT_1st;
-            S_2nd_DELAY:    next_state = (delay_counter == DELAY_TIME) ? 
-                                         ((mode[1]) ? S_REQ_2nd : S_END) : S_2nd_DELAY;
-            S_REQ_2nd:      next_state = S_WAIT_2nd;
-            S_WAIT_2nd:     next_state = (cbk_from_view) ? S_END : S_WAIT_2nd;
-            S_END:          next_state = (cbk_from_end_confirm) ? S_START : S_END;
+            // S_1st_DELAY:    next_state = (delay_counter == DELAY_TIME) ? S_REQ_1st : S_1st_DELAY;
+            // S_REQ_1st:      next_state = S_WAIT_1st;
+            // S_WAIT_1st:     next_state = (cbk_from_view) ? S_2nd_DELAY : S_WAIT_1st;
+            // S_2nd_DELAY:    next_state = (delay_counter == DELAY_TIME) ? 
+            //                              ((mode[1]) ? S_REQ_2nd : S_END) : S_2nd_DELAY;
+            // S_REQ_2nd:      next_state = S_WAIT_2nd;
+            // S_WAIT_2nd:     next_state = (cbk_from_view) ? S_END : S_WAIT_2nd;
+            // S_END:          next_state = (cbk_from_end_confirm) ? S_START : S_END;
+            S_END:          next_state = S_START;
           default:          next_state = S_START;
         endcase
     end
