@@ -1,6 +1,6 @@
 vlib work
 vlog pregame_controller.v
-vsim pregame_controller
+vsim PreGame
 log {/*}
 
 add wave -color yellow clock resetn 
