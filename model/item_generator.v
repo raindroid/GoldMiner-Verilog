@@ -40,8 +40,12 @@
  * Version: 0.1.1
  * Created: Nov 17, 2018
  * Last Updated: Nov 18, 2018, shoule be ok
- * Tested: pass the sims
+ * Tested: see TODO
  **/
+
+ //Todo:
+ // 1. store info about type
+ // 2. generate in order
 
  module Rand(
     input clock, resetn, enable,
@@ -69,7 +73,6 @@
      clock,
      resetn, 
      generateEn, 
-     size,
      data,
      counter,
 	  quantity,
@@ -90,10 +93,12 @@
     moveState,
     visible,
  );
+    parameter stone_size = 16;
+    parameter gold_size = 16;
+    parameter diamond_size = 8;
+    localparam size = 16; 
     parameter MAX_SIZE = 32 << 5; //1024
     input clock, resetn, generateEn;
-    // input [4:0] quantity;
-    input [5:0] size;
     output reg [MAX_SIZE - 1: 0] data;
     input moveEn;
     input [5:0]moveIndex;
@@ -261,6 +266,6 @@
     //                 (data[moveIndex * 32 + 14] << 3) + 
     //                 (data[moveIndex * 32 + 13] << 2) + 
     //                 (data[moveIndex * 32 + 12] << 1) + 
-    //                 (data[moveIndex * 32 + 11] << 0);
+    //                 (data[moveIndex * 32 + 11] << 0) + 80;
     
  endmodule // ItemGenerator
