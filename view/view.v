@@ -73,7 +73,7 @@ module view(
 		  	X_out = X_out_num;
 			Y_out = Y_out_num;
 			Color_out = Color_out_num;
-			if(Color_out == 12'hFFF)
+			if(Color_out == 12'b0)
 				writeEn <= 1'b0;
 			else
 				writeEn <= writeEn_num;
@@ -394,6 +394,7 @@ module view(
     	.resetn(resetn),
     	.score_to_display(1035),
     	.time_remained(25),
+		.goal(500),
     	.enable_score_and_time_display(enable_draw_num),
 
     	.outX(X_out_num),
