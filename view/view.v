@@ -26,8 +26,8 @@ module view(
 	wire [7:0]random;
 	
 	
-	reg [8:0]x_init;
-	reg [7:0]y_init;
+	wire [8:0]x_init;
+	wire [7:0]y_init;
 	
 	always@(posedge clk)begin
 		if(enable_draw_gold) begin
@@ -83,15 +83,15 @@ module view(
 	
 	
 	//instanciate lfsr to generate random x and y;
+	wire enable_random;
+	
+	/*
+	
 	lfsr l(
 	.out(random),
 	.clk(clk),
 	.rst(resetn)
 	);
-	
-	
-	wire enable_random;
-	
 	
 	always@(posedge clk)begin
 	 if(enable_random)begin
@@ -117,7 +117,46 @@ module view(
 			end
 		end
 	end
-	
+	*/
+	localparam MAX_SIZE = 32 << 5; //1024
+	wire [MAX_SIZE - 1: 0] data;
+	wire [4:0]counter;
+	wire [63:0]moveIndex;
+	assign moveIndex = 0;
+	 ItemMap item_map(
+    .clock(clk),
+    .resetn(resetn), 
+    .generateEn(enable_random), 
+    .size(16),
+    .data(data),
+    .counter(counter),
+    .quantity(0),
+
+    .moveEn(0),
+    .moveIndex(moveIndex),
+    .moveX(0),      //please multiple by << 4
+    .moveY(0),   
+
+    .moveEn2(0),
+    .moveIndex2(moveIndex),
+    .moveX2(0),      //please multiple by << 4
+    .moveY2(0),   
+
+    .moveState2(0),
+    .visible2(0),
+    .moveState(0),
+    .visible(0),
+ );
+	assign x_init = (data[moveIndex * 32 + 31] << 4) + 
+                    (data[moveIndex * 32 + 30] << 3) + 
+                    (data[moveIndex * 32 + 29] << 2) + 
+                     (data[moveIndex * 32 + 28] << 1) + 
+                     (data[moveIndex * 32 + 27] << 0);
+     assign y_init = (data[moveIndex * 32 + 18] << 3) + 
+                     (data[moveIndex * 32 + 17] << 2) + 
+                    (data[moveIndex * 32 + 16] << 1) + 
+                    (data[moveIndex * 32 + 15] << 0);
+
 
 	//instantiate view fsm
 	
