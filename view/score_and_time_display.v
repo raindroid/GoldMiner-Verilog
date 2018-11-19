@@ -652,6 +652,7 @@ module score_and_time_display(
             end
 
             S_DRAW_DONE: begin
+                resetn_decimal_counter = 1'b0;
                 display_score_and_time_done = 1'b1;
             end
 
