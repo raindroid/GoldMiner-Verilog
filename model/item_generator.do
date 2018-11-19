@@ -14,10 +14,10 @@ add wave -color blue -unsigned isMoving
 
 force {clock} 0 0, 1 10ns -r 20ns
 force {resetn} 0 0, 1 20ns
-force {size} 10000
-force {generateEn} 0 0, 1 10ns
-force {quantity} 'd32
-force {moveIndex} 0
+
+force {generateEn} 0 0, 1 10ns, 0 750ns
+force {quantity} 'd28
+force {moveIndex} 'd5
 run 1000ns
 
 force {moveEn} 1

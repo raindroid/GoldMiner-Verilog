@@ -127,10 +127,9 @@ module view(
     .clock(clk),
     .resetn(resetn), 
     .generateEn(enable_random), 
-    .size(16),
     .data(data),
     .counter(memory_counter),
-    .quantity(31),
+    .quantity(28),
 
     .moveEn(0),
     .moveIndex(moveIndex),
@@ -177,7 +176,7 @@ module view(
                     (data[(stone_count+8)  * 32 + 26] << 3) + 
                     (data[(stone_count+8)  * 32 + 25] << 2) + 
                     (data[(stone_count+8)  * 32 + 24] << 1) + 
-	                 (data[(stone_count+8)  * 32 + 23] << 0);
+	                (data[(stone_count+8)  * 32 + 23] << 0);
 	
     assign y_init_stone = (data[(stone_count+8) * 32 + 18] << 7) + 
                      (data[(stone_count+8) * 32 + 17] << 6) + 
@@ -259,7 +258,7 @@ module view(
 	wire [11:0]Color_out_gold;
 
 
-	wire [2:0]gold_count;
+	wire [7:0]gold_count;
 	wire [8:0]gold_pixel_cout;
 	
 	wire enable_draw_gold;
@@ -328,7 +327,7 @@ module view(
 	wire [11:0]Color_out_stone;
 
 
-	wire [2:0]stone_count;
+	wire [7:0]stone_count;
 	wire [8:0]stone_pixel_cout;
 	
 	wire enable_draw_stone;
@@ -386,7 +385,7 @@ module view(
 	wire [11:0]Color_out_diamond;
 
 
-	wire [2:0]diamond_count;
+	wire [13:0]diamond_count;
 	
 	wire enable_draw_diamond;
 	wire writeEn_diamond;

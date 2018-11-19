@@ -53,7 +53,7 @@ module draw_gold(
 	output reg [11:0]Color_out_gold;
 	
 	
-	output reg [2:0]gold_count;
+	output reg [7:0]gold_count;
 	output reg [8:0]gold_pixel_cout;
 	
 	
@@ -183,7 +183,7 @@ module draw_stone(
 	input enable_stone_count;
 	input resetn_gold_stone;
 			
-	output reg [2:0]stone_count;
+	output reg [7:0]stone_count;
 	output reg [8:0]stone_pixel_cout;
 	
 	output reg [8:0]X_out_stone;

@@ -42,9 +42,9 @@ module game_view_FSM(
 			draw_hook_done,
 			draw_num_done;
 	
-	input [2:0]gold_count;
-	input [2:0]stone_count;
-	input [2:0]diamond_count;
+	input [7:0]gold_count;
+	input [7:0]stone_count;
+	input [13:0]diamond_count;
 	input [5:0]memory_counter;
 	
 	
@@ -95,7 +95,7 @@ module game_view_FSM(
     begin: state_table 
             case (current_state)
 					GENERATE_X_Y: begin
-						next_state = (memory_counter == 32)? DRAW_BACKGROUND : GENERATE_X_Y;
+						next_state = (memory_counter == 10)? DRAW_BACKGROUND : GENERATE_X_Y;
 					end
                 	DRAW_BACKGROUND: begin
 						next_state = (draw_background_done) ? DRAW_BACKGROUND_WAIT : DRAW_BACKGROUND;
@@ -152,7 +152,7 @@ module game_view_FSM(
 					 
 					 end
 
-            default:     next_state = DRAW_BACKGROUND;
+            default:     next_state = GENERATE_X_Y;
         endcase
     end // state_table
    
@@ -209,7 +209,7 @@ module game_view_FSM(
     always@(posedge clk)
     begin: state_FFs
         if(resetn == 0)
-            current_state <= DRAW_BACKGROUND;
+            current_state <= GENERATE_X_Y;
         else
             current_state <= next_state;
     end // state_FFS
