@@ -129,7 +129,7 @@ endmodule // test_top
  );
     parameter SEED = 16'd173;
     parameter parA = 16'd13;
-    parameter parB = 16'd181;
+    parameter parB = 16'd187;
     wire[15: 0] temp;
     // reg [5: 0] counter;
     assign temp = parA * out + parB;
@@ -140,7 +140,7 @@ endmodule // test_top
         end
         else if (enable) begin 
             // out <= temp % 457;
-            // out <= temp > 16'd3877 ? temp - 16'd3877 : temp;
+            out = temp > 16'd3877 ? temp - 16'd3877 : temp;
             // counter = counter + temp[5:2];
         end
     end
