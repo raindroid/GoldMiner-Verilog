@@ -111,13 +111,13 @@ R20
 R8
 ndraw_gold_@f@s@m
 vdraw_hook
-Z21 !s110 1542405038
+Z21 !s110 1542682555
 !i10b 1
-!s100 198@eF7:l<HoF9A`8h=0O0
-I@Q?EDAoNc@N[dhKS`:h1K0
+!s100 EDeJkF@5Z9fDkjC?=K=;X0
+IZl_Xe3H8`<8TFfSi0RhfV1
 R2
-R0
-w1542405016
+Z22 df:/uofT/ecE241/ece241project/view
+w1542682553
 8draw_hook_FSM_data.v
 Fdraw_hook_FSM_data.v
 L0 23
@@ -125,9 +125,9 @@ R4
 r1
 !s85 0
 31
-Z22 !s108 1542405038.000000
-Z23 !s107 draw_hook_FSM_data.v|../model/degree.v|
-Z24 !s90 -reportprogress|300|../model/degree.v|draw_hook_FSM_data.v|
+Z23 !s108 1542682554.000000
+Z24 !s107 draw_hook_FSM_data.v|../model/degree.v|
+Z25 !s90 -reportprogress|300|../model/degree.v|draw_hook_FSM_data.v|
 !i113 1
 R8
 vdraw_stone_FSM
@@ -152,23 +152,23 @@ R20
 R8
 ndraw_stone_@f@s@m
 vItemMap
-Z25 !s110 1542577521
+Z26 !s110 1542577521
 !i10b 1
 !s100 V:9IdQnIf>i^V?CLAmZlJ1
 IDdek^LHNTfCm=GVf7j0^R1
 R2
 R3
-Z26 w1542575065
-Z27 8../model/item_generator.v
-Z28 F../model/item_generator.v
+Z27 w1542575065
+Z28 8../model/item_generator.v
+Z29 F../model/item_generator.v
 L0 68
 R4
 r1
 !s85 0
 31
-Z29 !s108 1542577521.000000
-Z30 !s107 ../model/item_generator.v|num9.v|num8.v|num7.v|num6.v|num5.v|num4.v|num3.v|num2.v|num1.v|num0.v|score_and_time_display.v|view.v|
-Z31 !s90 -reportprogress|300|view.v|score_and_time_display.v|num0.v|num1.v|num2.v|num3.v|num4.v|num5.v|num6.v|num7.v|num8.v|num9.v|../model/item_generator.v|
+Z30 !s108 1542577521.000000
+Z31 !s107 ../model/item_generator.v|num9.v|num8.v|num7.v|num6.v|num5.v|num4.v|num3.v|num2.v|num1.v|num0.v|score_and_time_display.v|view.v|
+Z32 !s90 -reportprogress|300|view.v|score_and_time_display.v|num0.v|num1.v|num2.v|num3.v|num4.v|num5.v|num6.v|num7.v|num8.v|num9.v|../model/item_generator.v|
 !i113 1
 R8
 n@item@map
@@ -373,23 +373,23 @@ R7
 !i113 1
 R8
 vRand
-R25
+R26
 !i10b 1
 !s100 T<eK2GggIAP]>d_QQ03F?2
 I9B9Y61OD`gQhUgCcIClnm1
 R2
 R3
-R26
 R27
 R28
+R29
 L0 46
 R4
 r1
 !s85 0
 31
-R29
 R30
 R31
+R32
 !i113 1
 R8
 n@rand
@@ -436,20 +436,20 @@ R8
 vtrig
 R21
 !i10b 1
-!s100 `IEkodL:P7Tii`^?TjY1[2
-Id^aVOeU6c00Ih`F1d?OaV1
+!s100 F;3Y<O_f:XI7oA9VJJenb1
+Ic7E6Af;g_P;[^]Z_Y@R682
 R2
-R0
-w1542230592
+R22
+w1542682467
 8../model/degree.v
 F../model/degree.v
-L0 1
+L0 3
 R4
 r1
 !s85 0
 31
-R22
 R23
 R24
+R25
 !i113 1
 R8

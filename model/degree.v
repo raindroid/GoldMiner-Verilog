@@ -1,452 +1,1105 @@
+//Need to use as (cos >> 8)
+
 module trig(
     input [8:0] degree,
 
     output reg [8:0]cos, sin,
     output reg signCos, signSin
 );
+    wire [8:0] sub_deg;
+    assign sub_deg = degree >> 1;
 
     always @(*) begin
         case (degree)
 	0: begin
-		cos	= 9'd100;
+		cos	= 9'd256;
 		sin	= 9'd  0;
+		signCos	= 1'b   1;
+		signSin	= 1'b   1;
+	end
+	1: begin
+		cos	= 9'd255;
+		sin	= 9'd  8;
+		signCos	= 1'b   1;
+		signSin	= 1'b   1;
+	end
+	2: begin
+		cos	= 9'd255;
+		sin	= 9'd 17;
+		signCos	= 1'b   1;
+		signSin	= 1'b   1;
+	end
+	3: begin
+		cos	= 9'd254;
+		sin	= 9'd 26;
+		signCos	= 1'b   1;
+		signSin	= 1'b   1;
+	end
+	4: begin
+		cos	= 9'd253;
+		sin	= 9'd 35;
 		signCos	= 1'b   1;
 		signSin	= 1'b   1;
 	end
 	5: begin
-		cos	= 9'd 99;
-		sin	= 9'd  8;
+		cos	= 9'd252;
+		sin	= 9'd 44;
+		signCos	= 1'b   1;
+		signSin	= 1'b   1;
+	end
+	6: begin
+		cos	= 9'd250;
+		sin	= 9'd 53;
+		signCos	= 1'b   1;
+		signSin	= 1'b   1;
+	end
+	7: begin
+		cos	= 9'd248;
+		sin	= 9'd 61;
+		signCos	= 1'b   1;
+		signSin	= 1'b   1;
+	end
+	8: begin
+		cos	= 9'd246;
+		sin	= 9'd 70;
+		signCos	= 1'b   1;
+		signSin	= 1'b   1;
+	end
+	9: begin
+		cos	= 9'd243;
+		sin	= 9'd 79;
 		signCos	= 1'b   1;
 		signSin	= 1'b   1;
 	end
 	10: begin
-		cos	= 9'd 98;
-		sin	= 9'd 17;
+		cos	= 9'd240;
+		sin	= 9'd 87;
+		signCos	= 1'b   1;
+		signSin	= 1'b   1;
+	end
+	11: begin
+		cos	= 9'd237;
+		sin	= 9'd 95;
+		signCos	= 1'b   1;
+		signSin	= 1'b   1;
+	end
+	12: begin
+		cos	= 9'd233;
+		sin	= 9'd104;
+		signCos	= 1'b   1;
+		signSin	= 1'b   1;
+	end
+	13: begin
+		cos	= 9'd230;
+		sin	= 9'd112;
+		signCos	= 1'b   1;
+		signSin	= 1'b   1;
+	end
+	14: begin
+		cos	= 9'd226;
+		sin	= 9'd120;
 		signCos	= 1'b   1;
 		signSin	= 1'b   1;
 	end
 	15: begin
-		cos	= 9'd 96;
-		sin	= 9'd 25;
+		cos	= 9'd221;
+		sin	= 9'd127;
+		signCos	= 1'b   1;
+		signSin	= 1'b   1;
+	end
+	16: begin
+		cos	= 9'd217;
+		sin	= 9'd135;
+		signCos	= 1'b   1;
+		signSin	= 1'b   1;
+	end
+	17: begin
+		cos	= 9'd212;
+		sin	= 9'd143;
+		signCos	= 1'b   1;
+		signSin	= 1'b   1;
+	end
+	18: begin
+		cos	= 9'd207;
+		sin	= 9'd150;
+		signCos	= 1'b   1;
+		signSin	= 1'b   1;
+	end
+	19: begin
+		cos	= 9'd201;
+		sin	= 9'd157;
 		signCos	= 1'b   1;
 		signSin	= 1'b   1;
 	end
 	20: begin
-		cos	= 9'd 93;
-		sin	= 9'd 34;
+		cos	= 9'd196;
+		sin	= 9'd164;
+		signCos	= 1'b   1;
+		signSin	= 1'b   1;
+	end
+	21: begin
+		cos	= 9'd190;
+		sin	= 9'd171;
+		signCos	= 1'b   1;
+		signSin	= 1'b   1;
+	end
+	22: begin
+		cos	= 9'd184;
+		sin	= 9'd177;
+		signCos	= 1'b   1;
+		signSin	= 1'b   1;
+	end
+	23: begin
+		cos	= 9'd177;
+		sin	= 9'd184;
+		signCos	= 1'b   1;
+		signSin	= 1'b   1;
+	end
+	24: begin
+		cos	= 9'd171;
+		sin	= 9'd190;
 		signCos	= 1'b   1;
 		signSin	= 1'b   1;
 	end
 	25: begin
-		cos	= 9'd 90;
-		sin	= 9'd 42;
+		cos	= 9'd164;
+		sin	= 9'd196;
+		signCos	= 1'b   1;
+		signSin	= 1'b   1;
+	end
+	26: begin
+		cos	= 9'd157;
+		sin	= 9'd201;
+		signCos	= 1'b   1;
+		signSin	= 1'b   1;
+	end
+	27: begin
+		cos	= 9'd150;
+		sin	= 9'd207;
+		signCos	= 1'b   1;
+		signSin	= 1'b   1;
+	end
+	28: begin
+		cos	= 9'd143;
+		sin	= 9'd212;
+		signCos	= 1'b   1;
+		signSin	= 1'b   1;
+	end
+	29: begin
+		cos	= 9'd135;
+		sin	= 9'd217;
 		signCos	= 1'b   1;
 		signSin	= 1'b   1;
 	end
 	30: begin
-		cos	= 9'd 86;
-		sin	= 9'd 49;
+		cos	= 9'd128;
+		sin	= 9'd221;
+		signCos	= 1'b   1;
+		signSin	= 1'b   1;
+	end
+	31: begin
+		cos	= 9'd120;
+		sin	= 9'd226;
+		signCos	= 1'b   1;
+		signSin	= 1'b   1;
+	end
+	32: begin
+		cos	= 9'd112;
+		sin	= 9'd230;
+		signCos	= 1'b   1;
+		signSin	= 1'b   1;
+	end
+	33: begin
+		cos	= 9'd104;
+		sin	= 9'd233;
+		signCos	= 1'b   1;
+		signSin	= 1'b   1;
+	end
+	34: begin
+		cos	= 9'd 95;
+		sin	= 9'd237;
 		signCos	= 1'b   1;
 		signSin	= 1'b   1;
 	end
 	35: begin
-		cos	= 9'd 81;
-		sin	= 9'd 57;
+		cos	= 9'd 87;
+		sin	= 9'd240;
+		signCos	= 1'b   1;
+		signSin	= 1'b   1;
+	end
+	36: begin
+		cos	= 9'd 79;
+		sin	= 9'd243;
+		signCos	= 1'b   1;
+		signSin	= 1'b   1;
+	end
+	37: begin
+		cos	= 9'd 70;
+		sin	= 9'd246;
+		signCos	= 1'b   1;
+		signSin	= 1'b   1;
+	end
+	38: begin
+		cos	= 9'd 61;
+		sin	= 9'd248;
+		signCos	= 1'b   1;
+		signSin	= 1'b   1;
+	end
+	39: begin
+		cos	= 9'd 53;
+		sin	= 9'd250;
 		signCos	= 1'b   1;
 		signSin	= 1'b   1;
 	end
 	40: begin
-		cos	= 9'd 76;
-		sin	= 9'd 64;
+		cos	= 9'd 44;
+		sin	= 9'd252;
+		signCos	= 1'b   1;
+		signSin	= 1'b   1;
+	end
+	41: begin
+		cos	= 9'd 35;
+		sin	= 9'd253;
+		signCos	= 1'b   1;
+		signSin	= 1'b   1;
+	end
+	42: begin
+		cos	= 9'd 26;
+		sin	= 9'd254;
+		signCos	= 1'b   1;
+		signSin	= 1'b   1;
+	end
+	43: begin
+		cos	= 9'd 17;
+		sin	= 9'd255;
+		signCos	= 1'b   1;
+		signSin	= 1'b   1;
+	end
+	44: begin
+		cos	= 9'd  8;
+		sin	= 9'd255;
 		signCos	= 1'b   1;
 		signSin	= 1'b   1;
 	end
 	45: begin
-		cos	= 9'd 70;
-		sin	= 9'd 70;
+		cos	= 9'd  0;
+		sin	= 9'd256;
 		signCos	= 1'b   1;
+		signSin	= 1'b   1;
+	end
+	46: begin
+		cos	= 9'd  8;
+		sin	= 9'd255;
+		signCos	= 1'b   0;
+		signSin	= 1'b   1;
+	end
+	47: begin
+		cos	= 9'd 17;
+		sin	= 9'd255;
+		signCos	= 1'b   0;
+		signSin	= 1'b   1;
+	end
+	48: begin
+		cos	= 9'd 26;
+		sin	= 9'd254;
+		signCos	= 1'b   0;
+		signSin	= 1'b   1;
+	end
+	49: begin
+		cos	= 9'd 35;
+		sin	= 9'd253;
+		signCos	= 1'b   0;
 		signSin	= 1'b   1;
 	end
 	50: begin
-		cos	= 9'd 64;
-		sin	= 9'd 76;
-		signCos	= 1'b   1;
+		cos	= 9'd 44;
+		sin	= 9'd252;
+		signCos	= 1'b   0;
+		signSin	= 1'b   1;
+	end
+	51: begin
+		cos	= 9'd 53;
+		sin	= 9'd250;
+		signCos	= 1'b   0;
+		signSin	= 1'b   1;
+	end
+	52: begin
+		cos	= 9'd 61;
+		sin	= 9'd248;
+		signCos	= 1'b   0;
+		signSin	= 1'b   1;
+	end
+	53: begin
+		cos	= 9'd 70;
+		sin	= 9'd246;
+		signCos	= 1'b   0;
+		signSin	= 1'b   1;
+	end
+	54: begin
+		cos	= 9'd 79;
+		sin	= 9'd243;
+		signCos	= 1'b   0;
 		signSin	= 1'b   1;
 	end
 	55: begin
-		cos	= 9'd 57;
-		sin	= 9'd 81;
-		signCos	= 1'b   1;
+		cos	= 9'd 87;
+		sin	= 9'd240;
+		signCos	= 1'b   0;
+		signSin	= 1'b   1;
+	end
+	56: begin
+		cos	= 9'd 95;
+		sin	= 9'd237;
+		signCos	= 1'b   0;
+		signSin	= 1'b   1;
+	end
+	57: begin
+		cos	= 9'd104;
+		sin	= 9'd233;
+		signCos	= 1'b   0;
+		signSin	= 1'b   1;
+	end
+	58: begin
+		cos	= 9'd112;
+		sin	= 9'd230;
+		signCos	= 1'b   0;
+		signSin	= 1'b   1;
+	end
+	59: begin
+		cos	= 9'd120;
+		sin	= 9'd226;
+		signCos	= 1'b   0;
 		signSin	= 1'b   1;
 	end
 	60: begin
-		cos	= 9'd 50;
-		sin	= 9'd 86;
-		signCos	= 1'b   1;
+		cos	= 9'd127;
+		sin	= 9'd221;
+		signCos	= 1'b   0;
+		signSin	= 1'b   1;
+	end
+	61: begin
+		cos	= 9'd135;
+		sin	= 9'd217;
+		signCos	= 1'b   0;
+		signSin	= 1'b   1;
+	end
+	62: begin
+		cos	= 9'd143;
+		sin	= 9'd212;
+		signCos	= 1'b   0;
+		signSin	= 1'b   1;
+	end
+	63: begin
+		cos	= 9'd150;
+		sin	= 9'd207;
+		signCos	= 1'b   0;
+		signSin	= 1'b   1;
+	end
+	64: begin
+		cos	= 9'd157;
+		sin	= 9'd201;
+		signCos	= 1'b   0;
 		signSin	= 1'b   1;
 	end
 	65: begin
-		cos	= 9'd 42;
-		sin	= 9'd 90;
-		signCos	= 1'b   1;
+		cos	= 9'd164;
+		sin	= 9'd196;
+		signCos	= 1'b   0;
+		signSin	= 1'b   1;
+	end
+	66: begin
+		cos	= 9'd171;
+		sin	= 9'd190;
+		signCos	= 1'b   0;
+		signSin	= 1'b   1;
+	end
+	67: begin
+		cos	= 9'd177;
+		sin	= 9'd184;
+		signCos	= 1'b   0;
+		signSin	= 1'b   1;
+	end
+	68: begin
+		cos	= 9'd184;
+		sin	= 9'd177;
+		signCos	= 1'b   0;
+		signSin	= 1'b   1;
+	end
+	69: begin
+		cos	= 9'd190;
+		sin	= 9'd171;
+		signCos	= 1'b   0;
 		signSin	= 1'b   1;
 	end
 	70: begin
-		cos	= 9'd 34;
-		sin	= 9'd 93;
-		signCos	= 1'b   1;
+		cos	= 9'd196;
+		sin	= 9'd164;
+		signCos	= 1'b   0;
+		signSin	= 1'b   1;
+	end
+	71: begin
+		cos	= 9'd201;
+		sin	= 9'd157;
+		signCos	= 1'b   0;
+		signSin	= 1'b   1;
+	end
+	72: begin
+		cos	= 9'd207;
+		sin	= 9'd150;
+		signCos	= 1'b   0;
+		signSin	= 1'b   1;
+	end
+	73: begin
+		cos	= 9'd212;
+		sin	= 9'd143;
+		signCos	= 1'b   0;
+		signSin	= 1'b   1;
+	end
+	74: begin
+		cos	= 9'd217;
+		sin	= 9'd135;
+		signCos	= 1'b   0;
 		signSin	= 1'b   1;
 	end
 	75: begin
-		cos	= 9'd 25;
-		sin	= 9'd 96;
-		signCos	= 1'b   1;
+		cos	= 9'd221;
+		sin	= 9'd127;
+		signCos	= 1'b   0;
+		signSin	= 1'b   1;
+	end
+	76: begin
+		cos	= 9'd226;
+		sin	= 9'd120;
+		signCos	= 1'b   0;
+		signSin	= 1'b   1;
+	end
+	77: begin
+		cos	= 9'd230;
+		sin	= 9'd112;
+		signCos	= 1'b   0;
+		signSin	= 1'b   1;
+	end
+	78: begin
+		cos	= 9'd233;
+		sin	= 9'd104;
+		signCos	= 1'b   0;
+		signSin	= 1'b   1;
+	end
+	79: begin
+		cos	= 9'd237;
+		sin	= 9'd 95;
+		signCos	= 1'b   0;
 		signSin	= 1'b   1;
 	end
 	80: begin
-		cos	= 9'd 17;
-		sin	= 9'd 98;
-		signCos	= 1'b   1;
-		signSin	= 1'b   1;
-	end
-	85: begin
-		cos	= 9'd  8;
-		sin	= 9'd 99;
-		signCos	= 1'b   1;
-		signSin	= 1'b   1;
-	end
-	90: begin
-		cos	= 9'd  0;
-		sin	= 9'd100;
-		signCos	= 1'b   1;
-		signSin	= 1'b   1;
-	end
-	95: begin
-		cos	= 9'd  8;
-		sin	= 9'd 99;
+		cos	= 9'd240;
+		sin	= 9'd 87;
 		signCos	= 1'b   0;
 		signSin	= 1'b   1;
 	end
-	100: begin
-		cos	= 9'd 17;
-		sin	= 9'd 98;
+	81: begin
+		cos	= 9'd243;
+		sin	= 9'd 79;
 		signCos	= 1'b   0;
 		signSin	= 1'b   1;
 	end
-	105: begin
-		cos	= 9'd 25;
-		sin	= 9'd 96;
-		signCos	= 1'b   0;
-		signSin	= 1'b   1;
-	end
-	110: begin
-		cos	= 9'd 34;
-		sin	= 9'd 93;
-		signCos	= 1'b   0;
-		signSin	= 1'b   1;
-	end
-	115: begin
-		cos	= 9'd 42;
-		sin	= 9'd 90;
-		signCos	= 1'b   0;
-		signSin	= 1'b   1;
-	end
-	120: begin
-		cos	= 9'd 49;
-		sin	= 9'd 86;
-		signCos	= 1'b   0;
-		signSin	= 1'b   1;
-	end
-	125: begin
-		cos	= 9'd 57;
-		sin	= 9'd 81;
-		signCos	= 1'b   0;
-		signSin	= 1'b   1;
-	end
-	130: begin
-		cos	= 9'd 64;
-		sin	= 9'd 76;
-		signCos	= 1'b   0;
-		signSin	= 1'b   1;
-	end
-	135: begin
-		cos	= 9'd 70;
+	82: begin
+		cos	= 9'd246;
 		sin	= 9'd 70;
 		signCos	= 1'b   0;
 		signSin	= 1'b   1;
 	end
-	140: begin
-		cos	= 9'd 76;
-		sin	= 9'd 64;
+	83: begin
+		cos	= 9'd248;
+		sin	= 9'd 61;
 		signCos	= 1'b   0;
 		signSin	= 1'b   1;
 	end
-	145: begin
-		cos	= 9'd 81;
-		sin	= 9'd 57;
+	84: begin
+		cos	= 9'd250;
+		sin	= 9'd 53;
 		signCos	= 1'b   0;
 		signSin	= 1'b   1;
 	end
-	150: begin
-		cos	= 9'd 86;
-		sin	= 9'd 49;
+	85: begin
+		cos	= 9'd252;
+		sin	= 9'd 44;
 		signCos	= 1'b   0;
 		signSin	= 1'b   1;
 	end
-	155: begin
-		cos	= 9'd 90;
-		sin	= 9'd 42;
+	86: begin
+		cos	= 9'd253;
+		sin	= 9'd 35;
 		signCos	= 1'b   0;
 		signSin	= 1'b   1;
 	end
-	160: begin
-		cos	= 9'd 93;
-		sin	= 9'd 34;
+	87: begin
+		cos	= 9'd254;
+		sin	= 9'd 26;
 		signCos	= 1'b   0;
 		signSin	= 1'b   1;
 	end
-	165: begin
-		cos	= 9'd 96;
-		sin	= 9'd 25;
-		signCos	= 1'b   0;
-		signSin	= 1'b   1;
-	end
-	170: begin
-		cos	= 9'd 98;
+	88: begin
+		cos	= 9'd255;
 		sin	= 9'd 17;
 		signCos	= 1'b   0;
 		signSin	= 1'b   1;
 	end
-	175: begin
-		cos	= 9'd 99;
+	89: begin
+		cos	= 9'd255;
 		sin	= 9'd  8;
 		signCos	= 1'b   0;
 		signSin	= 1'b   1;
 	end
-	180: begin
-		cos	= 9'd100;
+	90: begin
+		cos	= 9'd256;
 		sin	= 9'd  0;
 		signCos	= 1'b   0;
 		signSin	= 1'b   1;
 	end
-	185: begin
-		cos	= 9'd 99;
+	91: begin
+		cos	= 9'd255;
 		sin	= 9'd  8;
 		signCos	= 1'b   0;
 		signSin	= 1'b   0;
 	end
-	190: begin
-		cos	= 9'd 98;
+	92: begin
+		cos	= 9'd255;
 		sin	= 9'd 17;
 		signCos	= 1'b   0;
 		signSin	= 1'b   0;
 	end
-	195: begin
-		cos	= 9'd 96;
-		sin	= 9'd 25;
+	93: begin
+		cos	= 9'd254;
+		sin	= 9'd 26;
 		signCos	= 1'b   0;
 		signSin	= 1'b   0;
 	end
-	200: begin
-		cos	= 9'd 93;
-		sin	= 9'd 34;
+	94: begin
+		cos	= 9'd253;
+		sin	= 9'd 35;
 		signCos	= 1'b   0;
 		signSin	= 1'b   0;
 	end
-	205: begin
-		cos	= 9'd 90;
-		sin	= 9'd 42;
+	95: begin
+		cos	= 9'd252;
+		sin	= 9'd 44;
 		signCos	= 1'b   0;
 		signSin	= 1'b   0;
 	end
-	210: begin
-		cos	= 9'd 86;
-		sin	= 9'd 50;
+	96: begin
+		cos	= 9'd250;
+		sin	= 9'd 53;
 		signCos	= 1'b   0;
 		signSin	= 1'b   0;
 	end
-	215: begin
-		cos	= 9'd 81;
-		sin	= 9'd 57;
+	97: begin
+		cos	= 9'd248;
+		sin	= 9'd 61;
 		signCos	= 1'b   0;
 		signSin	= 1'b   0;
 	end
-	220: begin
-		cos	= 9'd 76;
-		sin	= 9'd 64;
-		signCos	= 1'b   0;
-		signSin	= 1'b   0;
-	end
-	225: begin
-		cos	= 9'd 70;
+	98: begin
+		cos	= 9'd246;
 		sin	= 9'd 70;
 		signCos	= 1'b   0;
 		signSin	= 1'b   0;
 	end
-	230: begin
-		cos	= 9'd 64;
-		sin	= 9'd 76;
+	99: begin
+		cos	= 9'd243;
+		sin	= 9'd 79;
 		signCos	= 1'b   0;
 		signSin	= 1'b   0;
 	end
-	235: begin
-		cos	= 9'd 57;
-		sin	= 9'd 81;
+	100: begin
+		cos	= 9'd240;
+		sin	= 9'd 87;
 		signCos	= 1'b   0;
 		signSin	= 1'b   0;
 	end
-	240: begin
-		cos	= 9'd 50;
-		sin	= 9'd 86;
+	101: begin
+		cos	= 9'd237;
+		sin	= 9'd 95;
 		signCos	= 1'b   0;
 		signSin	= 1'b   0;
 	end
-	245: begin
-		cos	= 9'd 42;
-		sin	= 9'd 90;
+	102: begin
+		cos	= 9'd233;
+		sin	= 9'd104;
 		signCos	= 1'b   0;
 		signSin	= 1'b   0;
 	end
-	250: begin
-		cos	= 9'd 34;
-		sin	= 9'd 93;
+	103: begin
+		cos	= 9'd230;
+		sin	= 9'd112;
 		signCos	= 1'b   0;
 		signSin	= 1'b   0;
 	end
-	255: begin
-		cos	= 9'd 25;
-		sin	= 9'd 96;
+	104: begin
+		cos	= 9'd226;
+		sin	= 9'd120;
 		signCos	= 1'b   0;
 		signSin	= 1'b   0;
 	end
-	260: begin
+	105: begin
+		cos	= 9'd221;
+		sin	= 9'd128;
+		signCos	= 1'b   0;
+		signSin	= 1'b   0;
+	end
+	106: begin
+		cos	= 9'd217;
+		sin	= 9'd135;
+		signCos	= 1'b   0;
+		signSin	= 1'b   0;
+	end
+	107: begin
+		cos	= 9'd212;
+		sin	= 9'd143;
+		signCos	= 1'b   0;
+		signSin	= 1'b   0;
+	end
+	108: begin
+		cos	= 9'd207;
+		sin	= 9'd150;
+		signCos	= 1'b   0;
+		signSin	= 1'b   0;
+	end
+	109: begin
+		cos	= 9'd201;
+		sin	= 9'd157;
+		signCos	= 1'b   0;
+		signSin	= 1'b   0;
+	end
+	110: begin
+		cos	= 9'd196;
+		sin	= 9'd164;
+		signCos	= 1'b   0;
+		signSin	= 1'b   0;
+	end
+	111: begin
+		cos	= 9'd190;
+		sin	= 9'd171;
+		signCos	= 1'b   0;
+		signSin	= 1'b   0;
+	end
+	112: begin
+		cos	= 9'd184;
+		sin	= 9'd177;
+		signCos	= 1'b   0;
+		signSin	= 1'b   0;
+	end
+	113: begin
+		cos	= 9'd177;
+		sin	= 9'd184;
+		signCos	= 1'b   0;
+		signSin	= 1'b   0;
+	end
+	114: begin
+		cos	= 9'd171;
+		sin	= 9'd190;
+		signCos	= 1'b   0;
+		signSin	= 1'b   0;
+	end
+	115: begin
+		cos	= 9'd164;
+		sin	= 9'd196;
+		signCos	= 1'b   0;
+		signSin	= 1'b   0;
+	end
+	116: begin
+		cos	= 9'd157;
+		sin	= 9'd201;
+		signCos	= 1'b   0;
+		signSin	= 1'b   0;
+	end
+	117: begin
+		cos	= 9'd150;
+		sin	= 9'd207;
+		signCos	= 1'b   0;
+		signSin	= 1'b   0;
+	end
+	118: begin
+		cos	= 9'd143;
+		sin	= 9'd212;
+		signCos	= 1'b   0;
+		signSin	= 1'b   0;
+	end
+	119: begin
+		cos	= 9'd135;
+		sin	= 9'd217;
+		signCos	= 1'b   0;
+		signSin	= 1'b   0;
+	end
+	120: begin
+		cos	= 9'd128;
+		sin	= 9'd221;
+		signCos	= 1'b   0;
+		signSin	= 1'b   0;
+	end
+	121: begin
+		cos	= 9'd120;
+		sin	= 9'd226;
+		signCos	= 1'b   0;
+		signSin	= 1'b   0;
+	end
+	122: begin
+		cos	= 9'd112;
+		sin	= 9'd230;
+		signCos	= 1'b   0;
+		signSin	= 1'b   0;
+	end
+	123: begin
+		cos	= 9'd104;
+		sin	= 9'd233;
+		signCos	= 1'b   0;
+		signSin	= 1'b   0;
+	end
+	124: begin
+		cos	= 9'd 95;
+		sin	= 9'd237;
+		signCos	= 1'b   0;
+		signSin	= 1'b   0;
+	end
+	125: begin
+		cos	= 9'd 87;
+		sin	= 9'd240;
+		signCos	= 1'b   0;
+		signSin	= 1'b   0;
+	end
+	126: begin
+		cos	= 9'd 79;
+		sin	= 9'd243;
+		signCos	= 1'b   0;
+		signSin	= 1'b   0;
+	end
+	127: begin
+		cos	= 9'd 70;
+		sin	= 9'd246;
+		signCos	= 1'b   0;
+		signSin	= 1'b   0;
+	end
+	128: begin
+		cos	= 9'd 61;
+		sin	= 9'd248;
+		signCos	= 1'b   0;
+		signSin	= 1'b   0;
+	end
+	129: begin
+		cos	= 9'd 53;
+		sin	= 9'd250;
+		signCos	= 1'b   0;
+		signSin	= 1'b   0;
+	end
+	130: begin
+		cos	= 9'd 44;
+		sin	= 9'd252;
+		signCos	= 1'b   0;
+		signSin	= 1'b   0;
+	end
+	131: begin
+		cos	= 9'd 35;
+		sin	= 9'd253;
+		signCos	= 1'b   0;
+		signSin	= 1'b   0;
+	end
+	132: begin
+		cos	= 9'd 26;
+		sin	= 9'd254;
+		signCos	= 1'b   0;
+		signSin	= 1'b   0;
+	end
+	133: begin
 		cos	= 9'd 17;
-		sin	= 9'd 98;
+		sin	= 9'd255;
 		signCos	= 1'b   0;
 		signSin	= 1'b   0;
 	end
-	265: begin
+	134: begin
 		cos	= 9'd  8;
-		sin	= 9'd 99;
+		sin	= 9'd255;
 		signCos	= 1'b   0;
 		signSin	= 1'b   0;
 	end
-	270: begin
+	135: begin
 		cos	= 9'd  0;
-		sin	= 9'd100;
+		sin	= 9'd256;
 		signCos	= 1'b   1;
 		signSin	= 1'b   0;
 	end
-	275: begin
+	136: begin
 		cos	= 9'd  8;
-		sin	= 9'd 99;
+		sin	= 9'd255;
 		signCos	= 1'b   1;
 		signSin	= 1'b   0;
 	end
-	280: begin
+	137: begin
 		cos	= 9'd 17;
-		sin	= 9'd 98;
+		sin	= 9'd255;
 		signCos	= 1'b   1;
 		signSin	= 1'b   0;
 	end
-	285: begin
-		cos	= 9'd 25;
-		sin	= 9'd 96;
+	138: begin
+		cos	= 9'd 26;
+		sin	= 9'd254;
 		signCos	= 1'b   1;
 		signSin	= 1'b   0;
 	end
-	290: begin
-		cos	= 9'd 34;
-		sin	= 9'd 93;
+	139: begin
+		cos	= 9'd 35;
+		sin	= 9'd253;
 		signCos	= 1'b   1;
 		signSin	= 1'b   0;
 	end
-	295: begin
-		cos	= 9'd 42;
-		sin	= 9'd 90;
+	140: begin
+		cos	= 9'd 44;
+		sin	= 9'd252;
 		signCos	= 1'b   1;
 		signSin	= 1'b   0;
 	end
-	300: begin
-		cos	= 9'd 50;
-		sin	= 9'd 86;
+	141: begin
+		cos	= 9'd 53;
+		sin	= 9'd250;
 		signCos	= 1'b   1;
 		signSin	= 1'b   0;
 	end
-	305: begin
-		cos	= 9'd 57;
-		sin	= 9'd 81;
+	142: begin
+		cos	= 9'd 61;
+		sin	= 9'd248;
 		signCos	= 1'b   1;
 		signSin	= 1'b   0;
 	end
-	310: begin
-		cos	= 9'd 64;
-		sin	= 9'd 76;
-		signCos	= 1'b   1;
-		signSin	= 1'b   0;
-	end
-	315: begin
+	143: begin
 		cos	= 9'd 70;
+		sin	= 9'd246;
+		signCos	= 1'b   1;
+		signSin	= 1'b   0;
+	end
+	144: begin
+		cos	= 9'd 79;
+		sin	= 9'd243;
+		signCos	= 1'b   1;
+		signSin	= 1'b   0;
+	end
+	145: begin
+		cos	= 9'd 87;
+		sin	= 9'd240;
+		signCos	= 1'b   1;
+		signSin	= 1'b   0;
+	end
+	146: begin
+		cos	= 9'd 95;
+		sin	= 9'd237;
+		signCos	= 1'b   1;
+		signSin	= 1'b   0;
+	end
+	147: begin
+		cos	= 9'd104;
+		sin	= 9'd233;
+		signCos	= 1'b   1;
+		signSin	= 1'b   0;
+	end
+	148: begin
+		cos	= 9'd112;
+		sin	= 9'd230;
+		signCos	= 1'b   1;
+		signSin	= 1'b   0;
+	end
+	149: begin
+		cos	= 9'd120;
+		sin	= 9'd226;
+		signCos	= 1'b   1;
+		signSin	= 1'b   0;
+	end
+	150: begin
+		cos	= 9'd128;
+		sin	= 9'd221;
+		signCos	= 1'b   1;
+		signSin	= 1'b   0;
+	end
+	151: begin
+		cos	= 9'd135;
+		sin	= 9'd217;
+		signCos	= 1'b   1;
+		signSin	= 1'b   0;
+	end
+	152: begin
+		cos	= 9'd143;
+		sin	= 9'd212;
+		signCos	= 1'b   1;
+		signSin	= 1'b   0;
+	end
+	153: begin
+		cos	= 9'd150;
+		sin	= 9'd207;
+		signCos	= 1'b   1;
+		signSin	= 1'b   0;
+	end
+	154: begin
+		cos	= 9'd157;
+		sin	= 9'd201;
+		signCos	= 1'b   1;
+		signSin	= 1'b   0;
+	end
+	155: begin
+		cos	= 9'd164;
+		sin	= 9'd196;
+		signCos	= 1'b   1;
+		signSin	= 1'b   0;
+	end
+	156: begin
+		cos	= 9'd171;
+		sin	= 9'd190;
+		signCos	= 1'b   1;
+		signSin	= 1'b   0;
+	end
+	157: begin
+		cos	= 9'd177;
+		sin	= 9'd184;
+		signCos	= 1'b   1;
+		signSin	= 1'b   0;
+	end
+	158: begin
+		cos	= 9'd184;
+		sin	= 9'd177;
+		signCos	= 1'b   1;
+		signSin	= 1'b   0;
+	end
+	159: begin
+		cos	= 9'd190;
+		sin	= 9'd171;
+		signCos	= 1'b   1;
+		signSin	= 1'b   0;
+	end
+	160: begin
+		cos	= 9'd196;
+		sin	= 9'd164;
+		signCos	= 1'b   1;
+		signSin	= 1'b   0;
+	end
+	161: begin
+		cos	= 9'd201;
+		sin	= 9'd157;
+		signCos	= 1'b   1;
+		signSin	= 1'b   0;
+	end
+	162: begin
+		cos	= 9'd207;
+		sin	= 9'd150;
+		signCos	= 1'b   1;
+		signSin	= 1'b   0;
+	end
+	163: begin
+		cos	= 9'd212;
+		sin	= 9'd143;
+		signCos	= 1'b   1;
+		signSin	= 1'b   0;
+	end
+	164: begin
+		cos	= 9'd217;
+		sin	= 9'd135;
+		signCos	= 1'b   1;
+		signSin	= 1'b   0;
+	end
+	165: begin
+		cos	= 9'd221;
+		sin	= 9'd128;
+		signCos	= 1'b   1;
+		signSin	= 1'b   0;
+	end
+	166: begin
+		cos	= 9'd226;
+		sin	= 9'd120;
+		signCos	= 1'b   1;
+		signSin	= 1'b   0;
+	end
+	167: begin
+		cos	= 9'd230;
+		sin	= 9'd112;
+		signCos	= 1'b   1;
+		signSin	= 1'b   0;
+	end
+	168: begin
+		cos	= 9'd233;
+		sin	= 9'd104;
+		signCos	= 1'b   1;
+		signSin	= 1'b   0;
+	end
+	169: begin
+		cos	= 9'd237;
+		sin	= 9'd 95;
+		signCos	= 1'b   1;
+		signSin	= 1'b   0;
+	end
+	170: begin
+		cos	= 9'd240;
+		sin	= 9'd 87;
+		signCos	= 1'b   1;
+		signSin	= 1'b   0;
+	end
+	171: begin
+		cos	= 9'd243;
+		sin	= 9'd 79;
+		signCos	= 1'b   1;
+		signSin	= 1'b   0;
+	end
+	172: begin
+		cos	= 9'd246;
 		sin	= 9'd 70;
 		signCos	= 1'b   1;
 		signSin	= 1'b   0;
 	end
-	320: begin
-		cos	= 9'd 76;
-		sin	= 9'd 64;
+	173: begin
+		cos	= 9'd248;
+		sin	= 9'd 61;
 		signCos	= 1'b   1;
 		signSin	= 1'b   0;
 	end
-	325: begin
-		cos	= 9'd 81;
-		sin	= 9'd 57;
+	174: begin
+		cos	= 9'd250;
+		sin	= 9'd 53;
 		signCos	= 1'b   1;
 		signSin	= 1'b   0;
 	end
-	330: begin
-		cos	= 9'd 86;
-		sin	= 9'd 50;
+	175: begin
+		cos	= 9'd252;
+		sin	= 9'd 44;
 		signCos	= 1'b   1;
 		signSin	= 1'b   0;
 	end
-	335: begin
-		cos	= 9'd 90;
-		sin	= 9'd 42;
+	176: begin
+		cos	= 9'd253;
+		sin	= 9'd 35;
 		signCos	= 1'b   1;
 		signSin	= 1'b   0;
 	end
-	340: begin
-		cos	= 9'd 93;
-		sin	= 9'd 34;
+	177: begin
+		cos	= 9'd254;
+		sin	= 9'd 26;
 		signCos	= 1'b   1;
 		signSin	= 1'b   0;
 	end
-	345: begin
-		cos	= 9'd 96;
-		sin	= 9'd 25;
-		signCos	= 1'b   1;
-		signSin	= 1'b   0;
-	end
-	350: begin
-		cos	= 9'd 98;
+	178: begin
+		cos	= 9'd255;
 		sin	= 9'd 17;
 		signCos	= 1'b   1;
 		signSin	= 1'b   0;
 	end
-	355: begin
-		cos	= 9'd 99;
+	179: begin
+		cos	= 9'd255;
 		sin	= 9'd  8;
 		signCos	= 1'b   1;
 		signSin	= 1'b   0;
 	end
 
-    default: begin
-		cos	= 9'd  0;
-		sin	= 9'd100;
+
+	default: begin
+		cos	= 9'd128;
+		sin	= 9'd  0;
 		signCos	= 1'b   1;
 		signSin	= 1'b   1;
 	end
-
+	
     endcase
 
     end
