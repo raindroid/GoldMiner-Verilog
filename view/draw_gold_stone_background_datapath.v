@@ -128,7 +128,7 @@ module draw_gold(
 	
 		//gold counter
 	always@(posedge clk)begin
-		if(!resetn | (!resetn_gold_stone)) gold_count <= 3'b0;
+		if(!resetn | (!resetn_gold_stone)) gold_count <= 8'b0;
 		else if(enable_gold_count)
 			gold_count <= gold_count + 1'b1;
 	end
@@ -265,7 +265,7 @@ module draw_stone(
 	
 		//stone counter
 	always@(posedge clk)begin
-		if(!resetn | (!resetn_gold_stone)) stone_count <= 3'b0;
+		if(!resetn | (!resetn_gold_stone)) stone_count <= 8'b0;
 		else if(enable_stone_count)
 			stone_count <= stone_count + 1'b1;
 	end

@@ -42,12 +42,12 @@
  **/
 
 module test_top(
-    input clk, resetn  
+    input clk, resetn,enable_random
 );
-    localparam gold_count = 3,
+    localparam gold_count = 1,
                 stone_count = 1,
-                diamond_count = 1,
-                enable_random = 1;
+                diamond_count = 1;
+     
     localparam MAX_SIZE = 32 << 5; //1024
 	wire [MAX_SIZE - 1: 0] data;
 	wire [5:0]memory_counter;
@@ -59,9 +59,9 @@ module test_top(
     .generateEn(enable_random), 
     .data(data),
     .counter(memory_counter),
-    .stoneQuantity(5), 
-    .goldQuantity(5), 
-    .diamondQuantity(5),
+    .stoneQuantity(1), 
+    .goldQuantity(1), 
+    .diamondQuantity(1),
 
     .moveEn(0),
     .moveIndex(0),
@@ -81,62 +81,62 @@ module test_top(
 	wire [8:0] x_init_gold,x_init_stone,x_init_diamond;
 	wire [7:0] y_init_gold,y_init_stone,y_init_diamond;
 
-	assign x_init_gold = (data[gold_count * 32 + 31] << 8) + 
-                    (data[gold_count * 32 + 30] << 7) + 
-                    (data[gold_count * 32 + 29] << 6) + 
-                    (data[gold_count * 32 + 28] << 5) + 
-                    (data[gold_count * 32 + 27] << 4) + 
-                    (data[gold_count * 32 + 26] << 3) + 
-                    (data[gold_count * 32 + 25] << 2) + 
-                    (data[gold_count * 32 + 24] << 1) + 
-	                (data[gold_count * 32 + 23] << 0);
+	assign x_init_gold = (data[1 * 32 + 31] << 8) + 
+                    (data[1 * 32 + 30] << 7) + 
+                    (data[1 * 32 + 29] << 6) + 
+                    (data[1 * 32 + 28] << 5) + 
+                    (data[1 * 32 + 27] << 4) + 
+                    (data[1 * 32 + 26] << 3) + 
+                    (data[1 * 32 + 25] << 2) + 
+                    (data[1 * 32 + 24] << 1) + 
+	                (data[1 * 32 + 23] << 0);
 
-	assign y_init_gold = (data[gold_count * 32 + 18] << 7) + 
-                     (data[gold_count * 32 + 17] << 6) + 
-                     (data[gold_count * 32 + 16] << 5) + 
-                     (data[gold_count * 32 + 15] << 4) + 
-                     (data[gold_count * 32 + 14] << 3) + 
-                     (data[gold_count * 32 + 13] << 2) + 
-                     (data[gold_count * 32 + 12] << 1) + 
-                     (data[gold_count * 32 + 11] << 0) + 80;
+	assign y_init_gold = (data[1 * 32 + 18] << 7) + 
+                     (data[1 * 32 + 17] << 6) + 
+                     (data[1 * 32 + 16] << 5) + 
+                     (data[1 * 32 + 15] << 4) + 
+                     (data[1 * 32 + 14] << 3) + 
+                     (data[1 * 32 + 13] << 2) + 
+                     (data[1 * 32 + 12] << 1) + 
+                     (data[1 * 32 + 11] << 0) + 80;
 
-	assign x_init_stone = (data[(stone_count+8) * 32 + 31] << 8) + 
-                    (data[(stone_count+8)  * 32 + 30] << 7) + 
-                    (data[(stone_count+8)  * 32 + 29] << 6) + 
-                    (data[(stone_count+8)  * 32 + 28] << 5) + 
-                    (data[(stone_count+8)  * 32 + 27] << 4) + 
-                    (data[(stone_count+8)  * 32 + 26] << 3) + 
-                    (data[(stone_count+8)  * 32 + 25] << 2) + 
-                    (data[(stone_count+8)  * 32 + 24] << 1) + 
-	                (data[(stone_count+8)  * 32 + 23] << 0);
+	assign x_init_stone = (data[(0) * 32 + 31] << 8) + 
+                    (data[(0)  * 32 + 30] << 7) + 
+                    (data[(0)  * 32 + 29] << 6) + 
+                    (data[(0) * 32 + 28] << 5) + 
+                    (data[(0)  * 32 + 27] << 4) + 
+                    (data[(0)  * 32 + 26] << 3) + 
+                    (data[(0)  * 32 + 25] << 2) + 
+                    (data[(0)  * 32 + 24] << 1) + 
+	                (data[(0)  * 32 + 23] << 0);
 	
-    assign y_init_stone = (data[(stone_count+8) * 32 + 18] << 7) + 
-                     (data[(stone_count+8) * 32 + 17] << 6) + 
-                     (data[(stone_count+8) * 32 + 16] << 5) + 
-                     (data[(stone_count+8) * 32 + 15] << 4) + 
-                     (data[(stone_count+8) * 32 + 14] << 3) + 
-                     (data[(stone_count+8) * 32 + 13] << 2) + 
-                     (data[(stone_count+8) * 32 + 12] << 1) + 
-                     (data[(stone_count+8) * 32 + 11] << 0) + 80;
+    assign y_init_stone = (data[(0) * 32 + 18] << 7) + 
+                     (data[(0) * 32 + 17] << 6) + 
+                     (data[(0) * 32 + 16] << 5) + 
+                     (data[(0) * 32 + 15] << 4) + 
+                     (data[(0) * 32 + 14] << 3) + 
+                     (data[(0) * 32 + 13] << 2) + 
+                     (data[(0) * 32 + 12] << 1) + 
+                     (data[(0) * 32 + 11] << 0) + 80;
 
-	assign x_init_diamond = (data[(diamond_count+16) * 32 + 31] << 8) + 
-                    (data[(diamond_count+16)  * 32 + 30] << 7) + 
-                    (data[(diamond_count+16)  * 32 + 29] << 6) + 
-                    (data[(diamond_count+16)  * 32 + 28] << 5) + 
-                    (data[(diamond_count+16)  * 32 + 27] << 4) + 
-                    (data[(diamond_count+16)  * 32 + 26] << 3) + 
-                    (data[(diamond_count+16)  * 32 + 25] << 2) + 
-                    (data[(diamond_count+16)  * 32 + 24] << 1) + 
-	                 (data[(diamond_count+16)  * 32 + 23] << 0);
+	assign x_init_diamond = (data[(2) * 32 + 31] << 8) + 
+                    (data[(2)  * 32 + 30] << 7) + 
+                    (data[(2)  * 32 + 29] << 6) + 
+                    (data[(2)  * 32 + 28] << 5) + 
+                    (data[(2)  * 32 + 27] << 4) + 
+                    (data[(2)  * 32 + 26] << 3) + 
+                    (data[(2)  * 32 + 25] << 2) + 
+                    (data[(2)  * 32 + 24] << 1) + 
+	                 (data[(2)  * 32 + 23] << 0);
 	
-    assign y_init_diamond= (data[(diamond_count+16) * 32 + 18] << 7) + 
-                     (data[(diamond_count+16) * 32 + 17] << 6) + 
-                     (data[(diamond_count+16) * 32 + 16] << 5) + 
-                     (data[(diamond_count+16) * 32 + 15] << 4) + 
-                     (data[(diamond_count+16) * 32 + 14] << 3) + 
-                     (data[(diamond_count+16) * 32 + 13] << 2) + 
-                     (data[(diamond_count+16) * 32 + 12] << 1) + 
-                     (data[(diamond_count+16) * 32 + 11] << 0) + 80;
+    assign y_init_diamond= (data[(2) * 32 + 18] << 7) + 
+                     (data[(2) * 32 + 17] << 6) + 
+                     (data[(2) * 32 + 16] << 5) + 
+                     (data[(2) * 32 + 15] << 4) + 
+                     (data[(2) * 32 + 14] << 3) + 
+                     (data[(2) * 32 + 13] << 2) + 
+                     (data[(2) * 32 + 12] << 1) + 
+                     (data[(2) * 32 + 11] << 0) + 80;
 endmodule // test_top
 
  module Rand(

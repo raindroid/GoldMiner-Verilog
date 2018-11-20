@@ -26,7 +26,7 @@ module draw_diamond(
     output reg [11:0]Color_out_diamond;
     output reg writeEn_diamond;
     output reg draw_diamond_done;
-    output reg [13:0]diamond_count;
+    output reg [7:0]diamond_count;
    
 
     reg [6:0]diamond_pixel_cout;

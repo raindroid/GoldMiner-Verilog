@@ -44,7 +44,7 @@ module game_view_FSM(
 	
 	input [7:0]gold_count;
 	input [7:0]stone_count;
-	input [13:0]diamond_count;
+	input [7:0]diamond_count;
 	input [5:0]memory_counter;
 	
 	
@@ -66,7 +66,7 @@ module game_view_FSM(
 	reg [6:0] current_state, next_state; 
     
    localparam   
-	
+					START  = 6'd20,
 					 GENERATE_X_Y         = 6'd3,
 					 DRAW_BACKGROUND      = 6'd0,
 					 
@@ -94,6 +94,9 @@ module game_view_FSM(
     always@(*)
     begin: state_table 
             case (current_state)
+					START: begin
+						next_state = GENERATE_X_Y;
+					end
 					GENERATE_X_Y: begin
 						next_state = DRAW_BACKGROUND;
 					end
@@ -152,7 +155,7 @@ module game_view_FSM(
 					 
 					 end
 
-            default:     next_state = GENERATE_X_Y;
+            default:     next_state = START;
         endcase
     end // state_table
    
