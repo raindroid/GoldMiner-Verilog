@@ -128,9 +128,9 @@ endmodule // test_top
     output reg [8 : 0] out
  );
     parameter SEED = 16'd173;
-    parameter parA = 16'd43;
+    parameter parA = 16'd13;
     parameter parB = 16'd181;
-    wire[31: 0] temp;
+    wire[15: 0] temp;
     // reg [5: 0] counter;
     assign temp = parA * out + parB;
     always @(posedge clock) begin
@@ -140,7 +140,7 @@ endmodule // test_top
         end
         else if (enable) begin 
             // out <= temp % 457;
-            out <= temp > 33'd2148004423 ? temp - 33'd2148004423 : temp;
+            // out <= temp > 16'd3877 ? temp - 16'd3877 : temp;
             // counter = counter + temp[5:2];
         end
     end

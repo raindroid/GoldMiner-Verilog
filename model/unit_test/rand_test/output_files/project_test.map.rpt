@@ -1,5 +1,5 @@
 Analysis & Synthesis report for project_test
-Tue Nov 20 16:30:20 2018
+Tue Nov 20 16:49:05 2018
 Quartus Prime Version 18.1.0 Build 625 09/12/2018 SJ Lite Edition
 
 
@@ -13,14 +13,13 @@ Quartus Prime Version 18.1.0 Build 625 09/12/2018 SJ Lite Edition
   5. Analysis & Synthesis Source Files Read
   6. Analysis & Synthesis Resource Usage Summary
   7. Analysis & Synthesis Resource Utilization by Entity
-  8. Analysis & Synthesis DSP Block Usage Summary
+  8. Registers Removed During Synthesis
   9. General Register Statistics
- 10. Multiplexer Restructuring Statistics (Restructuring Performed)
- 11. Parameter Settings for User Entity Instance: Rand:test_r
- 12. Post-Synthesis Netlist Statistics for Top Partition
- 13. Elapsed Time Per Partition
- 14. Analysis & Synthesis Messages
- 15. Analysis & Synthesis Suppressed Messages
+ 10. Parameter Settings for User Entity Instance: Rand:test_r
+ 11. Post-Synthesis Netlist Statistics for Top Partition
+ 12. Elapsed Time Per Partition
+ 13. Analysis & Synthesis Messages
+ 14. Analysis & Synthesis Suppressed Messages
 
 
 
@@ -46,17 +45,17 @@ refer to the applicable agreement for further details.
 +-------------------------------------------------------------------------------+
 ; Analysis & Synthesis Summary                                                  ;
 +---------------------------------+---------------------------------------------+
-; Analysis & Synthesis Status     ; Successful - Tue Nov 20 16:30:20 2018       ;
+; Analysis & Synthesis Status     ; Successful - Tue Nov 20 16:49:05 2018       ;
 ; Quartus Prime Version           ; 18.1.0 Build 625 09/12/2018 SJ Lite Edition ;
 ; Revision Name                   ; project_test                                ;
 ; Top-level Entity Name           ; project_test                                ;
 ; Family                          ; Cyclone V                                   ;
 ; Logic utilization (in ALMs)     ; N/A                                         ;
-; Total registers                 ; 9                                           ;
+; Total registers                 ; 0                                           ;
 ; Total pins                      ; 14                                          ;
 ; Total virtual pins              ; 0                                           ;
 ; Total block memory bits         ; 0                                           ;
-; Total DSP Blocks                ; 1                                           ;
+; Total DSP Blocks                ; 0                                           ;
 ; Total HSSI RX PCSs              ; 0                                           ;
 ; Total HSSI PMA RX Deserializers ; 0                                           ;
 ; Total HSSI TX PCSs              ; 0                                           ;
@@ -162,11 +161,10 @@ refer to the applicable agreement for further details.
 ; Maximum allowed            ; 4           ;
 ;                            ;             ;
 ; Average used               ; 1.00        ;
-; Maximum used               ; 4           ;
+; Maximum used               ; 1           ;
 ;                            ;             ;
 ; Usage by Processor         ; % Time Used ;
 ;     Processor 1            ; 100.0%      ;
-;     Processors 2-4         ;   0.0%      ;
 +----------------------------+-------------+
 
 
@@ -180,54 +178,58 @@ refer to the applicable agreement for further details.
 +----------------------------------+-----------------+------------------------+-----------------------------------------------------------------------+---------+
 
 
-+------------------------------------------------------------+
-; Analysis & Synthesis Resource Usage Summary                ;
-+---------------------------------------------+--------------+
-; Resource                                    ; Usage        ;
-+---------------------------------------------+--------------+
-; Estimate of Logic utilization (ALMs needed) ; 6            ;
-;                                             ;              ;
-; Combinational ALUT usage for logic          ; 11           ;
-;     -- 7 input functions                    ; 0            ;
-;     -- 6 input functions                    ; 0            ;
-;     -- 5 input functions                    ; 0            ;
-;     -- 4 input functions                    ; 0            ;
-;     -- <=3 input functions                  ; 11           ;
-;                                             ;              ;
-; Dedicated logic registers                   ; 9            ;
-;                                             ;              ;
-; I/O pins                                    ; 14           ;
-;                                             ;              ;
-; Total DSP Blocks                            ; 1            ;
-;                                             ;              ;
-; Maximum fan-out node                        ; KEY[1]~input ;
-; Maximum fan-out                             ; 10           ;
-; Total fan-out                               ; 91           ;
-; Average fan-out                             ; 1.86         ;
-+---------------------------------------------+--------------+
++------------------------------------------------------+
+; Analysis & Synthesis Resource Usage Summary          ;
++---------------------------------------------+--------+
+; Resource                                    ; Usage  ;
++---------------------------------------------+--------+
+; Estimate of Logic utilization (ALMs needed) ; 0      ;
+;                                             ;        ;
+; Combinational ALUT usage for logic          ; 0      ;
+;     -- 7 input functions                    ; 0      ;
+;     -- 6 input functions                    ; 0      ;
+;     -- 5 input functions                    ; 0      ;
+;     -- 4 input functions                    ; 0      ;
+;     -- <=3 input functions                  ; 0      ;
+;                                             ;        ;
+; Dedicated logic registers                   ; 0      ;
+;                                             ;        ;
+; I/O pins                                    ; 14     ;
+;                                             ;        ;
+; Total DSP Blocks                            ; 0      ;
+;                                             ;        ;
+; Maximum fan-out node                        ; KEY[0] ;
+; Maximum fan-out                             ; 1      ;
+; Total fan-out                               ; 14     ;
+; Average fan-out                             ; 0.50   ;
++---------------------------------------------+--------+
 
 
-+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-; Analysis & Synthesis Resource Utilization by Entity                                                                                                                                           ;
-+----------------------------+---------------------+---------------------------+-------------------+------------+------+--------------+---------------------------+--------------+--------------+
-; Compilation Hierarchy Node ; Combinational ALUTs ; Dedicated Logic Registers ; Block Memory Bits ; DSP Blocks ; Pins ; Virtual Pins ; Full Hierarchy Name       ; Entity Name  ; Library Name ;
-+----------------------------+---------------------+---------------------------+-------------------+------------+------+--------------+---------------------------+--------------+--------------+
-; |project_test              ; 11 (1)              ; 9 (0)                     ; 0                 ; 1          ; 14   ; 0            ; |project_test             ; project_test ; work         ;
-;    |Rand:test_r|           ; 10 (10)             ; 9 (9)                     ; 0                 ; 1          ; 0    ; 0            ; |project_test|Rand:test_r ; Rand         ; work         ;
-+----------------------------+---------------------+---------------------------+-------------------+------------+------+--------------+---------------------------+--------------+--------------+
++-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+; Analysis & Synthesis Resource Utilization by Entity                                                                                                                                     ;
++----------------------------+---------------------+---------------------------+-------------------+------------+------+--------------+---------------------+--------------+--------------+
+; Compilation Hierarchy Node ; Combinational ALUTs ; Dedicated Logic Registers ; Block Memory Bits ; DSP Blocks ; Pins ; Virtual Pins ; Full Hierarchy Name ; Entity Name  ; Library Name ;
++----------------------------+---------------------+---------------------------+-------------------+------------+------+--------------+---------------------+--------------+--------------+
+; |project_test              ; 0 (0)               ; 0 (0)                     ; 0                 ; 0          ; 14   ; 0            ; |project_test       ; project_test ; work         ;
++----------------------------+---------------------+---------------------------+-------------------+------------+------+--------------+---------------------+--------------+--------------+
 Note: For table entries with two numbers listed, the numbers in parentheses indicate the number of resources of the given type used by the specific entity alone. The numbers listed outside of parentheses indicate the total resources of the given type used by the specific entity and all of its sub-entities in the hierarchy.
 
 
-+-----------------------------------------------+
-; Analysis & Synthesis DSP Block Usage Summary  ;
-+---------------------------------+-------------+
-; Statistic                       ; Number Used ;
-+---------------------------------+-------------+
-; Independent 9x9                 ; 1           ;
-; Total number of DSP blocks      ; 1           ;
-;                                 ;             ;
-; Fixed Point Unsigned Multiplier ; 1           ;
-+---------------------------------+-------------+
++--------------------------------------------------------------------------------+
+; Registers Removed During Synthesis                                             ;
++---------------------------------------+----------------------------------------+
+; Register name                         ; Reason for Removal                     ;
++---------------------------------------+----------------------------------------+
+; Rand:test_r|out[2,3]                  ; Stuck at VCC due to stuck port data_in ;
+; Rand:test_r|out[1]                    ; Stuck at GND due to stuck port data_in ;
+; Rand:test_r|out[0]                    ; Stuck at VCC due to stuck port data_in ;
+; Rand:test_r|out[4]                    ; Stuck at GND due to stuck port data_in ;
+; Rand:test_r|out[5]                    ; Stuck at VCC due to stuck port data_in ;
+; Rand:test_r|out[6]                    ; Stuck at GND due to stuck port data_in ;
+; Rand:test_r|out[7]                    ; Stuck at VCC due to stuck port data_in ;
+; Rand:test_r|out[8]                    ; Stuck at GND due to stuck port data_in ;
+; Total Number of Removed Registers = 9 ;                                        ;
++---------------------------------------+----------------------------------------+
 
 
 +------------------------------------------------------+
@@ -235,24 +237,14 @@ Note: For table entries with two numbers listed, the numbers in parentheses indi
 +----------------------------------------------+-------+
 ; Statistic                                    ; Value ;
 +----------------------------------------------+-------+
-; Total registers                              ; 9     ;
+; Total registers                              ; 0     ;
 ; Number of registers using Synchronous Clear  ; 0     ;
-; Number of registers using Synchronous Load   ; 9     ;
+; Number of registers using Synchronous Load   ; 0     ;
 ; Number of registers using Asynchronous Clear ; 0     ;
 ; Number of registers using Asynchronous Load  ; 0     ;
-; Number of registers using Clock Enable       ; 9     ;
+; Number of registers using Clock Enable       ; 0     ;
 ; Number of registers using Preset             ; 0     ;
 +----------------------------------------------+-------+
-
-
-+------------------------------------------------------------------------------------------------------------------------------------------------+
-; Multiplexer Restructuring Statistics (Restructuring Performed)                                                                                 ;
-+--------------------+-----------+---------------+----------------------+------------------------+------------+----------------------------------+
-; Multiplexer Inputs ; Bus Width ; Baseline Area ; Area if Restructured ; Saving if Restructured ; Registered ; Example Multiplexer Output       ;
-+--------------------+-----------+---------------+----------------------+------------------------+------------+----------------------------------+
-; 3:1                ; 4 bits    ; 8 LEs         ; 4 LEs                ; 4 LEs                  ; Yes        ; |project_test|Rand:test_r|out[1] ;
-; 3:1                ; 5 bits    ; 10 LEs        ; 5 LEs                ; 5 LEs                  ; Yes        ; |project_test|Rand:test_r|out[0] ;
-+--------------------+-----------+---------------+----------------------+------------------------+------------+----------------------------------+
 
 
 +----------------------------------------------------------+
@@ -261,7 +253,7 @@ Note: For table entries with two numbers listed, the numbers in parentheses indi
 ; Parameter Name ; Value            ; Type                 ;
 +----------------+------------------+----------------------+
 ; SEED           ; 0000000010101101 ; Unsigned Binary      ;
-; parA           ; 0000000000101011 ; Unsigned Binary      ;
+; parA           ; 0000000000001101 ; Unsigned Binary      ;
 ; parB           ; 0000000010110101 ; Unsigned Binary      ;
 +----------------+------------------+----------------------+
 Note: In order to hide this table in the UI and the text report file, please set the "Show Parameter Settings in Synthesis Report" option in "Analysis and Synthesis Settings -> More Settings" to "Off".
@@ -272,19 +264,13 @@ Note: In order to hide this table in the UI and the text report file, please set
 +-----------------------+-----------------------------+
 ; Type                  ; Count                       ;
 +-----------------------+-----------------------------+
-; arriav_ff             ; 9                           ;
-;     ENA SLD           ; 9                           ;
-; arriav_lcell_comb     ; 11                          ;
-;     arith             ; 9                           ;
-;         1 data inputs ; 9                           ;
+; arriav_lcell_comb     ; 2                           ;
 ;     normal            ; 2                           ;
-;         0 data inputs ; 1                           ;
-;         2 data inputs ; 1                           ;
-; arriav_mac            ; 1                           ;
+;         0 data inputs ; 2                           ;
 ; boundary_port         ; 14                          ;
 ;                       ;                             ;
-; Max LUT depth         ; 1.80                        ;
-; Average LUT depth     ; 1.06                        ;
+; Max LUT depth         ; 0.00                        ;
+; Average LUT depth     ; 0.00                        ;
 +-----------------------+-----------------------------+
 
 
@@ -303,7 +289,7 @@ Note: In order to hide this table in the UI and the text report file, please set
 Info: *******************************************************************
 Info: Running Quartus Prime Analysis & Synthesis
     Info: Version 18.1.0 Build 625 09/12/2018 SJ Lite Edition
-    Info: Processing started: Tue Nov 20 16:29:57 2018
+    Info: Processing started: Tue Nov 20 16:48:57 2018
 Info: Command: quartus_map --read_settings_files=on --write_settings_files=off project_test -c project_test
 Warning (18236): Number of processors has not been specified which may cause overloading on shared machines.  Set the global assignment NUM_PARALLEL_PROCESSORS in your QSF to an appropriate value for best performance.
 Info (20030): Parallel compilation is enabled and will use 4 of the 4 processors detected
@@ -316,25 +302,34 @@ Info (12021): Found 1 design units, including 1 entities, in source file project
     Info (12023): Found entity 1: project_test File: F:/UofT/ECE241/ece241project/model/unit_test/rand_test/project_test.v Line: 7
 Info (12127): Elaborating entity "project_test" for the top level hierarchy
 Info (12128): Elaborating entity "Rand" for hierarchy "Rand:test_r" File: F:/UofT/ECE241/ece241project/model/unit_test/rand_test/project_test.v Line: 25
-Warning (10230): Verilog HDL assignment warning at item_generator.v(138): truncated value with size 16 to match size of target (9) File: ../ece241project/model/item_generator.v Line: 138
-Warning (10230): Verilog HDL assignment warning at item_generator.v(143): truncated value with size 33 to match size of target (9) File: ../ece241project/model/item_generator.v Line: 143
+Warning (10036): Verilog HDL or VHDL warning at item_generator.v(133): object "temp" assigned a value but never read File: F:/UofT/ECE241/ece241project/model/item_generator.v Line: 133
+Warning (10230): Verilog HDL assignment warning at item_generator.v(138): truncated value with size 16 to match size of target (9) File: F:/UofT/ECE241/ece241project/model/item_generator.v Line: 138
 Warning (13024): Output pins are stuck at VCC or GND
+    Warning (13410): Pin "LEDR[0]" is stuck at VCC File: F:/UofT/ECE241/ece241project/model/unit_test/rand_test/project_test.v Line: 10
+    Warning (13410): Pin "LEDR[1]" is stuck at GND File: F:/UofT/ECE241/ece241project/model/unit_test/rand_test/project_test.v Line: 10
+    Warning (13410): Pin "LEDR[2]" is stuck at VCC File: F:/UofT/ECE241/ece241project/model/unit_test/rand_test/project_test.v Line: 10
+    Warning (13410): Pin "LEDR[3]" is stuck at VCC File: F:/UofT/ECE241/ece241project/model/unit_test/rand_test/project_test.v Line: 10
+    Warning (13410): Pin "LEDR[4]" is stuck at GND File: F:/UofT/ECE241/ece241project/model/unit_test/rand_test/project_test.v Line: 10
+    Warning (13410): Pin "LEDR[5]" is stuck at VCC File: F:/UofT/ECE241/ece241project/model/unit_test/rand_test/project_test.v Line: 10
+    Warning (13410): Pin "LEDR[6]" is stuck at GND File: F:/UofT/ECE241/ece241project/model/unit_test/rand_test/project_test.v Line: 10
+    Warning (13410): Pin "LEDR[7]" is stuck at VCC File: F:/UofT/ECE241/ece241project/model/unit_test/rand_test/project_test.v Line: 10
+    Warning (13410): Pin "LEDR[8]" is stuck at GND File: F:/UofT/ECE241/ece241project/model/unit_test/rand_test/project_test.v Line: 10
     Warning (13410): Pin "LEDR[9]" is stuck at GND File: F:/UofT/ECE241/ece241project/model/unit_test/rand_test/project_test.v Line: 10
-Info (286030): Timing-Driven Synthesis is running
 Info (144001): Generated suppressed messages file F:/UofT/ECE241/ece241project/model/unit_test/rand_test/output_files/project_test.map.smsg
 Info (16010): Generating hard_block partition "hard_block:auto_generated_inst"
     Info (16011): Adding 0 node(s), including 0 DDIO, 0 PLL, 0 transceiver and 0 LCELL
-Warning (21074): Design contains 1 input pin(s) that do not drive logic
+Warning (21074): Design contains 4 input pin(s) that do not drive logic
+    Warning (15610): No output dependent on input pin "KEY[0]" File: F:/UofT/ECE241/ece241project/model/unit_test/rand_test/project_test.v Line: 8
+    Warning (15610): No output dependent on input pin "KEY[1]" File: F:/UofT/ECE241/ece241project/model/unit_test/rand_test/project_test.v Line: 8
+    Warning (15610): No output dependent on input pin "KEY[2]" File: F:/UofT/ECE241/ece241project/model/unit_test/rand_test/project_test.v Line: 8
     Warning (15610): No output dependent on input pin "KEY[3]" File: F:/UofT/ECE241/ece241project/model/unit_test/rand_test/project_test.v Line: 8
-Info (21057): Implemented 26 device resources after synthesis - the final resource count might be different
+Info (21057): Implemented 14 device resources after synthesis - the final resource count might be different
     Info (21058): Implemented 4 input pins
     Info (21059): Implemented 10 output pins
-    Info (21061): Implemented 11 logic cells
-    Info (21062): Implemented 1 DSP elements
-Info: Quartus Prime Analysis & Synthesis was successful. 0 errors, 8 warnings
-    Info: Peak virtual memory: 756 megabytes
-    Info: Processing ended: Tue Nov 20 16:30:20 2018
-    Info: Elapsed time: 00:00:23
+Info: Quartus Prime Analysis & Synthesis was successful. 0 errors, 20 warnings
+    Info: Peak virtual memory: 733 megabytes
+    Info: Processing ended: Tue Nov 20 16:49:05 2018
+    Info: Elapsed time: 00:00:08
     Info: Total CPU time (on all processors): 00:00:18
 
 

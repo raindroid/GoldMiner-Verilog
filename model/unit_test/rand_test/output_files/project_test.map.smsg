@@ -1,2 +1,1 @@
-Warning (10268): Verilog HDL information at item_generator.v(136): always construct contains both blocking and non-blocking assignments File: F:/UofT/ECE241/ece241project/model/item_generator.v Line: 136
 Warning (10268): Verilog HDL information at item_generator.v(250): always construct contains both blocking and non-blocking assignments File: F:/UofT/ECE241/ece241project/model/item_generator.v Line: 250
