@@ -2,9 +2,6 @@
  * This is the module for generating new item list
  * List Format:
  *      At most 30 items in the list
- *      0  - 7  : golds
- *      8 -  15：stones
- *      16 - : diamonds 
  *      For item n: 
             d[n * 32 + 31 : n * 32 + 19] >> 4 == left  when drawing
             d[n * 32 + 18 : n * 32 + 7] >> 4 == top 
@@ -238,13 +235,14 @@ endmodule // test_top
 
     reg [4:0] current_state, next_state;
     reg isCovered;
-
+    wire [31:0] counter32;
     
     assign type = (counter < stoneQuantity) ? 2'd0 : 
                 (counter < stoneQuantity + goldQuantity) ? 2'd1 : 2'd2;
     assign tempX = tempData >> 27;
     assign tempY = tempData[18:0] >> 15;
     assign tempOld = usedData[check_counter][31:0];
+    assign counter32 = counter << 5;
 
     localparam  S_START     = 5'd0,
                 S_PRE_GEN   = 5'd1,
@@ -298,8 +296,8 @@ endmodule // test_top
             end
             S_SAVE: begin
                 usedData[counter] <= tempData;
-                data <= data + (tempData << (counter * 32)) + 
-                    type << (counter * 32 + 2);
+                data = data + (tempData << (counter32)) + 
+                     (type << (counter32 + 2));
                 counter <= counter + 1;
                 next_state = S_AFTER_SAVE;
             end
@@ -310,6 +308,7 @@ endmodule // test_top
                     next_state = S_IN_GEN;
             end
             S_MODIFY: begin
+                next_state = S_START;
                 if (moveEn & moveEn2) begin
                     data <= data + (moveX[10]? -1: 1) * ((moveX[9:0]) << (moveIndex * 32 + 19)) + 
                         (moveY[10]? -1: 1) * ((moveY[9:0]) << (moveIndex * 32 + 7)) +
@@ -476,48 +475,48 @@ endmodule // test_top
     // end
 
     //The rest is only for test purpose
-    // assign tempX = (data[counter * 32 + 31] << 12) + 
-    //         (data[counter * 32 + 30] << 11) + 
-    //         (data[counter * 32 + 29] << 10) + 
-    //         (data[counter * 32 + 28] << 9) + 
-    //         (data[counter * 32 + 27] << 8) + 
-    //         (data[counter * 32 + 26] << 7) + 
-    //         (data[counter * 32 + 25] << 6) + 
-    //         (data[counter * 32 + 24] << 5) + 
-    //         (data[counter * 32 + 23] << 4) + 
-    //         (data[counter * 32 + 22] << 3) + 
-    //         (data[counter * 32 + 21] << 2) + 
-    //         (data[counter * 32 + 20] << 1) + 
-    //         (data[counter * 32 + 19] << 0);
+    // assign tempX = (data[moveIndex * 32 + 31] << 12) + 
+    //         (data[moveIndex * 32 + 30] << 11) + 
+    //         (data[moveIndex * 32 + 29] << 10) + 
+    //         (data[moveIndex * 32 + 28] << 9) + 
+    //         (data[moveIndex * 32 + 27] << 8) + 
+    //         (data[moveIndex * 32 + 26] << 7) + 
+    //         (data[moveIndex * 32 + 25] << 6) + 
+    //         (data[moveIndex * 32 + 24] << 5) + 
+    //         (data[moveIndex * 32 + 23] << 4) + 
+    //         (data[moveIndex * 32 + 22] << 3) + 
+    //         (data[moveIndex * 32 + 21] << 2) + 
+    //         (data[moveIndex * 32 + 20] << 1) + 
+    //         (data[moveIndex * 32 + 19] << 0);
 
-    // assign  tempY = (data[counter * 32 + 18] << 11) + 
-    //         (data[counter * 32 + 17] << 10) + 
-    //         (data[counter * 32 + 16] << 9) + 
-    //         (data[counter * 32 + 15] << 8) + 
-    //         (data[counter * 32 + 14] << 7) + 
-    //         (data[counter * 32 + 13] << 6) + 
-    //         (data[counter * 32 + 12] << 5) + 
-    //         (data[counter * 32 + 11] << 4) + 
-    //         (data[counter * 32 + 10] << 3) + 
-    //         (data[counter * 32 + 9] << 2) + 
-    //         (data[counter * 32 + 8] << 1) + 
-    //         (data[counter * 32 + 7] << 0);
-     assign testX = (data[counter * 32 + 31] << 8) + 
-                     (data[counter * 32 + 30] << 7) + 
-                     (data[counter * 32 + 29] << 6) + 
-                    (data[counter * 32 + 28] << 5) + 
-                    (data[counter * 32 + 27] << 4) + 
-                     (data[counter * 32 + 26] << 3) + 
-                     (data[counter * 32 + 25] << 2) + 
-                     (data[counter * 32 + 24] << 1) + 
-                     (data[counter * 32 + 23] << 0);
-     assign testY = (data[counter * 32 + 18] << 7) + 
-                     (data[counter * 32 + 17] << 6) + 
-                     (data[counter * 32 + 16] << 5) + 
-                     (data[counter * 32 + 15] << 4) + 
-                     (data[counter * 32 + 14] << 3) + 
-                     (data[counter * 32 + 13] << 2) + 
-                     (data[counter * 32 + 12] << 1) + 
-                     (data[counter * 32 + 11] << 0) + 80;
+    // assign  tempY = (data[moveIndex * 32 + 18] << 11) + 
+    //         (data[moveIndex * 32 + 17] << 10) + 
+    //         (data[moveIndex * 32 + 16] << 9) + 
+    //         (data[moveIndex * 32 + 15] << 8) + 
+    //         (data[moveIndex * 32 + 14] << 7) + 
+    //         (data[moveIndex * 32 + 13] << 6) + 
+    //         (data[moveIndex * 32 + 12] << 5) + 
+    //         (data[moveIndex * 32 + 11] << 4) + 
+    //         (data[moveIndex * 32 + 10] << 3) + 
+    //         (data[moveIndex * 32 + 9] << 2) + 
+    //         (data[moveIndex * 32 + 8] << 1) + 
+    //         (data[moveIndex * 32 + 7] << 0);
+     assign testX = (data[moveIndex * 32 + 31] << 8) + 
+                     (data[moveIndex * 32 + 30] << 7) + 
+                     (data[moveIndex * 32 + 29] << 6) + 
+                    (data[moveIndex * 32 + 28] << 5) + 
+                    (data[moveIndex * 32 + 27] << 4) + 
+                     (data[moveIndex * 32 + 26] << 3) + 
+                     (data[moveIndex * 32 + 25] << 2) + 
+                     (data[moveIndex * 32 + 24] << 1) + 
+                     (data[moveIndex * 32 + 23] << 0);
+     assign testY = (data[moveIndex * 32 + 18] << 7) + 
+                     (data[moveIndex * 32 + 17] << 6) + 
+                     (data[moveIndex * 32 + 16] << 5) + 
+                     (data[moveIndex * 32 + 15] << 4) + 
+                     (data[moveIndex * 32 + 14] << 3) + 
+                     (data[moveIndex * 32 + 13] << 2) + 
+                     (data[moveIndex * 32 + 12] << 1) + 
+                     (data[moveIndex * 32 + 11] << 0) + 80;
     
  endmodule // ItemGenerator

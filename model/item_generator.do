@@ -6,7 +6,7 @@ log {/*}
 add wave -color yellow clock resetn generateEn size
 
 add wave -color red -unsigned data 
-add wave -color blue -unsigned counter x y tempX tempY isCovered check_counter
+add wave -color blue -unsigned counter counter32 x y tempX tempY isCovered check_counter
 add wave -color blue -unsigned testX testY tempOld tempData usedData
 
 add wave -color yellow -unsigned moveEn moveIndex moveX moveY moveState
@@ -17,10 +17,10 @@ force {resetn} 0 0, 1 20ns
 
 force {generateEn} 0 0, 1 10ns
 force {stoneQuantity} 'd5
-force {goldQuantity} 'd15
-force {diamondQuantity} 'd5
+force {goldQuantity} 'd5
+force {diamondQuantity} 'd0
 force {moveIndex} 'd3
-run 6000ns
+run 3000ns
 
 force {moveEn} 1
 force {moveX} 10000000010
@@ -34,4 +34,4 @@ force {moveState2} 1
 force {visible} 1
 force {visible2} 1 
 
-run 160ns
+run 1600ns
