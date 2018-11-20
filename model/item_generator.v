@@ -506,22 +506,22 @@ endmodule // test_top
     //         (data[moveIndex * 32 + 9] << 2) + 
     //         (data[moveIndex * 32 + 8] << 1) + 
     //         (data[moveIndex * 32 + 7] << 0);
-    //  assign testX = (data[moveIndex * 32 + 31] << 8) + 
-    //                  (data[moveIndex * 32 + 30] << 7) + 
-    //                  (data[moveIndex * 32 + 29] << 6) + 
-    //                 (data[moveIndex * 32 + 28] << 5) + 
-    //                 (data[moveIndex * 32 + 27] << 4) + 
-    //                  (data[moveIndex * 32 + 26] << 3) + 
-    //                  (data[moveIndex * 32 + 25] << 2) + 
-    //                  (data[moveIndex * 32 + 24] << 1) + 
-    //                  (data[moveIndex * 32 + 23] << 0);
-    //  assign testY = (data[moveIndex * 32 + 18] << 7) + 
-    //                  (data[moveIndex * 32 + 17] << 6) + 
-    //                  (data[moveIndex * 32 + 16] << 5) + 
-    //                  (data[moveIndex * 32 + 15] << 4) + 
-    //                  (data[moveIndex * 32 + 14] << 3) + 
-    //                  (data[moveIndex * 32 + 13] << 2) + 
-    //                  (data[moveIndex * 32 + 12] << 1) + 
-    //                  (data[moveIndex * 32 + 11] << 0) + 80;
+     assign testX = (data[moveIndex * 32 + 31] << 8) + 
+                     (data[moveIndex * 32 + 30] << 7) + 
+                     (data[moveIndex * 32 + 29] << 6) + 
+                    (data[moveIndex * 32 + 28] << 5) + 
+                    (data[moveIndex * 32 + 27] << 4) + 
+                     (data[moveIndex * 32 + 26] << 3) + 
+                     (data[moveIndex * 32 + 25] << 2) + 
+                     (data[moveIndex * 32 + 24] << 1) + 
+                     (data[moveIndex * 32 + 23] << 0);
+     assign testY = (data[moveIndex * 32 + 18] << 7) + 
+                     (data[moveIndex * 32 + 17] << 6) + 
+                     (data[moveIndex * 32 + 16] << 5) + 
+                     (data[moveIndex * 32 + 15] << 4) + 
+                     (data[moveIndex * 32 + 14] << 3) + 
+                     (data[moveIndex * 32 + 13] << 2) + 
+                     (data[moveIndex * 32 + 12] << 1) + 
+                     (data[moveIndex * 32 + 11] << 0) + 80;
     
  endmodule // ItemGenerator

@@ -50,9 +50,9 @@ module game_view_FSM(
 	
 	input game_end;
 	
-	parameter max_stone = 3'd3;
-	parameter max_gold  = 3'd3;
-	parameter max_diamond = 3'd2;
+	parameter max_stone = 4'd1;
+	parameter max_gold  = 4'd1;
+	parameter max_diamond = 4'd1;
 	
 	output reg 	enable_draw_gold,
 					enable_draw_stone,
@@ -95,18 +95,18 @@ module game_view_FSM(
     begin: state_table 
             case (current_state)
 					GENERATE_X_Y: begin
-						next_state = (memory_counter == 10)? DRAW_BACKGROUND : GENERATE_X_Y;
+						next_state = DRAW_BACKGROUND;
 					end
                 	DRAW_BACKGROUND: begin
 						next_state = (draw_background_done) ? DRAW_BACKGROUND_WAIT : DRAW_BACKGROUND;
 						end // Loop in current state until value is input
                 	DRAW_BACKGROUND_WAIT:begin
-						if ((stone_count > max_stone) & (gold_count > max_gold) & (diamond_count > max_diamond))
+						if ((stone_count == max_stone) & (gold_count == max_gold) & (diamond_count == max_diamond))
 							next_state = DRAW_HOOK;
-						else if((gold_count > max_gold) & (stone_count > max_stone))
+						else if((gold_count == max_gold) & (stone_count == max_stone))
 							next_state = DRAW_DIAMOND;
 						else
-							next_state = ((gold_count > max_gold)) ? DRAW_STONE : DRAW_GOLD;
+							next_state = ((gold_count == max_gold)) ? DRAW_STONE : DRAW_GOLD;
 						end
 					 
 					 DRAW_GOLD: begin
