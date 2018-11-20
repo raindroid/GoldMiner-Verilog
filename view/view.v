@@ -129,7 +129,10 @@ module view(
     .generateEn(enable_random), 
     .data(data),
     .counter(memory_counter),
-    .quantity(28),
+    .stoneQuantity(5), 
+    .goldQuantity(5), 
+    .diamondQuantity(5),
+		
 
     .moveEn(0),
     .moveIndex(moveIndex),

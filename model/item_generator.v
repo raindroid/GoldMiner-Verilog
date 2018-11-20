@@ -255,7 +255,7 @@ endmodule // test_top
                 S_AFTER_SAVE= 5'd7,
                 S_MODIFY    = 5'd5;
    
-    always @(posedge clock, negedge generateEn) begin
+    always @(posedge clock, negedge generateEn, negedge resetn) begin
         if (!generateEn) counter <= 0;
 		  if (!resetn) counter <= 0;
         case (current_state)
