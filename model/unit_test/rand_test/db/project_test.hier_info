@@ -1,0 +1,56 @@
+|project_test
+KEY[0] => clock.IN1
+KEY[1] => resetn.IN1
+KEY[2] => enable.IN1
+KEY[3] => ~NO_FANOUT~
+LEDR[0] <= Rand:test_r.out
+LEDR[1] <= Rand:test_r.out
+LEDR[2] <= Rand:test_r.out
+LEDR[3] <= Rand:test_r.out
+LEDR[4] <= Rand:test_r.out
+LEDR[5] <= Rand:test_r.out
+LEDR[6] <= Rand:test_r.out
+LEDR[7] <= Rand:test_r.out
+LEDR[8] <= Rand:test_r.out
+LEDR[9] <= <GND>
+
+
+|project_test|Rand:test_r
+clock => out[0]~reg0.CLK
+clock => out[1]~reg0.CLK
+clock => out[2]~reg0.CLK
+clock => out[3]~reg0.CLK
+clock => out[4]~reg0.CLK
+clock => out[5]~reg0.CLK
+clock => out[6]~reg0.CLK
+clock => out[7]~reg0.CLK
+clock => out[8]~reg0.CLK
+resetn => out.OUTPUTSELECT
+resetn => out.OUTPUTSELECT
+resetn => out.OUTPUTSELECT
+resetn => out.OUTPUTSELECT
+resetn => out.OUTPUTSELECT
+resetn => out.OUTPUTSELECT
+resetn => out.OUTPUTSELECT
+resetn => out.OUTPUTSELECT
+resetn => out.OUTPUTSELECT
+enable => out.OUTPUTSELECT
+enable => out.OUTPUTSELECT
+enable => out.OUTPUTSELECT
+enable => out.OUTPUTSELECT
+enable => out.OUTPUTSELECT
+enable => out.OUTPUTSELECT
+enable => out.OUTPUTSELECT
+enable => out.OUTPUTSELECT
+enable => out.OUTPUTSELECT
+out[0] <= out[0]~reg0.DB_MAX_OUTPUT_PORT_TYPE
+out[1] <= out[1]~reg0.DB_MAX_OUTPUT_PORT_TYPE
+out[2] <= out[2]~reg0.DB_MAX_OUTPUT_PORT_TYPE
+out[3] <= out[3]~reg0.DB_MAX_OUTPUT_PORT_TYPE
+out[4] <= out[4]~reg0.DB_MAX_OUTPUT_PORT_TYPE
+out[5] <= out[5]~reg0.DB_MAX_OUTPUT_PORT_TYPE
+out[6] <= out[6]~reg0.DB_MAX_OUTPUT_PORT_TYPE
+out[7] <= out[7]~reg0.DB_MAX_OUTPUT_PORT_TYPE
+out[8] <= out[8]~reg0.DB_MAX_OUTPUT_PORT_TYPE
+
+
