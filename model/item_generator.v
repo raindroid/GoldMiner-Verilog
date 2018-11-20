@@ -170,9 +170,7 @@ endmodule // test_top
     moveState2,
     visible2,
 
-    LEDR
  );
-    output [8:0] LEDR;
     
 
     parameter stone_size = 16;
@@ -196,8 +194,6 @@ endmodule // test_top
     input [10:0]moveX2;      //please multiple by << 4
     input [10:0]moveY2;   
     input moveState2, visible2;
-
-    assign LEDR [8:0] = data[31 : 23];
 
     output reg [3:0] counter;
     //Input & output table END
