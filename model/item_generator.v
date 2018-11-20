@@ -1,7 +1,7 @@
 /**
  * This is the module for generating new item list
  * List Format:
- *      At most 30 items in the list
+ *      At most 5 items each in the list
  *      For item n: 
             d[n * 32 + 31 : n * 32 + 19] >> 4 == left  when drawing
             d[n * 32 + 18 : n * 32 + 7] >> 4 == top 
@@ -190,12 +190,12 @@ endmodule // test_top
     parameter gold_size = 16;
     parameter diamond_size = 8;
     localparam size = 16; 
-    parameter MAX_SIZE = 32 << 5; //1024
+    parameter MAX_SIZE = 2 << 9; //512
 
     //Input & output table START
     input clock, resetn, generateEn;
     output reg [MAX_SIZE - 1: 0] data;
-    input [4:0]stoneQuantity, goldQuantity, diamondQuantity;
+    input [3:0]stoneQuantity, goldQuantity, diamondQuantity;
 
     input moveEn;
     input [5:0]moveIndex;
@@ -208,17 +208,18 @@ endmodule // test_top
     input [10:0]moveY2;   
     input moveState2, visible2;
 
-    output reg [5:0] counter;
+    output reg [3:0] counter;
     //Input & output table END
 
     //Continuously generate random numbers
-    wire [5:0]quantity;
+    wire [3:0]quantity;
     wire [4:0]x;
     wire [3:0]y;
+    reg randEn;
     Rand rand_gen(
         .clock(clock),
         .resetn(resetn),
-        .enable(generateEn),
+        .enable(randEn),
         .out({x,y})
     );
     wire [13:0] tempX, tempY;
@@ -226,16 +227,16 @@ endmodule // test_top
     wire [1:0] type;
 
     
-    reg [63:0] usedData [63:0]; //No need for reseting
+    reg [31:0] usedData [3:0]; //No need for reseting
     reg [31:0] tempData;
     wire [31:0] tempOld;
 
     assign quantity = stoneQuantity + goldQuantity + diamondQuantity;
-    reg [63:0] check_counter;
+    reg [7:0] check_counter;
 
     reg [4:0] current_state, next_state;
     reg isCovered;
-    wire [31:0] counter32;
+    wire [9:0] counter32;
     
     assign type = (counter < stoneQuantity) ? 2'd0 : 
                 (counter < stoneQuantity + goldQuantity) ? 2'd1 : 2'd2;
@@ -253,18 +254,20 @@ endmodule // test_top
                 S_AFTER_SAVE= 5'd7,
                 S_MODIFY    = 5'd5;
    
-    always @(posedge clock, negedge generateEn, negedge resetn) begin
-        if (!generateEn) counter <= 0;
-		  if (!resetn) counter <= 0;
+    always @(posedge clock) begin
+        // if (!generateEn) counter <= 0;
+		//   if (!resetn) counter <= 0;
         case (current_state)
             S_START: begin
-                if (generateEn & counter == 0)
+                randEn = 1'b0;
+                if (generateEn)
                     next_state = S_PRE_GEN;
                 else if (moveEn | moveEn2)
                     next_state = S_MODIFY;
-            end
+            end 
             S_PRE_GEN: begin
-                // counter <= 0;
+                randEn = 1'b1;
+                counter <= 0;
                 next_state = S_IN_GEN;
                 data = 0;
             end

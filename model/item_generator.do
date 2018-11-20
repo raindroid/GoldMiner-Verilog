@@ -15,10 +15,10 @@ add wave -unsigned current_state next_state quantity
 force {clock} 0 0, 1 10ns -r 20ns
 force {resetn} 0 0, 1 20ns
 
-force {generateEn} 0 0, 1 10ns
+force {generateEn} 0 0, 1 10ns, 0 40ns
 force {stoneQuantity} 'd5
 force {goldQuantity} 'd5
-force {diamondQuantity} 'd0
+force {diamondQuantity} 'd5
 force {moveIndex} 'd3
 run 3000ns
 
