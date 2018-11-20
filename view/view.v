@@ -28,6 +28,8 @@ module view(
 	
 	wire [8:0]x_init;
 	wire [7:0]y_init;
+
+	
 	
 	always@(posedge clk)begin
 		if(enable_draw_gold) begin
@@ -119,6 +121,15 @@ module view(
 	end
 	*/
 	
+	wire [31:0]read_data;
+
+	initialize_1 initial_1(
+	.address(0),
+	.clock(clk),
+	.data(0),
+	.wren(0),
+	.q(read_data));
+
 	wire [1023: 0] data;
 	wire [5:0]memory_counter;
 	wire [63:0]moveIndex;
@@ -154,8 +165,8 @@ module view(
 	wire [7:0] y_init_gold,y_init_stone,y_init_diamond;
 
 	//assign LEDR [9:1] = data[1 * 32 +31 : 1 * 32 + 23];
-	assign x_init_stone = data[(0 * 32 + 31):(0 * 32 + 23)];
-	assign y_init_stone = data[(0 * 32 + 18):(0 * 32 + 11)] + 80;
+	assign x_init_stone = read_data[31:23];
+	assign y_init_stone = read_data[18:11] + 80;
 
 	// assign x_init_gold = data[(1 * 32 + 31):(1 * 32 + 23)];
 	// assign y_init_gold = data[(1 * 32 + 18):(1 * 32 + 11)];
