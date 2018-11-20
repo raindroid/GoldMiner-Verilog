@@ -257,6 +257,7 @@ endmodule // test_top
    
     always @(posedge clock, negedge generateEn) begin
         if (!generateEn) counter <= 0;
+		  if (!resetn) counter <= 0;
         case (current_state)
             S_START: begin
                 if (generateEn & counter == 0)
@@ -267,6 +268,7 @@ endmodule // test_top
             S_PRE_GEN: begin
                 // counter <= 0;
                 next_state = S_IN_GEN;
+                data = 0;
             end
             S_IN_GEN: begin
                 tempData <=  (((x >= 20) ? 40 - x : 20 - x) << 27) + 
@@ -339,8 +341,6 @@ endmodule // test_top
     always @(posedge clock) begin
         if (!resetn) begin
                 current_state <= S_START;
-                data = 0;
-                counter = 0;
 			end
         else
             current_state <= next_state;
