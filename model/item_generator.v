@@ -47,6 +47,102 @@
  // 1. store info about type
  // 2. generate in order
 
+module test_top(
+    input clk, resetn  
+);
+    localparam gold_count = 3,
+                stone_count = 1,
+                diamond_count = 1,
+                enable_random = 1;
+    localparam MAX_SIZE = 32 << 5; //1024
+	wire [MAX_SIZE - 1: 0] data;
+	wire [5:0]memory_counter;
+	wire [63:0]moveIndex;
+	assign moveIndex = 0;
+	 ItemMap item_map(
+    .clock(clk),
+    .resetn(resetn), 
+    .generateEn(enable_random), 
+    .data(data),
+    .counter(memory_counter),
+    .quantity(28),
+
+    .moveEn(0),
+    .moveIndex(0),
+    .moveX(0),      //please multiple by << 4
+    .moveY(0),   
+
+    .moveEn2(0),
+    .moveIndex2(0),
+    .moveX2(0),      //please multiple by << 4
+    .moveY2(0),   
+
+    .moveState2(0),
+    .visible2(0),
+    .moveState(0),
+    .visible(0)
+    );
+	wire [8:0] x_init_gold,x_init_stone,x_init_diamond;
+	wire [7:0] y_init_gold,y_init_stone,y_init_diamond;
+
+	assign x_init_gold = (data[gold_count * 32 + 31] << 8) + 
+                    (data[gold_count * 32 + 30] << 7) + 
+                    (data[gold_count * 32 + 29] << 6) + 
+                    (data[gold_count * 32 + 28] << 5) + 
+                    (data[gold_count * 32 + 27] << 4) + 
+                    (data[gold_count * 32 + 26] << 3) + 
+                    (data[gold_count * 32 + 25] << 2) + 
+                    (data[gold_count * 32 + 24] << 1) + 
+	                (data[gold_count * 32 + 23] << 0);
+
+	assign y_init_gold = (data[gold_count * 32 + 18] << 7) + 
+                     (data[gold_count * 32 + 17] << 6) + 
+                     (data[gold_count * 32 + 16] << 5) + 
+                     (data[gold_count * 32 + 15] << 4) + 
+                     (data[gold_count * 32 + 14] << 3) + 
+                     (data[gold_count * 32 + 13] << 2) + 
+                     (data[gold_count * 32 + 12] << 1) + 
+                     (data[gold_count * 32 + 11] << 0) + 80;
+
+	assign x_init_stone = (data[(stone_count+8) * 32 + 31] << 8) + 
+                    (data[(stone_count+8)  * 32 + 30] << 7) + 
+                    (data[(stone_count+8)  * 32 + 29] << 6) + 
+                    (data[(stone_count+8)  * 32 + 28] << 5) + 
+                    (data[(stone_count+8)  * 32 + 27] << 4) + 
+                    (data[(stone_count+8)  * 32 + 26] << 3) + 
+                    (data[(stone_count+8)  * 32 + 25] << 2) + 
+                    (data[(stone_count+8)  * 32 + 24] << 1) + 
+	                (data[(stone_count+8)  * 32 + 23] << 0);
+	
+    assign y_init_stone = (data[(stone_count+8) * 32 + 18] << 7) + 
+                     (data[(stone_count+8) * 32 + 17] << 6) + 
+                     (data[(stone_count+8) * 32 + 16] << 5) + 
+                     (data[(stone_count+8) * 32 + 15] << 4) + 
+                     (data[(stone_count+8) * 32 + 14] << 3) + 
+                     (data[(stone_count+8) * 32 + 13] << 2) + 
+                     (data[(stone_count+8) * 32 + 12] << 1) + 
+                     (data[(stone_count+8) * 32 + 11] << 0) + 80;
+
+	assign x_init_diamond = (data[(diamond_count+16) * 32 + 31] << 8) + 
+                    (data[(diamond_count+16)  * 32 + 30] << 7) + 
+                    (data[(diamond_count+16)  * 32 + 29] << 6) + 
+                    (data[(diamond_count+16)  * 32 + 28] << 5) + 
+                    (data[(diamond_count+16)  * 32 + 27] << 4) + 
+                    (data[(diamond_count+16)  * 32 + 26] << 3) + 
+                    (data[(diamond_count+16)  * 32 + 25] << 2) + 
+                    (data[(diamond_count+16)  * 32 + 24] << 1) + 
+	                 (data[(diamond_count+16)  * 32 + 23] << 0);
+	
+    assign y_init_diamond= (data[(diamond_count+16) * 32 + 18] << 7) + 
+                     (data[(diamond_count+16) * 32 + 17] << 6) + 
+                     (data[(diamond_count+16) * 32 + 16] << 5) + 
+                     (data[(diamond_count+16) * 32 + 15] << 4) + 
+                     (data[(diamond_count+16) * 32 + 14] << 3) + 
+                     (data[(diamond_count+16) * 32 + 13] << 2) + 
+                     (data[(diamond_count+16) * 32 + 12] << 1) + 
+                     (data[(diamond_count+16) * 32 + 11] << 0) + 80;
+endmodule // test_top
+
  module Rand(
     input clock, resetn, enable,
     output reg [8 : 0] out
@@ -54,7 +150,7 @@
     parameter SEED = 16'd163;
     parameter parA = 16'd43;
     parameter parB = 16'd181;
-    wire[40: 0] temp;
+    wire[31: 0] temp;
     reg [5: 0] counter;
     assign temp = counter * out + parB;
     always @(posedge clock) begin
@@ -63,19 +159,20 @@
             counter = 1;
         end
         else if (enable) begin 
-            out <= temp % 457;
+            // out <= temp % 457;
+            out <= temp % 2148004423 ? temp - 2148004423 : temp;
             counter = counter + temp[5:2];
         end
     end
  endmodule // Rand
  
  module ItemMap(
-     clock,
-     resetn, 
-     generateEn, 
-     data,
-     counter,
-	  quantity,
+    clock,
+    resetn, 
+    generateEn, 
+    data,
+    counter,
+    quantity,
      
 
     moveEn,
@@ -131,6 +228,96 @@
 
     wire [13:0] testX, testY;
     reg [31:0] tempData, tempOld;
+
+    //data for loop starts here
+
+    reg start_loop;
+    //loop counter
+    reg [5:0]loop_counter;
+    reg resetn_loop_counter;
+    reg check_done;
+    reg resetn_isCovered;
+    reg set_isCovered;
+    reg load_tempData, load_tempOld, endloop;
+   
+    //reg tempData
+    always@(posedge clock)begin
+        if(!resetn) tempData = 0;
+        else if(load_tempData)
+            tempData <=  (((x >= 20) ? x - 20 : x) << 27) + (((y >= 10) ? y - 10 : y) << 15);
+    end
+
+    //reg tempOld
+    always@(posedge clock)begin
+        if(!resetn) tempOld = 0;
+        else if (load_tempOld) tempOld = usedData[loop_counter];
+    end
+
+    // reg isCovered
+    always@(posedge clock)begin
+        if(!resetn | !resetn_isCovered) isCovered = 0;
+        else if(set_isCovered) isCovered = 1;
+    end
+
+    // FSM for loop starts here
+    reg [4:0] current_state, next_state;
+    localparam  BEFORE_LOOP     =5'd0,  //Wait for enable signal
+                IN_LOOP_CHECK      =5'd1,  //Prepare for drawing
+                CHECK_RESULT =5'd5,  //Draw rope
+                ENDLOOP =5'd2;  //Draw hook
+
+    always @(*) begin
+        case (current_state)
+            BEFORE_LOOP:        next_state = (start_loop) ? IN_LOOP_CHECK : BEFORE_LOOP;
+            IN_LOOP_CHECK:         next_state = CHECK_RESULT;
+            CHECK_RESULT:    next_state = (loop_counter == counter | isCovered) ?
+                                        ENDLOOP : IN_LOOP_CHECK;
+            ENDLOOP:    next_state = BEFORE_LOOP;
+          default: next_state = BEFORE_LOOP;
+        endcase      
+    end
+
+    always @(*)
+    begin: enable_signals
+        // By default make all our signals 0 to avoid latches.
+        resetn_loop_counter = 1'b1;
+        check_done = 1'b0;
+        resetn_isCovered = 1'b1;
+        set_isCovered = 1'b0;
+        load_tempData = 1'b0;
+        load_tempOld = 1'b0;
+        endloop = 1'b0;
+
+        case (current_state)
+            BEFORE_LOOP : begin
+                resetn_isCovered = 1'b0;
+            end
+			IN_LOOP_CHECK: begin
+                load_tempData = 1'b1;
+                load_tempOld = 1'b1;
+			end
+			CHECK_RESULT: begin
+                if(tempOld[31:0] == tempData[31:0]) set_isCovered = 1'b1;
+                check_done = 1'b1;
+            end
+            ENDLOOP: begin
+                endloop = 1'b1;
+            end
+				
+        // default:    // don't need default since we already made sure all of our outputs were assigned a value at the start of the always block
+        endcase
+    end // enable_signals
+
+    //state changes
+    always @(posedge clock) begin
+        if (!resetn) begin
+            current_state <= BEFORE_LOOP;
+			end
+        else
+            current_state <= next_state;
+    end
+
+
     always @(posedge clock) begin
         if (!generateEn) begin
             counter = 0;
@@ -142,23 +329,16 @@
             isMoving = 0;            
         end
         else if (generateEn & counter < quantity) begin
-            isCovered <= 0;
-            tempData <=  ((x%20) << 27) + ((y%10) << 15);
-            for (index = 0; index < counter; index = index + 1) begin
-
+            start_loop = 1'b1;
+            /*
+            isCovered = 0;
+            tempData <=  (((x >= 20) ? x - 20 : x) << 27) + (((y >= 10) ? y - 10 : y) << 15);
+            for (index = 0; index < counter; index = index + 1) begin 
                 tempOld = usedData[index];
-                // tempOld = (usedData[index][31] << 31) + 
-                //         (usedData[index][30] << 30) + 
-                //         (usedData[index][29] << 29) + 
-                //         (usedData[index][28] << 28) + 
-                //         (usedData[index][27] << 27) +
-                //         (usedData[index][18] << 18) + 
-                //         (usedData[index][17] << 17) + 
-                //         (usedData[index][16] << 16) + 
-                //         (usedData[index][15] << 15);
-                if (tempOld[31:0] == tempData[31:0]) isCovered <= 1;
+                if (tempOld[31:0] == tempData[31:0]) isCovered = 1;
                 
             end
+            */
             if (!isCovered) begin
                 usedData[counter] <= tempData;
                 data <= data + (tempData << (counter * 32));

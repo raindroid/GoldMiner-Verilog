@@ -11,13 +11,15 @@ add wave -color blue -unsigned testX testY tempOld tempData usedData
 
 add wave -color yellow -unsigned moveEn moveIndex moveX moveY moveState
 add wave -color blue -unsigned isMoving 
+add wave loop_counter resetn_loop_counter check_done resetn_isCovered set_isCovered load_tempData load_tempOld endloop
+add wave -unsigned current_state next_state start_loop
 
 force {clock} 0 0, 1 10ns -r 20ns
 force {resetn} 0 0, 1 20ns
 
 force {generateEn} 0 0, 1 10ns, 0 750ns
 force {quantity} 'd28
-force {moveIndex} 'd5
+force {moveIndex} 'd3
 run 1000ns
 
 force {moveEn} 1

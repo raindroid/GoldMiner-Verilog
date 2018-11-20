@@ -144,7 +144,7 @@ module view(
     .moveState2(0),
     .visible2(0),
     .moveState(0),
-    .visible(0),
+    .visible(0)
  );
 	wire [8:0] x_init_gold,x_init_stone,x_init_diamond;
 	wire [7:0] y_init_gold,y_init_stone,y_init_diamond;
