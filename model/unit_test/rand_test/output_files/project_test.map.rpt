@@ -1,5 +1,5 @@
 Analysis & Synthesis report for project_test
-Tue Nov 20 16:12:50 2018
+Tue Nov 20 16:30:20 2018
 Quartus Prime Version 18.1.0 Build 625 09/12/2018 SJ Lite Edition
 
 
@@ -46,7 +46,7 @@ refer to the applicable agreement for further details.
 +-------------------------------------------------------------------------------+
 ; Analysis & Synthesis Summary                                                  ;
 +---------------------------------+---------------------------------------------+
-; Analysis & Synthesis Status     ; Successful - Tue Nov 20 16:12:50 2018       ;
+; Analysis & Synthesis Status     ; Successful - Tue Nov 20 16:30:20 2018       ;
 ; Quartus Prime Version           ; 18.1.0 Build 625 09/12/2018 SJ Lite Edition ;
 ; Revision Name                   ; project_test                                ;
 ; Top-level Entity Name           ; project_test                                ;
@@ -170,14 +170,14 @@ refer to the applicable agreement for further details.
 +----------------------------+-------------+
 
 
-+----------------------------------------------------------------------------------------------------------------------------------------------------+
-; Analysis & Synthesis Source Files Read                                                                                                             ;
-+-----------------------------------------+-----------------+------------------------+-----------------------------------------------------+---------+
-; File Name with User-Entered Path        ; Used in Netlist ; File Type              ; File Name with Absolute Path                        ; Library ;
-+-----------------------------------------+-----------------+------------------------+-----------------------------------------------------+---------+
-; ../ece241project/model/item_generator.v ; yes             ; User Verilog HDL File  ; F:/UofT/ECE241/ece241project/model/item_generator.v ;         ;
-; project_test.v                          ; yes             ; User Verilog HDL File  ; F:/UofT/ECE241/ece241project-test/project_test.v    ;         ;
-+-----------------------------------------+-----------------+------------------------+-----------------------------------------------------+---------+
++---------------------------------------------------------------------------------------------------------------------------------------------------------------+
+; Analysis & Synthesis Source Files Read                                                                                                                        ;
++----------------------------------+-----------------+------------------------+-----------------------------------------------------------------------+---------+
+; File Name with User-Entered Path ; Used in Netlist ; File Type              ; File Name with Absolute Path                                          ; Library ;
++----------------------------------+-----------------+------------------------+-----------------------------------------------------------------------+---------+
+; ../../item_generator.v           ; yes             ; User Verilog HDL File  ; F:/UofT/ECE241/ece241project/model/item_generator.v                   ;         ;
+; project_test.v                   ; yes             ; User Verilog HDL File  ; F:/UofT/ECE241/ece241project/model/unit_test/rand_test/project_test.v ;         ;
++----------------------------------+-----------------+------------------------+-----------------------------------------------------------------------+---------+
 
 
 +------------------------------------------------------------+
@@ -303,7 +303,7 @@ Note: In order to hide this table in the UI and the text report file, please set
 Info: *******************************************************************
 Info: Running Quartus Prime Analysis & Synthesis
     Info: Version 18.1.0 Build 625 09/12/2018 SJ Lite Edition
-    Info: Processing started: Tue Nov 20 16:12:42 2018
+    Info: Processing started: Tue Nov 20 16:29:57 2018
 Info: Command: quartus_map --read_settings_files=on --write_settings_files=off project_test -c project_test
 Warning (18236): Number of processors has not been specified which may cause overloading on shared machines.  Set the global assignment NUM_PARALLEL_PROCESSORS in your QSF to an appropriate value for best performance.
 Info (20030): Parallel compilation is enabled and will use 4 of the 4 processors detected
@@ -313,34 +313,34 @@ Info (12021): Found 3 design units, including 3 entities, in source file /uoft/e
     Info (12023): Found entity 2: Rand File: F:/UofT/ECE241/ece241project/model/item_generator.v Line: 126
     Info (12023): Found entity 3: ItemMap File: F:/UofT/ECE241/ece241project/model/item_generator.v Line: 149
 Info (12021): Found 1 design units, including 1 entities, in source file project_test.v
-    Info (12023): Found entity 1: project_test File: F:/UofT/ECE241/ece241project-test/project_test.v Line: 7
+    Info (12023): Found entity 1: project_test File: F:/UofT/ECE241/ece241project/model/unit_test/rand_test/project_test.v Line: 7
 Info (12127): Elaborating entity "project_test" for the top level hierarchy
-Info (12128): Elaborating entity "Rand" for hierarchy "Rand:test_r" File: F:/UofT/ECE241/ece241project-test/project_test.v Line: 25
-Warning (10230): Verilog HDL assignment warning at item_generator.v(138): truncated value with size 16 to match size of target (9) File: F:/UofT/ECE241/ece241project/model/item_generator.v Line: 138
-Warning (10230): Verilog HDL assignment warning at item_generator.v(143): truncated value with size 33 to match size of target (9) File: F:/UofT/ECE241/ece241project/model/item_generator.v Line: 143
+Info (12128): Elaborating entity "Rand" for hierarchy "Rand:test_r" File: F:/UofT/ECE241/ece241project/model/unit_test/rand_test/project_test.v Line: 25
+Warning (10230): Verilog HDL assignment warning at item_generator.v(138): truncated value with size 16 to match size of target (9) File: ../ece241project/model/item_generator.v Line: 138
+Warning (10230): Verilog HDL assignment warning at item_generator.v(143): truncated value with size 33 to match size of target (9) File: ../ece241project/model/item_generator.v Line: 143
 Warning (13024): Output pins are stuck at VCC or GND
-    Warning (13410): Pin "LEDR[9]" is stuck at GND File: F:/UofT/ECE241/ece241project-test/project_test.v Line: 10
+    Warning (13410): Pin "LEDR[9]" is stuck at GND File: F:/UofT/ECE241/ece241project/model/unit_test/rand_test/project_test.v Line: 10
 Info (286030): Timing-Driven Synthesis is running
-Info (144001): Generated suppressed messages file F:/UofT/ECE241/ece241project-test/output_files/project_test.map.smsg
+Info (144001): Generated suppressed messages file F:/UofT/ECE241/ece241project/model/unit_test/rand_test/output_files/project_test.map.smsg
 Info (16010): Generating hard_block partition "hard_block:auto_generated_inst"
     Info (16011): Adding 0 node(s), including 0 DDIO, 0 PLL, 0 transceiver and 0 LCELL
 Warning (21074): Design contains 1 input pin(s) that do not drive logic
-    Warning (15610): No output dependent on input pin "KEY[3]" File: F:/UofT/ECE241/ece241project-test/project_test.v Line: 8
+    Warning (15610): No output dependent on input pin "KEY[3]" File: F:/UofT/ECE241/ece241project/model/unit_test/rand_test/project_test.v Line: 8
 Info (21057): Implemented 26 device resources after synthesis - the final resource count might be different
     Info (21058): Implemented 4 input pins
     Info (21059): Implemented 10 output pins
     Info (21061): Implemented 11 logic cells
     Info (21062): Implemented 1 DSP elements
 Info: Quartus Prime Analysis & Synthesis was successful. 0 errors, 8 warnings
-    Info: Peak virtual memory: 764 megabytes
-    Info: Processing ended: Tue Nov 20 16:12:50 2018
-    Info: Elapsed time: 00:00:08
-    Info: Total CPU time (on all processors): 00:00:17
+    Info: Peak virtual memory: 756 megabytes
+    Info: Processing ended: Tue Nov 20 16:30:20 2018
+    Info: Elapsed time: 00:00:23
+    Info: Total CPU time (on all processors): 00:00:18
 
 
 +------------------------------------------+
 ; Analysis & Synthesis Suppressed Messages ;
 +------------------------------------------+
-The suppressed messages can be found in F:/UofT/ECE241/ece241project-test/output_files/project_test.map.smsg.
+The suppressed messages can be found in F:/UofT/ECE241/ece241project/model/unit_test/rand_test/output_files/project_test.map.smsg.
 
 

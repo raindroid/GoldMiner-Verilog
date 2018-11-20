@@ -3,16 +3,16 @@ KEY[0] => clock.IN1
 KEY[1] => resetn.IN1
 KEY[2] => enable.IN1
 KEY[3] => ~NO_FANOUT~
-LEDR[0] <= Rand:test_r.out
-LEDR[1] <= Rand:test_r.out
-LEDR[2] <= Rand:test_r.out
-LEDR[3] <= Rand:test_r.out
-LEDR[4] <= Rand:test_r.out
-LEDR[5] <= Rand:test_r.out
-LEDR[6] <= Rand:test_r.out
-LEDR[7] <= Rand:test_r.out
-LEDR[8] <= Rand:test_r.out
-LEDR[9] <= <GND>
+LEDR[0] << Rand:test_r.out
+LEDR[1] << Rand:test_r.out
+LEDR[2] << Rand:test_r.out
+LEDR[3] << Rand:test_r.out
+LEDR[4] << Rand:test_r.out
+LEDR[5] << Rand:test_r.out
+LEDR[6] << Rand:test_r.out
+LEDR[7] << Rand:test_r.out
+LEDR[8] << Rand:test_r.out
+LEDR[9] << <GND>
 
 
 |project_test|Rand:test_r
