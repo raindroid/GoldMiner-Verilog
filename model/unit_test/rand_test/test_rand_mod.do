@@ -1,5 +1,5 @@
 vlib work
-vlog ../ece241project/model/item_generator.v project_test.v
+vlog ../../item_generator.v project_test.v
 vsim project_test
 log {/*}
 
