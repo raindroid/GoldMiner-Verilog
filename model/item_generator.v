@@ -243,7 +243,7 @@ endmodule // test_top
     assign tempX = tempData >> 27;
     assign tempY = tempData[18:0] >> 15;
     assign testX = tempX << 4;
-    assign testY = tempY << 4;
+    assign testY = (tempY << 4) + 80;
     assign tempOld = usedData[check_counter][31:0];
     assign counter32 = counter << 5;
 
@@ -274,8 +274,8 @@ endmodule // test_top
                 data = 0;
             end
             S_IN_GEN: begin
-                tempData <=  (((x >= 20) ? 40 - x : 20 - x) << 27) + 
-                    (((y >= 10) ? 20 - y : 10 - y) << 15);
+                tempData <=  (((x >= 20) ? 39 - x : 20 - x) << 27) + 
+                    (((y >= 10) ? 19 - y : 10 - y) << 15);
                 next_state = S_PRE_CHECK;
             end
             S_PRE_CHECK: begin

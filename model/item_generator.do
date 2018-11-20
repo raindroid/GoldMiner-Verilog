@@ -16,9 +16,9 @@ force {clock} 0 0, 1 10ns -r 20ns
 force {resetn} 0 0, 1 20ns
 
 force {generateEn} 0 0, 1 10ns, 0 40ns
-force {stoneQuantity} 'd3
-force {goldQuantity} 'd3
-force {diamondQuantity} 'd2
+force {stoneQuantity} 'd5
+force {goldQuantity} 'd0
+force {diamondQuantity} 'd0
 force {moveIndex} 'd3
 run 3000ns
 
