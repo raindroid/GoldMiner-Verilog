@@ -118,8 +118,8 @@ module view(
 		end
 	end
 	*/
-	localparam MAX_SIZE = 32 << 5; //1024
-	wire [MAX_SIZE - 1: 0] data;
+	
+	wire [1023: 0] data;
 	wire [5:0]memory_counter;
 	wire [63:0]moveIndex;
 	assign moveIndex = 0;
@@ -135,22 +135,33 @@ module view(
 		
 
     .moveEn(0),
-    .moveIndex(moveIndex),
+    .moveIndex(0),
     .moveX(0),      //please multiple by << 4
     .moveY(0),   
 
     .moveEn2(0),
-    .moveIndex2(moveIndex),
+    .moveIndex2(0),
     .moveX2(0),      //please multiple by << 4
     .moveY2(0),   
 
     .moveState2(0),
     .visible2(0),
     .moveState(0),
-    .visible(0)
+    .visible(0),
+	.LEDR(LEDR[9:1])
  );
 	wire [8:0] x_init_gold,x_init_stone,x_init_diamond;
 	wire [7:0] y_init_gold,y_init_stone,y_init_diamond;
+
+	//assign LEDR [9:1] = data[1 * 32 +31 : 1 * 32 + 23];
+	assign x_init_stone = data[(0 * 32 + 31):(0 * 32 + 23)];
+	assign y_init_stone = data[(0 * 32 + 18):(0 * 32 + 11)] + 80;
+
+	// assign x_init_gold = data[(1 * 32 + 31):(1 * 32 + 23)];
+	// assign y_init_gold = data[(1 * 32 + 18):(1 * 32 + 11)];
+
+	// assign x_init_diamond = data[(2 * 32 + 31):(2 * 32 + 23)];
+	// assign y_init_diamond = data[(2 * 32 + 18):(2 * 32 + 11)];
 
 	assign x_init_gold = (data[1 * 32 + 31] << 8) + 
                     (data[1 * 32 + 30] << 7) + 
@@ -172,24 +183,24 @@ module view(
                      (data[1 * 32 + 11] << 0) + 80;
 
 
-	assign x_init_stone = (data[(0) * 32 + 31] << 8) + 
-                    (data[(0)  * 32 + 30] << 7) + 
-                    (data[(0)  * 32 + 29] << 6) + 
-                    (data[(0)  * 32 + 28] << 5) + 
-                    (data[(0)  * 32 + 27] << 4) + 
-                    (data[(0)  * 32 + 26] << 3) + 
-                    (data[(0)  * 32 + 25] << 2) + 
-                    (data[(0)  * 32 + 24] << 1) + 
-	                (data[(0)  * 32 + 23] << 0);
+	// assign x_init_stone = (data[(0) * 32 + 31] << 8) + 
+    //                 (data[(0)  * 32 + 30] << 7) + 
+    //                 (data[(0)  * 32 + 29] << 6) + 
+    //                 (data[(0)  * 32 + 28] << 5) + 
+    //                 (data[(0)  * 32 + 27] << 4) + 
+    //                 (data[(0)  * 32 + 26] << 3) + 
+    //                 (data[(0)  * 32 + 25] << 2) + 
+    //                 (data[(0)  * 32 + 24] << 1) + 
+	//                 (data[(0)  * 32 + 23] << 0);
 	
-    assign y_init_stone = (data[(0) * 32 + 18] << 7) + 
-                     (data[(0) * 32 + 17] << 6) + 
-                     (data[(0) * 32 + 16] << 5) + 
-                     (data[(0) * 32 + 15] << 4) + 
-                     (data[(0) * 32 + 14] << 3) + 
-                     (data[(0) * 32 + 13] << 2) + 
-                     (data[(0) * 32 + 12] << 1) + 
-                     (data[(0) * 32 + 11] << 0) + 80;
+    // assign y_init_stone = (data[(0) * 32 + 18] << 7) + 
+    //                  (data[(0) * 32 + 17] << 6) + 
+    //                  (data[(0) * 32 + 16] << 5) + 
+    //                  (data[(0) * 32 + 15] << 4) + 
+    //                  (data[(0) * 32 + 14] << 3) + 
+    //                  (data[(0) * 32 + 13] << 2) + 
+    //                  (data[(0) * 32 + 12] << 1) + 
+    //                  (data[(0) * 32 + 11] << 0) + 80;
 
 	assign x_init_diamond = (data[(2) * 32 + 31] << 8) + 
                     (data[(2)  * 32 + 30] << 7) + 
@@ -471,7 +482,7 @@ module view(
 		.color(Color_out_hook),
 		.writeEn(writeEn_hook),
 		.done(draw_hook_done),
-		.LEDR(LEDR)
+		.LEDR(LEDR[0])
 	);
 
 	wire 	[8:0] X_out_num;

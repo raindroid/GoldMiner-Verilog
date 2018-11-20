@@ -12,5 +12,5 @@ add wave -color blue -unsigned x_init_diamond  y_init_diamond
 
 force {clk} 0 0, 1 10ns -r 20ns
 force {resetn} 0 0, 1 20ns
-force {enable_random} 0 0, 1 20ns, 0 40ns
+force {enable_random} 0 0, 1 20ns, 0 60ns
 run 10000ns

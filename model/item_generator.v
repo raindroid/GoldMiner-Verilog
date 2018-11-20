@@ -49,7 +49,7 @@ module test_top(
                 diamond_count = 1;
      
     localparam MAX_SIZE = 32 << 5; //1024
-	wire [MAX_SIZE - 1: 0] data;
+	wire [1023: 0] data;
 	wire [5:0]memory_counter;
 	wire [63:0]moveIndex;
 	assign moveIndex = 0;
@@ -100,24 +100,8 @@ module test_top(
                      (data[1 * 32 + 12] << 1) + 
                      (data[1 * 32 + 11] << 0) + 80;
 
-	assign x_init_stone = (data[(0) * 32 + 31] << 8) + 
-                    (data[(0)  * 32 + 30] << 7) + 
-                    (data[(0)  * 32 + 29] << 6) + 
-                    (data[(0) * 32 + 28] << 5) + 
-                    (data[(0)  * 32 + 27] << 4) + 
-                    (data[(0)  * 32 + 26] << 3) + 
-                    (data[(0)  * 32 + 25] << 2) + 
-                    (data[(0)  * 32 + 24] << 1) + 
-	                (data[(0)  * 32 + 23] << 0);
-	
-    assign y_init_stone = (data[(0) * 32 + 18] << 7) + 
-                     (data[(0) * 32 + 17] << 6) + 
-                     (data[(0) * 32 + 16] << 5) + 
-                     (data[(0) * 32 + 15] << 4) + 
-                     (data[(0) * 32 + 14] << 3) + 
-                     (data[(0) * 32 + 13] << 2) + 
-                     (data[(0) * 32 + 12] << 1) + 
-                     (data[(0) * 32 + 11] << 0) + 80;
+	assign x_init_stone = data[(0 * 32 + 31):(0 * 32 + 23)];
+	assign y_init_stone = data[(0 * 32 + 18):(0 * 32 + 11)] + 80;
 
 	assign x_init_diamond = (data[(2) * 32 + 31] << 8) + 
                     (data[(2)  * 32 + 30] << 7) + 
@@ -156,7 +140,7 @@ endmodule // test_top
         end
         else if (enable) begin 
             // out <= temp % 457;
-            out <= temp > 2148004423 ? temp - 2148004423 : temp;
+            out <= temp > 33'd2148004423 ? temp - 33'd2148004423 : temp;
             // counter = counter + temp[5:2];
         end
     end
@@ -184,8 +168,13 @@ endmodule // test_top
     moveX2,      //please multiple by << 4
     moveY2,   
     moveState2,
-    visible2
+    visible2,
+
+    LEDR
  );
+    output [8:0] LEDR;
+    
+
     parameter stone_size = 16;
     parameter gold_size = 16;
     parameter diamond_size = 8;
@@ -207,6 +196,8 @@ endmodule // test_top
     input [10:0]moveX2;      //please multiple by << 4
     input [10:0]moveY2;   
     input moveState2, visible2;
+
+    assign LEDR [8:0] = data[31 : 23];
 
     output reg [3:0] counter;
     //Input & output table END
@@ -250,11 +241,11 @@ endmodule // test_top
     localparam  S_START     = 5'd0,
                 S_PRE_GEN   = 5'd1,
                 S_IN_GEN    = 5'd2,
-                S_PRE_CHECK = 5'd6,
-                S_IN_CHECK  = 5'd3,
-                S_SAVE      = 5'd4,
-                S_AFTER_SAVE= 5'd7,
-                S_MODIFY    = 5'd5;
+                S_PRE_CHECK = 5'd3,
+                S_IN_CHECK  = 5'd4,
+                S_SAVE      = 5'd5,
+                S_AFTER_SAVE= 5'd6,
+                S_MODIFY    = 5'd7;
    
     always @(posedge clock) begin
         // if (!generateEn) counter <= 0;
@@ -506,22 +497,22 @@ endmodule // test_top
     //         (data[moveIndex * 32 + 9] << 2) + 
     //         (data[moveIndex * 32 + 8] << 1) + 
     //         (data[moveIndex * 32 + 7] << 0);
-     assign testX = (data[moveIndex * 32 + 31] << 8) + 
-                     (data[moveIndex * 32 + 30] << 7) + 
-                     (data[moveIndex * 32 + 29] << 6) + 
-                    (data[moveIndex * 32 + 28] << 5) + 
-                    (data[moveIndex * 32 + 27] << 4) + 
-                     (data[moveIndex * 32 + 26] << 3) + 
-                     (data[moveIndex * 32 + 25] << 2) + 
-                     (data[moveIndex * 32 + 24] << 1) + 
-                     (data[moveIndex * 32 + 23] << 0);
-     assign testY = (data[moveIndex * 32 + 18] << 7) + 
-                     (data[moveIndex * 32 + 17] << 6) + 
-                     (data[moveIndex * 32 + 16] << 5) + 
-                     (data[moveIndex * 32 + 15] << 4) + 
-                     (data[moveIndex * 32 + 14] << 3) + 
-                     (data[moveIndex * 32 + 13] << 2) + 
-                     (data[moveIndex * 32 + 12] << 1) + 
-                     (data[moveIndex * 32 + 11] << 0) + 80;
+    //  assign testX = (data[moveIndex * 32 + 31] << 8) + 
+    //                  (data[moveIndex * 32 + 30] << 7) + 
+    //                  (data[moveIndex * 32 + 29] << 6) + 
+    //                 (data[moveIndex * 32 + 28] << 5) + 
+    //                 (data[moveIndex * 32 + 27] << 4) + 
+    //                  (data[moveIndex * 32 + 26] << 3) + 
+    //                  (data[moveIndex * 32 + 25] << 2) + 
+    //                  (data[moveIndex * 32 + 24] << 1) + 
+    //                  (data[moveIndex * 32 + 23] << 0);
+    //  assign testY = (data[moveIndex * 32 + 18] << 7) + 
+    //                  (data[moveIndex * 32 + 17] << 6) + 
+    //                  (data[moveIndex * 32 + 16] << 5) + 
+    //                  (data[moveIndex * 32 + 15] << 4) + 
+    //                  (data[moveIndex * 32 + 14] << 3) + 
+    //                  (data[moveIndex * 32 + 13] << 2) + 
+    //                  (data[moveIndex * 32 + 12] << 1) + 
+    //                  (data[moveIndex * 32 + 11] << 0) + 80;
     
  endmodule // ItemGenerator

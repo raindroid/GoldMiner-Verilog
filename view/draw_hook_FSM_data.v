@@ -31,7 +31,7 @@ module draw_hook(
     output [11:0] color,
     output reg writeEn,
     output reg done,
-    output reg [9:0] LEDR
+    output reg [0:0] LEDR
 );
 
     reg [63:0] centerX, centerY;
@@ -110,10 +110,10 @@ module draw_hook(
                 
                 centerX = START_X + ((length * deg_cos) >> 8) * (deg_signCos ? 64'd1 : -64'd1);
                 centerY = START_Y + ((length * deg_sin) >> 8);
-                LEDR = 9'b0;
+                LEDR[0] = 1'b0;
             end
             S_DRAW_ROPE: begin
-                LEDR[3] = 1'b1;
+                LEDR[0] = 1'b1;
 
                 rope_len = length;
 
@@ -132,7 +132,7 @@ module draw_hook(
                 length_counter <= length_counter + 1;
             end
             S_DRAW_HOOK: begin
-                LEDR[2] = 1'b1;
+                
                 
                  tempX = (RADIUS * cos[8:0]) >> 8;
                  outX = centerX[8:0] + tempX[8:0] * (signCos ? 64'd1 : -64'd1);
@@ -148,7 +148,7 @@ module draw_hook(
                 degree_counter <= degree_counter + 4;
             end
             S_DRAW_DONE: begin
-                LEDR[3] = 1'b0;
+
                 done = 1'b1;
             end
         endcase

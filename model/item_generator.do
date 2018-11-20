@@ -11,27 +11,28 @@ add wave -color blue -unsigned testX testY tempOld tempData usedData
 
 add wave -color yellow -unsigned moveEn moveIndex moveX moveY moveState
 add wave -unsigned current_state next_state quantity
+add wave LEDR
 
 force {clock} 0 0, 1 10ns -r 20ns
 force {resetn} 0 0, 1 20ns
 
-force {generateEn} 0 0, 1 10ns, 0 40ns
-force {stoneQuantity} 'd5
-force {goldQuantity} 'd0
-force {diamondQuantity} 'd0
-force {moveIndex} 'd3
+force {generateEn} 0 0, 1 20ns, 0 40ns
+force {stoneQuantity} 'd1
+force {goldQuantity} 'd1
+force {diamondQuantity} 'd1
+force {moveIndex} 'd0
 run 3000ns
 
-force {moveEn} 1
-force {moveX} 10000000010
-force {moveY} 10
-force {moveState} 1
-force {moveIndex2} 100
-force {moveEn2} 1
-force {moveX2} 0000000010
-force {moveY2} 10
-force {moveState2} 1
-force {visible} 1
-force {visible2} 1 
+#force {moveEn} 1
+#force {moveX} 10000000010
+#force {moveY} 10
+#force {moveState} 1
+#force {moveIndex2} 100
+#force {moveEn2} 1
+#force {moveX2} 0000000010
+#force {moveY2} 10
+#force {moveState2} 1
+#force {visible} 1
+#force {visible2} 1 
 
-run 1600ns
+#run 1600ns
