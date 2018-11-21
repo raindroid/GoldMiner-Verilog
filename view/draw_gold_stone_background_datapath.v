@@ -285,14 +285,15 @@ module draw_background(
 		X_out_background, 
 		Y_out_background, 
 		Color_out_background,
-		background_cout
+		background_cout,
+		resetn_gold_stone_diamond
 		
 		);
 	input clk;
 	input resetn;
 	
 	input   enable_x_adder_background, enable_y_adder_background;
-	input enable_c_stone_background;
+	input enable_c_stone_background, resetn_gold_stone_diamond;
 	
 	output reg [8:0]X_out_background;
 	output reg [8:0]Y_out_background;
@@ -342,7 +343,7 @@ module draw_background(
 	
 	// 17-bit black counter
 	always@(posedge clk)begin
-		if(resetn == 0) background_cout <= 17'b0;
+		if(resetn == 0 |!resetn_gold_stone_diamond) background_cout <= 17'b0;
 		else
 			if(enable_c_stone_background) background_cout <= background_cout + 1'b1;
 	end

@@ -297,7 +297,7 @@ module draw_background_FSM(
 						next_state = (enable_draw_background) ? DRAW_BACKGROUND_WAIT : DRAW_BACKGROUND; 
 						end // Loop in current state until value is input
                 DRAW_BACKGROUND_WAIT:begin
-						next_state = (background_cout == 17'b11111111111111111) ? DRAW_BACKGROUND_DONE : DRAW_BACKGROUND;
+						next_state = (background_cout == 17'b1_1110_0001_0100_0000) ? DRAW_BACKGROUND_DONE : DRAW_BACKGROUND;
 						end
 					 DRAW_BACKGROUND_DONE: begin
 						next_state = DRAW_BACKGROUND;

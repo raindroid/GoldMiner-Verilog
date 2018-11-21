@@ -265,7 +265,7 @@ module score_and_time_display(
                 case(score_one)
                     4'd0: color = num0_color;
                     4'd1: color = num1_color;
-                    4'd2: color = num1_color;
+                    4'd2: color = num2_color;
                     4'd3: color = num3_color;
                     4'd4: color = num4_color;
                     4'd5: color = num5_color;
@@ -281,7 +281,7 @@ module score_and_time_display(
                 case(score_ten)
                     4'd0: color = num0_color;
                     4'd1: color = num1_color;
-                    4'd2: color = num1_color;
+                    4'd2: color = num2_color;
                     4'd3: color = num3_color;
                     4'd4: color = num4_color;
                     4'd5: color = num5_color;
@@ -297,7 +297,7 @@ module score_and_time_display(
                 case(score_hun)
                     4'd0: color = num0_color;
                     4'd1: color = num1_color;
-                    4'd2: color = num1_color;
+                    4'd2: color = num2_color;
                     4'd3: color = num3_color;
                     4'd4: color = num4_color;
                     4'd5: color = num5_color;
@@ -313,7 +313,7 @@ module score_and_time_display(
                 case(score_tho)
                     4'd0: color = num0_color;
                     4'd1: color = num1_color;
-                    4'd2: color = num1_color;
+                    4'd2: color = num2_color;
                     4'd3: color = num3_color;
                     4'd4: color = num4_color;
                     4'd5: color = num5_color;
@@ -334,7 +334,7 @@ module score_and_time_display(
                 case(goal_one)
                     4'd0: color = num0_color;
                     4'd1: color = num1_color;
-                    4'd2: color = num1_color;
+                    4'd2: color = num2_color;
                     4'd3: color = num3_color;
                     4'd4: color = num4_color;
                     4'd5: color = num5_color;
@@ -350,7 +350,7 @@ module score_and_time_display(
                 case(goal_ten)
                     4'd0: color = num0_color;
                     4'd1: color = num1_color;
-                    4'd2: color = num1_color;
+                    4'd2: color = num2_color;
                     4'd3: color = num3_color;
                     4'd4: color = num4_color;
                     4'd5: color = num5_color;
@@ -366,7 +366,7 @@ module score_and_time_display(
                 case(goal_hun)
                     4'd0: color = num0_color;
                     4'd1: color = num1_color;
-                    4'd2: color = num1_color;
+                    4'd2: color = num2_color;
                     4'd3: color = num3_color;
                     4'd4: color = num4_color;
                     4'd5: color = num5_color;
@@ -382,7 +382,7 @@ module score_and_time_display(
                 case(goal_tho)
                     4'd0: color = num0_color;
                     4'd1: color = num1_color;
-                    4'd2: color = num1_color;
+                    4'd2: color = num2_color;
                     4'd3: color = num3_color;
                     4'd4: color = num4_color;
                     4'd5: color = num5_color;
@@ -401,7 +401,7 @@ module score_and_time_display(
                 case(time_one)
                     4'd0: color = num0_color;
                     4'd1: color = num1_color;
-                    4'd2: color = num1_color;
+                    4'd2: color = num2_color;
                     4'd3: color = num3_color;
                     4'd4: color = num4_color;
                     4'd5: color = num5_color;
@@ -417,7 +417,7 @@ module score_and_time_display(
                 case(time_ten)
                     4'd0: color = num0_color;
                     4'd1: color = num1_color;
-                    4'd2: color = num1_color;
+                    4'd2: color = num2_color;
                     4'd3: color = num3_color;
                     4'd4: color = num4_color;
                     4'd5: color = num5_color;

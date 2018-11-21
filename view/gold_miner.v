@@ -39,8 +39,7 @@ module gold_miner(
 		.plot(plot), 
 		.resetn(resetn),
 		.background(background),
-		.go(~KEY[3]),
-		.position_in(SW[8:0]),
+		.go(SW[9]),
 		.SW(SW),
 		.KEY(KEY),							// On Board Keys
 		// The ports below are for the VGA output.  Do not change.
@@ -66,7 +65,6 @@ module fill
 	resetn,
 	background,
 	go,
-	position_in,
 	SW,
 	KEY,							// On Board Keys
 	// The ports below are for the VGA output.  Do not change.
@@ -88,7 +86,7 @@ module fill
 	
 	// Declare your inputs and outputs here
 	input plot, resetn, background,go;
-	input [8:0]position_in;
+
 	
 	// Do not change the following outputs
 	output			VGA_CLK;   				//	VGA Clock

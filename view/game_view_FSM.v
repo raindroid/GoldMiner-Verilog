@@ -4,7 +4,6 @@ module game_view_FSM(
 	clk, 
 	resetn,
 	go,
-	frame,
 	
 	draw_gold_done,
 	draw_stone_done,
@@ -30,13 +29,15 @@ module game_view_FSM(
 	enable_random,
 	enable_draw_hook,
 	enable_draw_num,
+	timer_enable,
+	time_resetn,
 
 	resetn_gold_stone_diamond
 
 	);
 	input clk;
 	input resetn;
-	input go,frame;
+	input go;
 
 
 	input draw_gold_done,
@@ -64,7 +65,9 @@ module game_view_FSM(
 					enable_random,
 					enable_draw_hook,
 					enable_draw_num,
-					resetn_gold_stone_diamond;
+					resetn_gold_stone_diamond,
+					timer_enable,
+					time_resetn;
 
 	reg [6:0] current_state, next_state; 
     
@@ -98,7 +101,7 @@ module game_view_FSM(
     begin: state_table 
             case (current_state)
 					START: begin
-						next_state = GENERATE_X_Y;
+						next_state = (go)? GENERATE_X_Y : START;
 					end
 					GENERATE_X_Y: begin
 						next_state = DRAW_BACKGROUND;
@@ -153,7 +156,7 @@ module game_view_FSM(
 					 GAME: begin
 					 	if((game_end)) next_state = GAME_DONE;
 						else
-							next_state = (frame & go) ? DRAW_BACKGROUND : GAME;
+							next_state = (frame) ? DRAW_BACKGROUND : GAME;
 					 end
 					 GAME_DONE: begin
 						next_state = (go) ? DRAW_BACKGROUND : GAME_DONE;
@@ -178,35 +181,46 @@ module game_view_FSM(
 			enable_draw_hook = 1'b0;
 			enable_draw_num = 1'b0;
 			resetn_gold_stone_diamond = 1'b1;
+			timer_enable = 1'b0;
+			time_resetn = 1'b1;
 
 
         case (current_state)
 			GENERATE_X_Y: begin
 			  	enable_random = 1'b1;
+				time_resetn = 1'b0;
 			end
 			DRAW_BACKGROUND: begin
 				enable_draw_background = 1'b1;
+				timer_enable = 1'b1;
 			end
             DRAW_GOLD: begin
 				enable_draw_gold = 1'b1;
+				timer_enable = 1'b1;
 			end
 			DRAW_STONE: begin
 				enable_draw_stone = 1'b1;
+				timer_enable = 1'b1;
 			end	
 			DRAW_DIAMOND: begin
 				enable_draw_diamond = 1'b1;
+				timer_enable = 1'b1;
 			end	
 			DRAW_HOOK: begin
 			  	enable_draw_hook = 1'b1;
+				  timer_enable = 1'b1;
 			end
 			DRAW_HOOK_WAIT: begin
 			  	enable_draw_hook = 1'b1;
+				  timer_enable = 1'b1;
 			end
 			DRAW_NUM: begin
 			  	enable_draw_num = 1'b1;
+				  timer_enable = 1'b1;
 			end
 			GAME: begin
 				resetn_gold_stone_diamond = 1'b0;
+				timer_enable = 1'b1;
 			end
 				
         // default:    // don't need default since we already made sure all of our outputs were assigned a value at the start of the always block
@@ -222,6 +236,13 @@ module game_view_FSM(
             current_state <= next_state;
     end // state_FFS
 	 
+	wire frame;
+	rate_divider r1(
+	.resetn(resetn), 
+	.clock(clk), 
+	.Enable(frame)
+	);
+
 endmodule
 
 

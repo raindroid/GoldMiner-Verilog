@@ -29,10 +29,13 @@ module view(
 	wire [8:0]x_init;
 	wire [7:0]y_init;
 
-	
+	wire visible;
+	assign visible = 1;
 	
 	always@(posedge clk)begin
-		if(enable_draw_gold) begin
+		if(!visible)
+			writeEn = 1'b0;
+		else if(enable_draw_gold) begin
 			X_out <= X_out_gold;
 			Y_out <= Y_out_gold;
 			Color_out <= Color_out_gold;
@@ -130,38 +133,38 @@ module view(
 	.wren(0),
 	.q(read_data));
 
-	wire [1023: 0] data;
-	wire [5:0]memory_counter;
-	wire [63:0]moveIndex;
-	assign moveIndex = 0;
-	 ItemMap item_map(
-    .clock(clk),
-    .resetn(resetn), 
-    .generateEn(enable_random), 
-    .data(data),
-    .counter(memory_counter),
-    .stoneQuantity(1), 
-    .goldQuantity(1), 
-    .diamondQuantity(1),
+// 	wire [1023: 0] data;
+// 	wire [5:0]memory_counter;
+// 	wire [63:0]moveIndex;
+// 	assign moveIndex = 0;
+// 	 ItemMap item_map(
+//     .clock(clk),
+//     .resetn(resetn), 
+//     .generateEn(enable_random), 
+//     .data(data),
+//     .counter(memory_counter),
+//     .stoneQuantity(1), 
+//     .goldQuantity(1), 
+//     .diamondQuantity(1),
 		
 
-    .moveEn(0),
-    .moveIndex(0),
-    .moveX(0),      //please multiple by << 4
-    .moveY(0),   
+//     .moveEn(0),
+//     .moveIndex(0),
+//     .moveX(0),      //please multiple by << 4
+//     .moveY(0),   
 
-    .moveEn2(0),
-    .moveIndex2(0),
-    .moveX2(0),      //please multiple by << 4
-    .moveY2(0),   
+//     .moveEn2(0),
+//     .moveIndex2(0),
+//     .moveX2(0),      //please multiple by << 4
+//     .moveY2(0),   
 
-    .moveState2(0),
-    .visible2(0),
-    .moveState(0),
-    .visible(0)
- );
+//     .moveState2(0),
+//     .visible2(0),
+//     .moveState(0),
+//     .visible(0)
+//  );
 	
-	assign LEDR[9:1] = read_data[31:23];
+	
 	assign x_init = read_data[31:23];
 	assign y_init = read_data[18:11] + 80;
 
@@ -258,7 +261,7 @@ module view(
 		.max_gold(1),
 		.max_diamond(1),
 	
-		.game_end(1),
+		.game_end(time_up),
 	
 		.enable_draw_gold(enable_draw_gold),
 		.enable_draw_stone(enable_draw_stone),
@@ -267,7 +270,9 @@ module view(
 		.enable_draw_hook(enable_draw_hook),
 		.enable_random(enable_random),
 		.enable_draw_num(enable_draw_num),
-		.resetn_gold_stone_diamond(resetn_gold_stone_diamond)
+		.resetn_gold_stone_diamond(resetn_gold_stone_diamond),
+		.timer_enable(timer_enable),
+		.time_resetn(time_resetn)
 
 	);
 	
@@ -460,6 +465,7 @@ module view(
 		.enable_x_adder_background(enable_x_adder_background), 
 		.enable_y_adder_background(enable_y_adder_background),
 		.enable_c_stone_background(enable_c_stone_background),
+		.resetn_gold_stone_diamond(resetn_gold_stone_diamond),
 
 		
 		.X_out_background(X_out_background), 
@@ -508,13 +514,14 @@ module view(
 	wire	writeEn_num,
 		draw_num_done,
 		enable_draw_num;
+	wire [7:0] time_remained;
 
 	score_and_time_display display_num(
     	.clk(clk),
     	.resetn(resetn),
-    	.score_to_display(1035),
-    	.time_remained(45),
-		.goal(560),
+    	.score_to_display(1025),
+    	.time_remained(time_remained),
+		.goal(220),
     	.enable_score_and_time_display(enable_draw_num),
 
     	.outX(X_out_num),
@@ -525,12 +532,23 @@ module view(
     	.display_score_and_time_done(draw_num_done)
     );
 
-	wire frame;
-	rate_divider r1(
-	.resetn(resetn), 
-	.clock(clk), 
-	.Enable(frame)
+	wire timer_enable, time_resetn;
+	wire time_up;
+
+	timer t0(
+		.clk(clk),
+		.resetn(resetn),
+		.timer_enable(timer_enable),
+		.time_resetn(time_resetn),
+		.time_remain(time_remained),
+		.time_up(time_up)
 	);
+
+	
+
+	wire game_end;
+	assign game_end = time_up;
+	assign LEDR[8:1] = time_remained;
 
 endmodule
 
