@@ -23,7 +23,7 @@ module Rope(
     parameter mode = 1'b0;
     parameter player = 1'b0;
     parameter originX = ((!mode) ? 10'd160 : (player ? 10'd237 : 10'd77));
-    parameter originY = 10'd45;
+    parameter originY = 64'd45;
 
     /**
      * STATE
@@ -142,8 +142,7 @@ module Rope(
     always @(posedge clock) begin
         //update x,y based on length and degree
         endX <= originX + ((rope_len * deg_cos) >> 8) * (deg_signCos ? 64'd1 : -64'd1);
-        tempEndY = originY + ((32'd1 * length * deg_sin) >> 16);
-        endY <= tempEndY;
+        endY = originY + ((length * deg_sin) >> 16);
 
         scoreEn = 0;
         writeEn = 0;
