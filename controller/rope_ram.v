@@ -235,8 +235,12 @@ module Rope(
                     else
                         next_state = S_PRE_RCCW;
                 end
-                else 
-                    next_state = S_PRE_UP;
+                else begin
+                    if (found_stone)
+                        next_state = S_MOVE;
+                    else
+                        next_state = S_PRE_UP;
+                end
                 frame_counter = 0;
             end
             S_MOVE: begin
