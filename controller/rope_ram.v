@@ -257,7 +257,7 @@ module Rope(
             S_MOVE_NEW_XY: begin
                 // tempData = tempData - ((DELTA_LEN * deg_sin) >> 1) * 64'd1 -
                 //         ((DELTA_LEN * deg_cos * (deg_signCos ? 64'd1 : -64'd1)) << 11);
-                tempData = endX << 23 + endY << 1 + tempData[1:0];
+                tempData = (endX << 23) + (endY << 11) + tempData[1:0];
                 data_write <= tempData;
                 next_state = S_MOVE_WRITE;
             end
