@@ -262,9 +262,9 @@ module view(
     //                  (data[(2) * 32 + 12] << 1) + 
     //                  (data[(2) * 32 + 11] << 0) + 80;
 
-	localparam max_gold = 1'b5;
-	localparam max_stone = 1'b7;
-	localparam max_diamond = 1'b3;
+	localparam max_gold = 4'd5;
+	localparam max_stone = 4'd7;
+	localparam max_diamond = 4'd3;
 	//instantiate view fsm
 	
 	game_view_FSM game_view(
@@ -607,7 +607,13 @@ module view(
 
 		.data(read_data),
 		.current_score(current_score),
-		.LEDR(LEDR)
+		.LEDR(LEDR),
+		.HEX0(HEX0),
+		.HEX1(HEX1),
+		.HEX2(HEX2),
+		.HEX3(HEX3),
+		.HEX4(HEX4),
+		.HEX5(HEX5)
 		// output bomb_use
 
  	);
@@ -664,22 +670,7 @@ module view(
 	wire game_end;
 	assign game_end = time_up;
 
-	hex_decoder H0(
-        .hex_digit(endX[3:0]), 
-        .segments(HEX0)
-        );
-	hex_decoder H1(
-        .hex_digit(endX[7:4]), 
-        .segments(HEX1)
-        );
-	hex_decoder H2(
-        .hex_digit(endY[3:0]), 
-        .segments(HEX2)
-        );
-	hex_decoder H3(
-        .hex_digit(endY[7:4]), 
-        .segments(HEX3)
-        );
+	
 
 
 endmodule

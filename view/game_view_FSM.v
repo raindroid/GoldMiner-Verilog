@@ -254,22 +254,27 @@ module game_view_FSM(
 				timer_enable = 1'b1;
 			end	
 			DRAW_HOOK: begin
+				draw_stone_flag = 1'b0;
 			  	enable_draw_hook = 1'b1;
 				  timer_enable = 1'b1;
 			end
 			DRAW_HOOK_WAIT: begin
+			draw_stone_flag = 1'b0;
 			  	enable_draw_hook = 1'b1;
 				  timer_enable = 1'b1;
 			end
 			DRAW_NUM: begin
+			draw_stone_flag = 1'b0;
 			  	enable_draw_num = 1'b1;
 				  timer_enable = 1'b1;
 			end
 			DRAW_GAMEOVER: begin
+			draw_stone_flag = 1'b0;
 			  	enable_draw_gameover = 1'b1;
 				  timer_enable = 1'b1;
 			end
 			DRAW_GAMEOVER_WAIT: begin
+			draw_stone_flag = 1'b0;
 			  	enable_draw_gameover = 1'b1;
 				  timer_enable = 1'b1;
 				  end
