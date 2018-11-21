@@ -19,7 +19,7 @@ module Rope(
     output [9:0] current_score,
 
     //Test only
-    output [9:0]LEDR
+    output [9:0]LEDR,
     output[6:0] HEX0, HEX1, HEX2, HEX3, HEX4, HEX5
     // output bomb_use
 
