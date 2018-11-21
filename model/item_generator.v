@@ -35,7 +35,7 @@
  *      [1 * 32 - 1 : 0] item
 
  * Author: Yucan Wu
- * Version: 0.1.1
+ * Version: 0.2.1
  * Created: Nov 17, 2018
  * Last Updated: Nov 19, 2018, ...
  * Tested: run more tests
@@ -170,18 +170,20 @@ endmodule // test_top
     moveState2,
     visible2,
 
+    LEDR
  );
+    output [8:0] LEDR;
     
 
     parameter stone_size = 16;
     parameter gold_size = 16;
     parameter diamond_size = 8;
     localparam size = 16; 
-    parameter MAX_SIZE = 2 << 9; //512
+    parameter MAX_SIZE = 16 << 32; //512
 
     //Input & output table START
     input clock, resetn, generateEn;
-    output reg [MAX_SIZE - 1: 0] data;
+    output reg [511: 0] data;
     input [3:0]stoneQuantity, goldQuantity, diamondQuantity;
 
     input moveEn;
@@ -194,6 +196,8 @@ endmodule // test_top
     input [10:0]moveX2;      //please multiple by << 4
     input [10:0]moveY2;   
     input moveState2, visible2;
+
+    // assign LEDR [8:0] = data[31 : 23];
 
     output reg [3:0] counter;
     //Input & output table END
@@ -214,8 +218,9 @@ endmodule // test_top
     wire [1:0] type;
 
     
-    reg [31:0] usedData [3:0]; //No need for reseting
+    reg [31:0] usedData [15:0]; //No need for reseting
     reg [31:0] tempData;
+    wire [31:0] genData;
     wire [31:0] tempOld;
 
     assign quantity = stoneQuantity + goldQuantity + diamondQuantity;
@@ -233,6 +238,9 @@ endmodule // test_top
     assign testY = (tempY << 4) + 80;
     assign tempOld = usedData[check_counter][31:0];
     assign counter32 = counter << 5;
+    assign genData = (((x >= 20) ? 39 - x : 5'd20 - x) << 5'd27) + 
+                    (((y >= 10) ? 19 - y : 10 - y) << 5'd15);
+
 
     localparam  S_START     = 5'd0,
                 S_PRE_GEN   = 5'd1,
@@ -261,8 +269,7 @@ endmodule // test_top
                 data = 0;
             end
             S_IN_GEN: begin
-                tempData <=  (((x >= 20) ? 39 - x : 20 - x) << 27) + 
-                    (((y >= 10) ? 19 - y : 10 - y) << 15);
+                tempData =  genData;
                 next_state = S_PRE_CHECK;
             end
             S_PRE_CHECK: begin
@@ -336,136 +343,6 @@ endmodule // test_top
         else
             current_state <= next_state;
     end
-
-    // //reg tempData
-    // always@(posedge clock)begin
-    //     if(!resetn) tempData = 0;
-    //     else if(load_tempData)
-            
-    // end
-
-    // //reg tempOld
-    // always@(posedge clock)begin
-    //     if(!resetn) tempOld = 0;
-    //     else if (load_tempOld) tempOld = usedData[loop_counter];
-    // end
-
-    // // reg isCovered
-    // always@(posedge clock)begin
-    //     if(!resetn | !resetn_isCovered) isCovered = 0;
-    //     else if(set_isCovered) isCovered = 1;
-    // end
-
-    // // FSM for loop starts here
-    // reg [4:0] current_state, next_state;
-    // localparam  BEFORE_LOOP     =5'd0,  //Wait for enable signal
-    //             IN_LOOP_CHECK      =5'd1,  //Prepare for drawing
-    //             CHECK_RESULT =5'd5,  //Draw rope
-    //             ENDLOOP =5'd2;  //Draw hook
-
-    // always @(*) begin
-    //     case (current_state)
-    //         BEFORE_LOOP:        next_state = (start_loop) ? IN_LOOP_CHECK : BEFORE_LOOP;
-    //         IN_LOOP_CHECK:         next_state = CHECK_RESULT;
-    //         CHECK_RESULT:    next_state = (loop_counter == counter | isCovered) ?
-    //                                     ENDLOOP : IN_LOOP_CHECK;
-    //         ENDLOOP:    next_state = BEFORE_LOOP;
-    //       default: next_state = BEFORE_LOOP;
-    //     endcase      
-    // end
-
-    // always @(*)
-    // begin: enable_signals
-    //     // By default make all our signals 0 to avoid latches.
-    //     resetn_loop_counter = 1'b1;
-    //     check_done = 1'b0;
-    //     resetn_isCovered = 1'b1;
-    //     set_isCovered = 1'b0;
-    //     load_tempData = 1'b0;
-    //     load_tempOld = 1'b0;
-    //     endloop = 1'b0;
-
-    //     case (current_state)
-    //         BEFORE_LOOP : begin
-    //             resetn_isCovered = 1'b0;
-    //         end
-	// 		IN_LOOP_CHECK: begin
-    //             load_tempData = 1'b1;
-    //             load_tempOld = 1'b1;
-	// 		end
-	// 		CHECK_RESULT: begin
-    //             if(tempOld[31:0] == tempData[31:0]) set_isCovered = 1'b1;
-    //             check_done = 1'b1;
-    //         end
-    //         ENDLOOP: begin
-    //             endloop = 1'b1;
-    //         end
-				
-    //     // default:    // don't need default since we already made sure all of our outputs were assigned a value at the start of the always block
-    //     endcase
-    // end // enable_signals
-
-    // //state changes
-    // always @(posedge clock) begin
-    //     if (!resetn) begin
-    //         current_state <= BEFORE_LOOP;
-	// 		end
-    //     else
-    //         current_state <= next_state;
-    // end
-
-
-    // always @(posedge clock) begin
-    //     if (!generateEn) begin
-    //         counter = 0;
-    //     end
-
-    //     if (!resetn) begin
-    //         data = 0;
-    //         counter = 0;
-    //         isMoving = 0;            
-    //     end
-    //     else if (generateEn & counter < quantity) begin
-    //         start_loop = 1'b1;
-            
-    //         //
-
-    //         if (!isCovered) begin
-    //             usedData[counter] <= tempData;
-    //             data <= data + (tempData << (counter * 32));
-    //             counter <= counter + 1;
-    //         end
-    //     end
-    //     else begin 
-    //         if (moveEn & moveEn2) begin
-    //             isMoving = 1;
-    //             isMoving = 1;
-    //             data <= data + (moveX[10]? -1: 1) * ((moveX[9:0]) << (moveIndex * 32 + 19)) + 
-    //                 (moveY[10]? -1: 1) * ((moveY[9:0]) << (moveIndex * 32 + 7)) +
-    //                 (moveX2[10]? -1: 1) * ((moveX2[9:0]) << (moveIndex2 * 32 + 19)) + 
-    //                 (moveY2[10]? -1: 1) * ((moveY2[9:0]) << (moveIndex2 * 32 + 7));
-    //             data[moveIndex2 * 32 + 1] <= visible2;
-    //             data[moveIndex2 * 32] <= moveState2;
-    //             data[moveIndex * 32 + 1] <= visible;
-    //             data[moveIndex * 32] <= moveState;
-    //         end 
-    //         else if (moveEn) begin
-    //             isMoving = 1;
-    //             data <= data + (moveX[10]? -1: 1) * ((moveX[9:0]) << (moveIndex * 32 + 19)) + 
-    //                 (moveY[10]? -1: 1) * ((moveY[9:0]) << (moveIndex * 32 + 7));
-    //             data[moveIndex * 32 + 1] <= visible;
-    //             data[moveIndex * 32] <= moveState;
-    //         end
-    //         else if (moveEn2) begin
-    //             isMoving = 1;
-    //             data <= data + (moveX2[10]? -1: 1) * ((moveX2[9:0]) << (moveIndex2 * 32 + 19)) + 
-    //                 (moveY2[10]? -1: 1) * ((moveY2[9:0]) << (moveIndex2 * 32 + 7));
-    //             data[moveIndex2 * 32 + 1] <= visible2;
-    //             data[moveIndex2 * 32] <= moveState2;
-    //         end
-    //     end
-    // end
-
     //The rest is only for test purpose
     // assign tempX = (data[moveIndex * 32 + 31] << 12) + 
     //         (data[moveIndex * 32 + 30] << 11) + 
