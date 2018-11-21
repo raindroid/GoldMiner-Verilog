@@ -39,10 +39,12 @@ module Rope(
     
     reg [4:0] current_state, next_state;
 
+    //Game data
     parameter FRAME_CLOCK = 833_334; //used for frame counter
     // parameter ROPE_MAX = 200;
     parameter ROPE_MIN = 20;
     parameter UP_DELAY_TIMES = 3;
+    parameter DELTA_LEN = 18'd10;
 
     reg [3:0] rope_index; //the index for rope to control
     reg [31:0] data_write; //used to write to the ram
@@ -209,7 +211,7 @@ module Rope(
                 end
             end
             S_IN_UP: begin
-                length = length - (1 << 3);
+                length = length - (DELTA_LEN << 8);
                 if (rope_len <= ROPE_MIN) begin
                   //reach the top
                     if (found_stone)
@@ -235,8 +237,8 @@ module Rope(
                 next_state = S_MOVE_NEW_XY;
             end
             S_MOVE_NEW_XY: begin
-                tempData = tempData - ((8'd8 * deg_sin) << 7) -
-                        ((9'd8 * deg_cos * deg_signCos) << 19);
+                tempData = tempData - ((DELTA_LEN * deg_sin) << 7) -
+                        ((DELTA_LEN * deg_cos * deg_signCos) << 19);
                 next_state = S_MOVE_WRITE;
             end
             S_MOVE_WRITE: begin
@@ -296,7 +298,7 @@ module Rope(
             end
             S_IN_DOWN: begin
                 frame_counter = 0;
-                length = length + (1 << 8);
+                length = length + (DELTA_LEN << 8);
                 if (endX <= 10 | endX >= 310 | endY >= 230 | rope_len >= 275) 
                     next_state = S_PRE_UP;
                 else
