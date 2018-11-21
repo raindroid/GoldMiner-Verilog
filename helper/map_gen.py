@@ -73,7 +73,7 @@ CONTENT BEGIN""");
                 else:
                     print(to_bin(i, 4), "\t\t:\t", to_bin(x, 13), to_bin(y, 13), to_bin(0, 4),
                           to_bin((1 if i < gold_q else (0 if i < stone_q + gold_q else 2)), 2),
-                          "10", sep="")
+                          "10", ";", sep="")
                 get = True
 
 
