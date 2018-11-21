@@ -10,7 +10,13 @@ module gold_miner(
 		VGA_R,   						//	VGA Red[9:0]
 		VGA_G,	 						//	VGA Green[9:0]
 		VGA_B,
-		LEDR
+		LEDR,
+		HEX0,
+		HEX1,
+		HEX2,
+		HEX3,
+		HEX4,
+		HEX5
 		);
 		
 		input [9:0]SW;
@@ -26,6 +32,13 @@ module gold_miner(
 		output	[7:0]	VGA_G;	 				//	VGA Green[7:0]
 		output	[7:0]	VGA_B;   				//	VGA Blue[7:0]
 		output [9:0] 	LEDR;
+
+		output [6:0]HEX0;
+		output [6:0]HEX1;
+		output [6:0]HEX2;
+		output [6:0]HEX3;
+		output [6:0]HEX4;
+		output [6:0]HEX5;
 		
 		wire resetn;
 		assign resetn = KEY[0];
@@ -51,7 +64,13 @@ module gold_miner(
 		.VGA_R(VGA_R),   						//	VGA Red[9:0]
 		.VGA_G(VGA_G),	 						//	VGA Green[9:0]
 		.VGA_B(VGA_B),   						//	VGA Blue[9:0]
-		.LEDR(LEDR)
+		.LEDR(LEDR),
+		.HEX0(HEX0),
+		.HEX1(HEX1),
+		.HEX2(HEX2),
+		.HEX3(HEX3),
+		.HEX4(HEX4),
+		.HEX5(HEX5)
 
 	);
 	endmodule
@@ -76,7 +95,13 @@ module fill
 	VGA_R,   						//	VGA Red[9:0]
 	VGA_G,	 						//	VGA Green[9:0]
 	VGA_B,   						//	VGA Blue[9:0]
-	LEDR
+	LEDR,
+	HEX0,
+	HEX1,
+	HEX2,
+	HEX3,
+	HEX4,
+	HEX5
 );
 
 	input			CLOCK_50;				//	50 MHz
@@ -98,6 +123,13 @@ module fill
 	output	[7:0]	VGA_G;	 				//	VGA Green[7:0]
 	output	[7:0]	VGA_B;   				//	VGA Blue[7:0]
 	output [9:0] 	LEDR;
+
+	output [6:0]HEX0;
+	output [6:0]HEX1;
+	output [6:0]HEX2;
+	output [6:0]HEX3;
+	output [6:0]HEX4;
+	output [6:0]HEX5;
 	
 	
 	// Create the colour, x, y and writeEn wires that are inputs to the controller.
@@ -149,7 +181,13 @@ module fill
 		.Y_out(y),
 		.Color_out(colour),
 		.writeEn(writeEn),
-		.LEDR(LEDR)
+		.LEDR(LEDR),
+		.HEX0(HEX0),
+		.HEX1(HEX1),
+		.HEX2(HEX2),
+		.HEX3(HEX3),
+		.HEX4(HEX4),
+		.HEX5(HEX5)
 		);
 	
 
@@ -157,3 +195,28 @@ endmodule
 
 
 
+module hex_decoder(hex_digit, segments);
+    input [3:0] hex_digit;
+    output reg [6:0] segments;
+   
+    always @(*)
+        case (hex_digit)
+            4'h0: segments = 7'b100_0000;
+            4'h1: segments = 7'b111_1001;
+            4'h2: segments = 7'b010_0100;
+            4'h3: segments = 7'b011_0000;
+            4'h4: segments = 7'b001_1001;
+            4'h5: segments = 7'b001_0010;
+            4'h6: segments = 7'b000_0010;
+            4'h7: segments = 7'b111_1000;
+            4'h8: segments = 7'b000_0000;
+            4'h9: segments = 7'b001_1000;
+            4'hA: segments = 7'b000_1000;
+            4'hB: segments = 7'b000_0011;
+            4'hC: segments = 7'b100_0110;
+            4'hD: segments = 7'b010_0001;
+            4'hE: segments = 7'b000_0110;
+            4'hF: segments = 7'b000_1110;   
+            default: segments = 7'h7f;
+        endcase
+endmodule

@@ -11,11 +11,18 @@ module view(
 		Y_out,
 		Color_out,
 		writeEn,
-		LEDR
+		LEDR,
+		HEX0,
+		HEX1,
+		HEX2,
+		HEX3,
+		HEX4,
+		HEX5
 		
 		);
 	input clk, resetn;
 	input go, drop;
+
 	
 	output reg[8:0]X_out;
 	output reg[7:0]Y_out;
@@ -23,6 +30,7 @@ module view(
 	output reg writeEn;
 
 	output [9:0] 	LEDR;
+	output [6:0] HEX0,HEX1,HEX2,HEX3,HEX4,HEX5;
 	
 	wire [7:0]random;
 	
@@ -167,7 +175,7 @@ module view(
 	
 	
 	assign x_init = read_data[31:23];
-	assign y_init = read_data[18:11] + 80;
+	assign y_init = read_data[18:11];
 
 	// wire [8:0] x_init_gold,x_init_stone,x_init_diamond;
 	// wire [7:0] y_init_gold,y_init_stone,y_init_diamond;
@@ -506,7 +514,9 @@ module view(
 		.color(Color_out_hook),
 		.writeEn(writeEn_hook),
 		.done(draw_hook_done),
-		.LEDR(LEDR[0])
+		.LEDR(LEDR[0]),
+		.HEX4(HEX4),
+		.HEX5(HEX5)
 	);
 
 	wire 	[8:0] X_out_num;
@@ -574,10 +584,37 @@ module view(
     // output bomb_use
 
  );
+	// reg [7:0]max_degree,min_degree;
+	// always@(posedge clk)begin
+	// 	if(!resetn) begin
+	// 		max_degree <= 0;
+	// 		min_degree <= 0;
+	// 	end
+	// 	else if(degree > max_degree) max_degree <= degree[7:0];
+	// 	else if(degree < min_degree) min_degree <= degree[7:0];
+	// end
 
 	wire game_end;
 	assign game_end = time_up;
 	assign LEDR[8:1] = time_remained;
+
+	hex_decoder H0(
+        .hex_digit(endX[3:0]), 
+        .segments(HEX0)
+        );
+	hex_decoder H1(
+        .hex_digit(endX[7:4]), 
+        .segments(HEX1)
+        );
+	hex_decoder H2(
+        .hex_digit(endY[3:0]), 
+        .segments(HEX2)
+        );
+	hex_decoder H3(
+        .hex_digit(endY[7:4]), 
+        .segments(HEX3)
+        );
+
 
 endmodule
 
