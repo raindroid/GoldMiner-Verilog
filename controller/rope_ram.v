@@ -44,7 +44,7 @@ module Rope(
     // parameter ROPE_MAX = 200;
     parameter ROPE_MIN = 20;
     parameter UP_DELAY_TIMES = 3;
-    parameter DELTA_LEN = 18'd10;
+    parameter DELTA_LEN = 18'd6;
 
     reg [3:0] rope_index; //the index for rope to control
     reg [31:0] data_write; //used to write to the ram
@@ -140,8 +140,8 @@ module Rope(
 
     always @(posedge clock) begin
         //update x,y based on length and degree
-        endX = originX + ((length * deg_cos) >> 8) * (deg_signCos ? 64'd1 : -64'd1);
-        endY = originY + ((length * deg_sin) >> 8);
+        endX = originX + ((rope_len * deg_cos) >> 8) * (deg_signCos ? 64'd1 : -64'd1);
+        endY = originY + ((rope_len * deg_sin) >> 8);
 
         scoreEn = 0;
         writeEn = 0;
