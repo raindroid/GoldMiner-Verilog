@@ -50,24 +50,6 @@ module draw_gameover(
 	end
 	
 	
-	//x register
-	always@(posedge clk)begin
-		if(resetn == 0) x <= 9'b0;
-		else
-			if(load_x_gameover) begin
-			x[8:0] <= x_init;
-			end
-	end
-	
-	//y register
-	always@(posedge clk)begin
-		if(resetn == 0) y <= 8'b0;
-		else
-			if(load_y_gameover) begin
-			y[7:0] <= y_init;
-			
-			end
-	end
 	
 
 	//x_out adder
@@ -75,7 +57,7 @@ module draw_gameover(
 		if(resetn == 0) X_out_gameover <= 9'b0;
 		else
 			if(enable_x_adder_gameover) begin
-				X_out_gameover <= x + gameover_pixel_cout[2:0];
+				X_out_gameover <= x_init + gameover_pixel_cout[5:0];
 				end
 	end
 	
@@ -84,7 +66,7 @@ module draw_gameover(
 		if(resetn == 0) Y_out_gameover <= 8'b0;
 		else
 			if(enable_y_adder_gameover)begin
-				Y_out_gameover <= y + gameover_pixel_cout[5:3];
+				Y_out_gameover <= y_init + gameover_pixel_cout[11:6];
 				end
 	end
 	

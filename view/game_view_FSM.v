@@ -12,6 +12,7 @@ module game_view_FSM(
 	draw_hook_done,
 	draw_num_done,
 	draw_gameover_done,
+	draw_gamestart_done,
 	draw_stone_flag,
 	
 	gold_count,
@@ -29,11 +30,13 @@ module game_view_FSM(
 	enable_draw_diamond,
 	enable_draw_background,
 	enable_draw_gameover,
+	enable_draw_gamestart,
 	enable_random,
 	enable_draw_hook,
 	enable_draw_num,
 	timer_enable,
 	time_resetn,
+	resetn_rope,
 
 	resetn_gold_stone_diamond
 
@@ -49,7 +52,8 @@ module game_view_FSM(
 			draw_background_done,
 			draw_hook_done,
 			draw_num_done,
-			draw_gameover_done;
+			draw_gameover_done,
+			draw_gamestart_done;
 			
 	
 	input [7:0]gold_count;
@@ -71,15 +75,19 @@ module game_view_FSM(
 					enable_draw_hook,
 					enable_draw_num,
 					enable_draw_gameover,
+					enable_draw_gamestart,
 					resetn_gold_stone_diamond,
 					timer_enable,
 					time_resetn,
-					draw_stone_flag;
+					draw_stone_flag,
+					resetn_rope;
 
 	reg [6:0] current_state, next_state; 
     
    localparam   
 					START  = 6'd20,
+					DRAW_GAMESTART                = 6'd22,
+					DRAW_GAMESTART_WAIT               = 6'd23,
 					 GENERATE_X_Y         = 6'd3,
 					 DRAW_BACKGROUND      = 6'd0,
 					 
@@ -110,10 +118,19 @@ module game_view_FSM(
     begin: state_table 
             case (current_state)
 					START: begin
-						next_state = (go)? GENERATE_X_Y : START;
+						next_state = DRAW_GAMESTART;
 					end
+					
+					DRAW_GAMESTART: begin
+						next_state = DRAW_GAMESTART_WAIT;
+					 end
+					 DRAW_GAMESTART_WAIT:begin
+					   	next_state = (draw_gamestart_done) ? GENERATE_X_Y : DRAW_GAMESTART_WAIT;
+					 end
+					
+
 					GENERATE_X_Y: begin
-						next_state = DRAW_BACKGROUND;
+						next_state = (go)? DRAW_BACKGROUND : GENERATE_X_Y;
 					end
                 	DRAW_BACKGROUND: begin
 						next_state = (draw_background_done) ? DRAW_BACKGROUND_WAIT : DRAW_BACKGROUND;
@@ -163,7 +180,7 @@ module game_view_FSM(
 					  	next_state = (draw_num_done) ? GAME : DRAW_NUM;
 					end
 					 GAME: begin
-					 	if((game_end)) next_state = DRAW_GAMEOVER_WAIT;
+					 	if((game_end)) next_state = DRAW_GAMEOVER;
 						else
 							next_state = (frame) ? DRAW_BACKGROUND : GAME;
 					 end
@@ -196,16 +213,27 @@ module game_view_FSM(
 			enable_draw_hook = 1'b0;
 			enable_draw_num = 1'b0;
 			enable_draw_gameover = 1'b0;
+			enable_draw_gamestart = 1'b0;
 			resetn_gold_stone_diamond = 1'b1;
 			timer_enable = 1'b0;
 			time_resetn = 1'b1;
 			draw_stone_flag =1'b1;
+			resetn_rope = 1'b1;
+			
 
 
         case (current_state)
+			DRAW_GAMESTART: begin
+			  	enable_draw_gamestart = 1'b1;
+			end
+			DRAW_GAMESTART_WAIT: begin
+			  	enable_draw_gamestart = 1'b1;
+				  end
+
 			GENERATE_X_Y: begin
 			  	enable_random = 1'b1;
 				time_resetn = 1'b0;
+				resetn_rope = 1'b0;
 			end
 			DRAW_BACKGROUND: begin
 				enable_draw_background = 1'b1;
@@ -258,7 +286,7 @@ module game_view_FSM(
     always@(posedge clk)
     begin: state_FFs
         if(resetn == 0)
-            current_state <= GENERATE_X_Y;
+            current_state <= START;
         else
             current_state <= next_state;
     end // state_FFS

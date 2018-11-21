@@ -22,7 +22,7 @@ module timer(
 	
 	wire time_counter_enable;
 
-	localparam time_remaining = 7'd60;
+	localparam time_remaining = 7'd20;
 	
 
 	rate_divider_second r0(

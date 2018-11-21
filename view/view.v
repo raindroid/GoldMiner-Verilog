@@ -92,10 +92,17 @@ module view(
 				writeEn <= writeEn_num;
 		end
 		else if(enable_draw_gameover)begin
-			X_out <= X_out_background;
-			Y_out <= Y_out_background;
-			Color_out <= Color_out_background;
-			writeEn <= writeEn_background;
+			X_out <= X_out_gameover;
+			Y_out <= Y_out_gameover;
+			Color_out <= Color_out_gameover;
+			writeEn <= writeEn_gameover;
+		end
+
+		else if(enable_draw_gamestart)begin
+			X_out <= X_out_gamestart;
+			Y_out <= Y_out_gamestart;
+			Color_out <= Color_out_gamestart;
+			writeEn <= writeEn_gamestart;
 		end
 
 	end
@@ -270,6 +277,7 @@ module view(
 		.draw_hook_done(draw_hook_done), 
 		.draw_num_done(draw_num_done),
 		.draw_gameover_done(draw_gameover_done),
+		.draw_gamestart_done(draw_gamestart_done),
 		.draw_stone_flag(draw_stone_flag),
 	
 		.gold_count(gold_count),
@@ -289,12 +297,15 @@ module view(
 		.enable_random(enable_random),
 		.enable_draw_num(enable_draw_num),
 		.enable_draw_gameover(enable_draw_gameover),
+		.enable_draw_gamestart(enable_draw_gamestart),
 		.resetn_gold_stone_diamond(resetn_gold_stone_diamond),
 		.timer_enable(timer_enable),
-		.time_resetn(time_resetn)
+		.time_resetn(time_resetn),
+		.resetn_rope(resetn_rope)
 
 	);
 	
+	wire resetn_rope;
 	
 	
 	//instantiate all the drawing datapath and FSMs
@@ -571,7 +582,7 @@ module view(
 
 	Rope rope0(
     .clock(clk),
-	.resetn(resetn), 
+	.resetn(resetn_rope), 
 	.enable(1),
     
 	.draw_stone_flag(draw_stone_flag), //on when the previous drawing is in process
@@ -610,17 +621,39 @@ module view(
 	wire [7:0]Y_out_gameover;
 	wire [11:0]Color_out_gameover;
 	wire draw_gameover_done;
+	wire writeEn_gamestart,writeEn_gameover;
+	
+
 	draw_gameover dgo0(
     .clk(clk), 
 	.resetn(resetn),
 	.enable_draw_gameover(enable_draw_gameover),
-	.resetn_gold_stone_gameover(resetn_gold_stone_gameover),
+	.resetn_gold_stone_gameover(resetn_gold_stone_diamond),
 
 	.X_out_gameover(X_out_gameover),
     .Y_out_gameover(Y_out_gameover),
     .Color_out_gameover(Color_out_gameover),
     .writeEn_gameover(writeEn_gameover),
     .draw_gameover_done(draw_gameover_done),
+);
+
+	wire enable_draw_gamestart;
+	wire [8:0]X_out_gamestart;
+	wire [7:0]Y_out_gamestart;
+	wire [11:0]Color_out_gamestart;
+	wire draw_gamestart_done;
+	
+	draw_gamestart dgs0(
+    .clk(clk), 
+	.resetn(resetn),
+	.enable_draw_gamestart(enable_draw_gamestart),
+	.resetn_gold_stone_gamestart(resetn_gold_stone_diamond),
+
+	.X_out_gamestart(X_out_gamestart),
+    .Y_out_gamestart(Y_out_gamestart),
+    .Color_out_gamestart(Color_out_gamestart),
+    .writeEn_gamestart(writeEn_gamestart),
+    .draw_gamestart_done(draw_gamestart_done),
 );
 
 	wire game_end;
