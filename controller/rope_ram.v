@@ -122,7 +122,7 @@ module Rope(
     );
 
     //Debug
-    assign LEDR[0] = go;
+    assign LEDR[0] = (rope_len < ROPE_MIN);
     assign LEDR[1] = writeEn;
     assign LEDR[2] = scoreEn;
     assign LEDR[3] = rCW;
@@ -188,7 +188,7 @@ module Rope(
             S_IN_RCCW: begin
                 degree = degree - 1;
                 rCW = 0;
-                if (degree <= 15)
+                if (degree < 15)
                     next_state = S_PRE_RCW;
                 else if (go)
                     next_state = S_PRE_DOWN;
@@ -231,7 +231,7 @@ module Rope(
             end
             S_IN_UP: begin
                 length = length - (DELTA_LEN << 8);
-                if (rope_len <= ROPE_MIN) begin
+                if (rope_len < ROPE_MIN) begin
                   //reach the top
                     if (found_stone)
                         next_state = S_MOVE;
@@ -262,8 +262,8 @@ module Rope(
             S_MOVE_NEW_XY: begin
                 // tempData = tempData - ((DELTA_LEN * deg_sin) >> 1) * 64'd1 -
                 //         ((DELTA_LEN * deg_cos * (deg_signCos ? 64'd1 : -64'd1)) << 11);
-                tempData = (endX << 23) + (endY << 11) + tempData[3:0];
-                data_write = tempData;
+                tempData = (endX[8:0] << 23) + (endY[7:0] << 11) + (tempType[1:0] << 2) + 2'b11;
+                data_write <= tempData;
                 next_state = S_MOVE_WRITE;
             end
             S_MOVE_WRITE: begin
@@ -275,7 +275,7 @@ module Rope(
             S_MOVE_WRITE_WAIT: begin
                 writeEn = 1;
                 rope_index = move_index;
-                if (rope_len <= ROPE_MIN) begin
+                if (rope_len < ROPE_MIN) begin
                     next_state = S_AFTER_MOVE;
                 end
                 else begin
@@ -302,6 +302,7 @@ module Rope(
                 score_change = (tempType == 2'b0 ? SCORE_STONE : 
                         (tempType == 2'b1 ? SCORE_GOLD : SCORE_DIAMOND));
                 //Make the item invisible
+                writeEn = 1;
                 data_write = {tempData[31:2], 2'b10}; // 10 for visible, 1 for moving
 
                 found_stone = 0;
@@ -325,7 +326,7 @@ module Rope(
             S_IN_DOWN: begin
                 frame_counter = 0;
                 length = length + (DELTA_LEN << 8);
-                if (endX <= 10 | endX >= 310 | endY >= 230 | rope_len >= 275) begin
+                if (endX < 10 | endX >= 310 | endY >= 230 | rope_len >= 275) begin
                     next_state = S_PRE_UP;
                 end
                 else
@@ -353,14 +354,14 @@ module Rope(
                     rope_index = rope_index + 1;
                     next_state = S_IN_CHECK;
                 end
-                // else if (((tempX - 6 > 0 ? tempX - 6 : 0) <= endX) & 
-                //         (endX <= (tempX + 16 + 6 < 320 ? tempX + 16 + 6: 320)) &
-                //         ((tempY - 6 > 0 ? tempY - 6 : 0) <= endY) & 
-                //         (endY <= (tempY + 16 + 6 < 240 ? tempY + 16 + 6 : 240))) begin
-                else if (((tempX) <= endX) & 
-                        (endX <= (tempX + 16 < 320 ? tempX + 16: 320)) &
-                        ((tempY - 6 > 0 ? tempY - 6 : 0) <= endY) & 
-                        (endY <= (tempY + 16 < 240 ? tempY + 16 : 240))) begin
+                // else if (((tempX - 6 > 0 ? tempX - 6 : 0) < endX) & 
+                //         (endX < (tempX + 16 + 6 < 320 ? tempX + 16 + 6: 320)) &
+                //         ((tempY - 6 > 0 ? tempY - 6 : 0) < endY) & 
+                //         (endY < (tempY + 16 + 6 < 240 ? tempY + 16 + 6 : 240))) begin
+                else if (((tempX) < endX) & 
+                        (endX < (tempX + 16 < 320 ? tempX + 16: 320)) &
+                        ((tempY - 6 > 0 ? tempY - 6 : 0) < endY) & 
+                        (endY < (tempY + 16 < 240 ? tempY + 16 : 240))) begin
                             found_stone = 1;
                             move_index = rope_index;
                             next_state = S_SAVE;
@@ -383,10 +384,10 @@ module Rope(
 
     always @(posedge clock) begin
         if (!resetn) begin
-            current_state <= S_STOP;
+            current_state < S_STOP;
         end            
         else begin
-            current_state <= next_state;
+            current_state < next_state;
         end
     end
 
