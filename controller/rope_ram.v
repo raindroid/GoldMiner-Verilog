@@ -45,7 +45,7 @@ module Rope(
     //Game data
     parameter FRAME_CLOCK = 833_334; //used for frame counter
     // parameter ROPE_MAX = 200;
-    parameter ROPE_MIN = 20;
+    parameter ROPE_MIN = 10'd20;
     parameter UP_DELAY_TIMES = 3;
     parameter DELTA_LEN = 18'd6;
     reg [31:0] tempEndX, tempEndY;
@@ -70,8 +70,10 @@ module Rope(
 
     //for check part
     reg [3:0] check_counter;
-    reg [13:0] tempX, tempY;
+    wire [13:0] tempX, tempY;
     reg [9:0] rope_max;
+    assign tempX = {5'b0, read_data[31:23]};
+    assign tempY = {6'b0, read_data[18:11]};
     // assign rope_max = (endX < 0)
 
     //for score
@@ -322,8 +324,9 @@ module Rope(
             S_IN_DOWN: begin
                 frame_counter = 0;
                 length = length + (DELTA_LEN << 8);
-                if (endX <= 10 | endX >= 310 | endY >= 230 | rope_len >= 275) 
+                if (endX <= 10 | endX >= 310 | endY >= 230 | rope_len >= 275) begin
                     next_state = S_PRE_UP;
+                end
                 else
                     next_state = S_PRE_CHECK;
             end
@@ -342,8 +345,6 @@ module Rope(
             end
             S_IN_CHECK_READ: begin
                 tempData = read_data;
-                tempX = {5'b0, read_data[31:23]};
-                tempY = {6'b0, read_data[18:11]};
                 next_state = S_IN_CHECK_CHECK;
             end
             S_IN_CHECK_CHECK: begin
