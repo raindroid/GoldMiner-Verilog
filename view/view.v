@@ -538,8 +538,7 @@ module view(
 		.color(Color_out_hook),
 		.writeEn(writeEn_hook),
 		.done(draw_hook_done),
-		.HEX4(HEX4),
-		.HEX5(HEX5)
+
 	);
 
 	wire 	[8:0] X_out_num;

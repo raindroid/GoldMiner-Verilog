@@ -139,6 +139,20 @@ module Rope(
         .segments(HEX1)
         );
 
+    hex_decoder H3(
+        .hex_digit(rope_len[3:0]), 
+        .segments(HEX3)
+        );
+    hex_decoder H4(
+        .hex_digit(rope_len[7:4]), 
+        .segments(HEX4)
+        );
+    hex_decoder H5(
+        .hex_digit({3'b0,rope_len[8]}), 
+        .segments(HEX5)
+        );
+
+
 
     localparam  S_STOP      = 5'd0,
                 S_PRE_RCCW  = 5'd1,
