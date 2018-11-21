@@ -13,7 +13,7 @@ module Rope(
     // input bomb_quantity,
 
     output reg[9:0] rotation_speed, line_speed, endX, endY, degree, //not all the output is useful
-    output [9:0]rope_len, endX, endY,
+    output [9:0]rope_len,
 
     output [31:0] data,
     output [9:0] current_score
@@ -44,7 +44,7 @@ module Rope(
     // parameter ROPE_MAX = 200;
     parameter ROPE_MIN = 20;
     parameter UP_DELAY_TIMES = 3;
-    parameter DELTA_LEN = 18'd2;
+    parameter DELTA_LEN = 18'd6;
     reg [31:0] tempEndX, tempEndY;
 
     reg [3:0] rope_index; //the index for rope to control
@@ -141,8 +141,9 @@ module Rope(
 
     always @(posedge clock) begin
         //update x,y based on length and degree
-        endX = originX + ((rope_len * deg_cos) >> 8) * (deg_signCos ? 64'd1 : -64'd1);
-        endY = originY + ((rope_len * deg_sin) >> 8);
+        endX <= originX + ((rope_len * deg_cos) >> 8) * (deg_signCos ? 64'd1 : -64'd1);
+        tempEndY = originY + ((32'd1 * length * deg_sin) >> 16);
+        endY <= tempEndY;
 
         scoreEn = 0;
         writeEn = 0;
