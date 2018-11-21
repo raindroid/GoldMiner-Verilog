@@ -68,7 +68,7 @@ CONTENT BEGIN""");
                         map[x][y] = 1
                 if __DEBUG:
                     print(to_bin(i, 4), "\t\t:\t", to_bin(x, 13), "_", to_bin(y, 13), "_", to_bin(0, 4),
-                          to_bin((1 if i < gold_q else (0 if i < stone_q else 2)), 2),
+                          to_bin((1 if i < gold_q else (0 if i < stone_q + gold_q else 2)), 2),
                           "10", sep="")
                 else:
                     print(to_bin(i, 4), "\t\t:\t", to_bin(x, 13), to_bin(y, 13), to_bin(0, 4),
