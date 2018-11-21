@@ -38,7 +38,7 @@ module Rope(
     reg [1:0] state; 
     reg rCW; //Is or was in cw rotation
     reg [31: 0] length; //more precise length
-    assign rope_len = length[17:8];  //magnify by << 8, to get drawable length
+    assign rope_len[9:0] = length[17:8];  //magnify by << 8, to get drawable length
     
     reg [4:0] current_state, next_state;
 
@@ -48,7 +48,7 @@ module Rope(
     parameter ROPE_MIN = 10'd20;
     parameter UP_DELAY_TIMES = 3;
     parameter DELTA_LEN = 18'd6;
-    reg [31:0] tempEndX, tempEndY;
+    
 
     reg [3:0] rope_index; //the index for rope to control
     reg [31:0] data_write; //used to write to the ram
@@ -69,9 +69,7 @@ module Rope(
     assign tempType = tempData[3:2];
 
     //for check part
-    reg [3:0] check_counter;
     wire [13:0] tempX, tempY;
-    reg [9:0] rope_max;
     assign tempX = {5'b0, read_data[31:23]};
     assign tempY = {6'b0, read_data[18:11]};
     // assign rope_max = (endX < 0)
@@ -127,8 +125,8 @@ module Rope(
     assign LEDR[2] = scoreEn;
     assign LEDR[3] = rCW;
     assign LEDR[4] = found_stone;
-    assign LEDR[5] = tempData[0];
-    assign LEDR[6] = tempData[1];
+    assign LEDR[5] = tempType[0];
+    assign LEDR[6] = tempType[1];
     assign LEDR[9:7] = move_index[2:0];
 
     localparam  S_STOP      = 5'd0,
@@ -177,6 +175,7 @@ module Rope(
                 tempData = 0;
                 rope_index = 0;
                 data_write = 0;
+                move_index = 0;
             end
             S_PRE_RCCW: begin
                 found_stone = 0;
