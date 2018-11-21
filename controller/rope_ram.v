@@ -302,7 +302,7 @@ module Rope(
                 score_change = (tempType == 2'b0 ? SCORE_STONE : 
                         (tempType == 2'b1 ? SCORE_GOLD : SCORE_DIAMOND));
                 //Make the item invisible
-                data_write = {tempData[31:2], 2'b0}; // 10 for visible, 1 for moving
+                data_write = {tempData[31:2], 2'b10}; // 10 for visible, 1 for moving
 
                 found_stone = 0;
                 if (rCW)
