@@ -120,14 +120,15 @@ module Rope(
     );
 
     //Debug
-    assign LEDR[0] = (rope_len < ROPE_MIN);
-    assign LEDR[1] = writeEn;
-    assign LEDR[2] = scoreEn;
-    assign LEDR[3] = rCW;
-    assign LEDR[4] = found_stone;
-    assign LEDR[5] = tempType[0];
-    assign LEDR[6] = tempType[1];
-    assign LEDR[9:7] = move_index[2:0];
+    // assign LEDR[0] = (rope_len < ROPE_MIN);
+    // assign LEDR[1] = writeEn;
+    // assign LEDR[2] = scoreEn;
+    // assign LEDR[3] = rCW;
+    // assign LEDR[4] = found_stone;
+    // assign LEDR[5] = tempType[0];
+    // assign LEDR[6] = tempType[1];
+    // assign LEDR[9:7] = move_index[2:0];
+    assign LEDR[9:0] = read_data[9:0];
 
     localparam  S_STOP      = 5'd0,
                 S_PRE_RCCW  = 5'd1,
@@ -280,8 +281,8 @@ module Rope(
                 next_state = S_MOVE_WRITE_WAIT;
             end
             S_MOVE_WRITE_WAIT: begin
-                writeEn = 1;
-                rope_index = move_index;
+                //writeEn = 1;
+                // rope_index = move_index;
                 if (rope_len < ROPE_MIN + 1) begin
                     next_state = S_AFTER_MOVE;
                 end

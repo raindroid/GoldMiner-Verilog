@@ -262,6 +262,9 @@ module view(
     //                  (data[(2) * 32 + 12] << 1) + 
     //                  (data[(2) * 32 + 11] << 0) + 80;
 
+	localparam max_gold = 1'b5;
+	localparam max_stone = 1'b7;
+	localparam max_diamond = 1'b3;
 	//instantiate view fsm
 	
 	game_view_FSM game_view(
@@ -283,9 +286,9 @@ module view(
 		.gold_count(gold_count),
 		.stone_count(stone_count),
 		.diamond_count(diamond_count),
-		.max_stone(1),
-		.max_gold(1),
-		.max_diamond(1),
+		.max_stone(max_stone),
+		.max_gold(max_gold),
+		.max_diamond(max_diamond),
 	
 		.game_end(time_up),
 	
@@ -580,32 +583,34 @@ module view(
 	wire [9:0]rope_len;
 	wire [9:0] current_score;
 
+
+	//rope ram module instanciation
 	Rope rope0(
-    .clock(clk),
-	.resetn(resetn_rope), 
-	.enable(1),
-    
-	.draw_stone_flag(draw_stone_flag), //on when the previous drawing is in process
-    .draw_index(stone_count + gold_count + diamond_count),
-    .quantity(3),
+		.clock(clk),
+		.resetn(resetn_rope), 
+		.enable(1),
+		
+		.draw_stone_flag(draw_stone_flag), //on when the previous drawing is in process
+		.draw_index(stone_count + gold_count + diamond_count),
+		.quantity(max_gold+max_diamond+max_stone),
 
-    .go_KEY(drop), //physical key for the go input
-    //bomb_KEY,
-    // input bomb_quantity,
+		.go_KEY(drop), //physical key for the go input
+		//bomb_KEY,
+		// input bomb_quantity,
 
-    .rotation_speed(rotation_speed),
-	.line_speed(line_speed),
-	.endX(endX), 
-	.endY(endY), 
-	.degree(degree), //not all the output is useful
-    .rope_len(rope_len),
+		.rotation_speed(rotation_speed),
+		.line_speed(line_speed),
+		.endX(endX), 
+		.endY(endY), 
+		.degree(degree), //not all the output is useful
+		.rope_len(rope_len),
 
-    .data(read_data),
-    .current_score(current_score),
-	.LEDR(LEDR)
-    // output bomb_use
+		.data(read_data),
+		.current_score(current_score),
+		.LEDR(LEDR)
+		// output bomb_use
 
- );
+ 	);
 	// reg [7:0]max_degree,min_degree;
 	// always@(posedge clk)begin
 	// 	if(!resetn) begin
