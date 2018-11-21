@@ -168,7 +168,7 @@ module Rope(
                 state = 2'b00;
                 rCW = 0;
                 length = ROPE_MIN << 8;
-                degree = 165;
+                degree = 10'd90;
                 if (enable) next_state = S_PRE_RCCW;
                 else next_state = S_STOP;
                 frame_counter = 0;
@@ -357,9 +357,9 @@ module Rope(
                 //         ((tempY - 6 > 0 ? tempY - 6 : 0) <= endY) & 
                 //         (endY <= (tempY + 16 + 6 < 240 ? tempY + 16 + 6 : 240))) begin
                 else if (((tempX) <= endX) & 
-                        (endX <= (tempX + 16 + 6 < 320 ? tempX + 16 + 6: 320)) &
+                        (endX <= (tempX + 16 < 320 ? tempX + 16: 320)) &
                         ((tempY - 6 > 0 ? tempY - 6 : 0) <= endY) & 
-                        (endY <= (tempY + 16 + 6 < 240 ? tempY + 16 + 6 : 240))) begin
+                        (endY <= (tempY + 16 < 240 ? tempY + 16 : 240))) begin
                             found_stone = 1;
                             move_index = rope_index;
                             next_state = S_SAVE;
