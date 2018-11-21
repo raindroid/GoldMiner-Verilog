@@ -235,7 +235,7 @@ module Rope(
             end
             S_IN_UP: begin
                 length = length - (DELTA_LEN << 8);
-                if (rope_len < ROPE_MIN) begin
+                if (rope_len < ROPE_MIN + 1) begin
                   //reach the top
                     if (found_stone)
                         next_state = S_MOVE;
@@ -316,10 +316,11 @@ module Rope(
             S_AFTER_MOVE_WAIT: begin
                 writeEn = 1;
                 found_stone = 0;
-                if (rCW)
-                    next_state = S_PRE_RCW;
-                else
-                    next_state = S_PRE_RCCW;
+                next_state = S_PRE_UP;
+                // if (rCW)
+                //     next_state = S_PRE_RCW;
+                // else
+                //     next_state = S_PRE_RCCW;
                 frame_counter = 0;
             end
             S_PRE_DOWN: begin
