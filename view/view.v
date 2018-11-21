@@ -39,16 +39,14 @@ module view(
 	wire [7:0]y_init;
 
 	wire visible;
-	assign visible = 1;
+	assign visible = read_data[1];
 	
 	always@(posedge clk)begin
-		if(!visible)
-			writeEn = 1'b0;
-		else if(enable_draw_gold) begin
+		if(enable_draw_gold) begin
 			X_out <= X_out_gold;
 			Y_out <= Y_out_gold;
 			Color_out <= Color_out_gold;
-			if(Color_out == 12'b0) 
+			if(Color_out == 12'b0 | !visible) 
 				writeEn <= 1'b0;
 			else
 				writeEn <= writeEn_gold;
@@ -57,16 +55,17 @@ module view(
 			X_out <= X_out_stone;
 			Y_out <= Y_out_stone;
 			Color_out <= Color_out_stone;
-			if(Color_out == 12'b0) 
+			if(Color_out == 12'b0 | !visible) 
 				writeEn <= 1'b0;
 			else
 				writeEn <= writeEn_stone;
 		end
-		else if(enable_draw_diamond)begin
+		else if(enable_draw_diamond )begin
 			X_out <= X_out_diamond;
 			Y_out <= Y_out_diamond;
 			Color_out <= Color_out_diamond;
-			if(Color_out == 12'b0) 
+			if(Color_out == 12'b0 | !visible
+			) 
 				writeEn <= 1'b0;
 			else
 				writeEn <= writeEn_diamond;
@@ -92,7 +91,15 @@ module view(
 			else
 				writeEn <= writeEn_num;
 		end
+		else if(enable_draw_gameover)begin
+			X_out <= X_out_background;
+			Y_out <= Y_out_background;
+			Color_out <= Color_out_background;
+			writeEn <= writeEn_background;
+		end
+
 	end
+	
 	
 	
 	
@@ -262,6 +269,8 @@ module view(
 		
 		.draw_hook_done(draw_hook_done), 
 		.draw_num_done(draw_num_done),
+		.draw_gameover_done(draw_gameover_done),
+		.draw_stone_flag(draw_stone_flag),
 	
 		.gold_count(gold_count),
 		.stone_count(stone_count),
@@ -279,6 +288,7 @@ module view(
 		.enable_draw_hook(enable_draw_hook),
 		.enable_random(enable_random),
 		.enable_draw_num(enable_draw_num),
+		.enable_draw_gameover(enable_draw_gameover),
 		.resetn_gold_stone_diamond(resetn_gold_stone_diamond),
 		.timer_enable(timer_enable),
 		.time_resetn(time_resetn)
@@ -514,7 +524,6 @@ module view(
 		.color(Color_out_hook),
 		.writeEn(writeEn_hook),
 		.done(draw_hook_done),
-		.LEDR(LEDR[0]),
 		.HEX4(HEX4),
 		.HEX5(HEX5)
 	);
@@ -556,15 +565,16 @@ module view(
 		.time_up(time_up)
 	);
 
-	wire [9:0] rotation_speed, line_speed, endX, endY, degree;
+	wire [9:0] rotation_speed, line_speed, endX, endY, degree, draw_stone_flag;
 	wire [9:0]rope_len;
 	wire [9:0] current_score;
+
 	Rope rope0(
     .clock(clk),
 	.resetn(resetn), 
 	.enable(1),
     
-	.draw_stone_flag(!draw_num_done), //on when the previous drawing is in process
+	.draw_stone_flag(draw_stone_flag), //on when the previous drawing is in process
     .draw_index(stone_count + gold_count + diamond_count),
     .quantity(3),
 
@@ -580,7 +590,8 @@ module view(
     .rope_len(rope_len),
 
     .data(read_data),
-    .current_score(current_score)
+    .current_score(current_score),
+	.LEDR(LEDR)
     // output bomb_use
 
  );
@@ -594,9 +605,26 @@ module view(
 	// 	else if(degree < min_degree) min_degree <= degree[7:0];
 	// end
 
+	wire enable_draw_gameover;
+	wire [8:0]X_out_gameover;
+	wire [7:0]Y_out_gameover;
+	wire [11:0]Color_out_gameover;
+	wire draw_gameover_done;
+	draw_gameover dgo0(
+    .clk(clk), 
+	.resetn(resetn),
+	.enable_draw_gameover(enable_draw_gameover),
+	.resetn_gold_stone_gameover(resetn_gold_stone_gameover),
+
+	.X_out_gameover(X_out_gameover),
+    .Y_out_gameover(Y_out_gameover),
+    .Color_out_gameover(Color_out_gameover),
+    .writeEn_gameover(writeEn_gameover),
+    .draw_gameover_done(draw_gameover_done),
+);
+
 	wire game_end;
 	assign game_end = time_up;
-	assign LEDR[8:1] = time_remained;
 
 	hex_decoder H0(
         .hex_digit(endX[3:0]), 

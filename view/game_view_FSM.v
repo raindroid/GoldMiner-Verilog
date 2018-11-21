@@ -11,6 +11,8 @@ module game_view_FSM(
 	draw_background_done,
 	draw_hook_done,
 	draw_num_done,
+	draw_gameover_done,
+	draw_stone_flag,
 	
 	gold_count,
 	stone_count,
@@ -26,6 +28,7 @@ module game_view_FSM(
 	enable_draw_stone,
 	enable_draw_diamond,
 	enable_draw_background,
+	enable_draw_gameover,
 	enable_random,
 	enable_draw_hook,
 	enable_draw_num,
@@ -45,7 +48,9 @@ module game_view_FSM(
 			draw_diamond_done,
 			draw_background_done,
 			draw_hook_done,
-			draw_num_done;
+			draw_num_done,
+			draw_gameover_done;
+			
 	
 	input [7:0]gold_count;
 	input [7:0]stone_count;
@@ -65,9 +70,11 @@ module game_view_FSM(
 					enable_random,
 					enable_draw_hook,
 					enable_draw_num,
+					enable_draw_gameover,
 					resetn_gold_stone_diamond,
 					timer_enable,
-					time_resetn;
+					time_resetn,
+					draw_stone_flag;
 
 	reg [6:0] current_state, next_state; 
     
@@ -92,6 +99,8 @@ module game_view_FSM(
 
 					DRAW_NUM 			= 6'd14,
 					GAME						 = 6'd15,
+					DRAW_GAMEOVER                = 6'd21,
+					DRAW_GAMEOVER_WAIT               = 6'd21,
 					 
 					GAME_DONE				 = 6'd16;
 					 
@@ -154,9 +163,15 @@ module game_view_FSM(
 					  	next_state = (draw_num_done) ? GAME : DRAW_NUM;
 					end
 					 GAME: begin
-					 	if((game_end)) next_state = GAME_DONE;
+					 	if((game_end)) next_state = DRAW_GAMEOVER_WAIT;
 						else
 							next_state = (frame) ? DRAW_BACKGROUND : GAME;
+					 end
+					 DRAW_GAMEOVER: begin
+						next_state = DRAW_GAMEOVER_WAIT;
+					 end
+					 DRAW_GAMEOVER_WAIT:begin
+					   	next_state = (draw_gameover_done) ? GAME_DONE : DRAW_GAMEOVER_WAIT;
 					 end
 					 GAME_DONE: begin
 						next_state = (go) ? DRAW_BACKGROUND : GAME_DONE;
@@ -180,9 +195,11 @@ module game_view_FSM(
 			enable_random = 1'b0;
 			enable_draw_hook = 1'b0;
 			enable_draw_num = 1'b0;
+			enable_draw_gameover = 1'b0;
 			resetn_gold_stone_diamond = 1'b1;
 			timer_enable = 1'b0;
 			time_resetn = 1'b1;
+			draw_stone_flag =1'b1;
 
 
         case (current_state)
@@ -218,10 +235,20 @@ module game_view_FSM(
 			  	enable_draw_num = 1'b1;
 				  timer_enable = 1'b1;
 			end
+			DRAW_GAMEOVER: begin
+			  	enable_draw_gameover = 1'b1;
+				  timer_enable = 1'b1;
+			end
+			DRAW_GAMEOVER_WAIT: begin
+			  	enable_draw_gameover = 1'b1;
+				  timer_enable = 1'b1;
+				  end
 			GAME: begin
+				draw_stone_flag = 1'b0;
 				resetn_gold_stone_diamond = 1'b0;
 				timer_enable = 1'b1;
-			end
+				end
+			
 				
         // default:    // don't need default since we already made sure all of our outputs were assigned a value at the start of the always block
         endcase

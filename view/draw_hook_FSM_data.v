@@ -31,7 +31,6 @@ module draw_hook(
     output [11:0] color,
     output reg writeEn,
     output reg done,
-    output reg [0:0] LEDR,
     output [6:0]HEX4, HEX5
 );
 
@@ -120,10 +119,10 @@ module draw_hook(
                 
                 centerX = START_X + ((length * deg_cos) >> 8) * (deg_signCos ? 64'd1 : -64'd1);
                 centerY = START_Y + ((length * deg_sin) >> 8);
-                LEDR[0] = 1'b0;
+
             end
             S_DRAW_ROPE: begin
-                LEDR[0] = 1'b1;
+
 
                 rope_len = length;
 
