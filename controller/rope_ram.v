@@ -75,9 +75,9 @@ module Rope(
     // assign rope_max = (endX < 0)
 
     //for score
-    parameter SCORE_STONE = 1;
-    parameter SCORE_GOLD = 2;
-    parameter SCORE_DIAMOND = 5;
+    parameter SCORE_STONE = 32'd1;
+    parameter SCORE_GOLD = 32'd2;
+    parameter SCORE_DIAMOND = 32'd5;
     reg scoreEn, scorePlus;
     reg [7:0] score_change;
     Score my_score(
@@ -217,7 +217,8 @@ module Rope(
             end
             S_PRE_UP: begin
                 frame_counter = frame_counter + 1;
-                if (frame_counter >= (FRAME_CLOCK * 2 + (found_stone * UP_DELAY_TIMES)) & (!draw_stone_flag)) begin
+                if (frame_counter >= (FRAME_CLOCK * 2 + (64'b1 * found_stone * UP_DELAY_TIMES * FRAME_CLOCK)) 
+                    & (!draw_stone_flag)) begin
                     next_state = S_IN_UP;
                     frame_counter = 0;
                 end
@@ -305,6 +306,7 @@ module Rope(
                     next_state = S_PRE_RCW;
                 else
                     next_state = S_PRE_RCCW;
+                frame_counter = 0;
             end
             S_PRE_DOWN: begin
                 found_stone = 0;
@@ -349,7 +351,11 @@ module Rope(
                     rope_index = rope_index + 1;
                     next_state = S_IN_CHECK;
                 end
-                else if (((tempX - 6 > 0 ? tempX - 6 : 0) <= endX) & 
+                // else if (((tempX - 6 > 0 ? tempX - 6 : 0) <= endX) & 
+                //         (endX <= (tempX + 16 + 6 < 320 ? tempX + 16 + 6: 320)) &
+                //         ((tempY - 6 > 0 ? tempY - 6 : 0) <= endY) & 
+                //         (endY <= (tempY + 16 + 6 < 240 ? tempY + 16 + 6 : 240))) begin
+                else if (((tempX) <= endX) & 
                         (endX <= (tempX + 16 + 6 < 320 ? tempX + 16 + 6: 320)) &
                         ((tempY - 6 > 0 ? tempY - 6 : 0) <= endY) & 
                         (endY <= (tempY + 16 + 6 < 240 ? tempY + 16 + 6 : 240))) begin
