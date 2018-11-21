@@ -40,7 +40,7 @@ module Rope(
     reg [4:0] current_state, next_state;
 
     parameter FRAME_CLOCK = 833_334; //used for frame counter
-    parameter ROPE_MAX = 200;
+    // parameter ROPE_MAX = 200;
     parameter UP_DELAY_TIMES = 3;
 
     reg [3:0] rope_index; //the index for rope to control
@@ -63,6 +63,8 @@ module Rope(
     //for check part
     reg [3:0] check_counter;
     reg [13:0] tempX, tempY;
+    reg [9:0] rope_max;
+    // assign rope_max = (endX < 0)
 
     //for score
     parameter SCORE_STONE = 1;
@@ -292,7 +294,7 @@ module Rope(
             S_IN_DOWN: begin
                 frame_counter = 0;
                 length = length + 1 << 8;
-                if (rope_len == ROPE_MAX) 
+                if (endX <= 10 | endX >= 310 | endY >= 230) 
                     next_state = S_PRE_UP;
                 else
                     next_state = S_PRE_CHECK;
@@ -313,15 +315,15 @@ module Rope(
             end
             S_IN_CHECK_READ: begin
                 tempData = read_data;
-                tempX = {1'b0, read_data[31:19]};
-                tempY = {2'b0, read_data[18:7]};
+                tempX = {1'b0, read_data[31:23]};
+                tempY = {2'b0, read_data[18:11]};
                 next_state = S_IN_CHECK_CHECK;
             end
             S_IN_CHECK_CHECK: begin
                 if (tempData[0] | !tempData[1]) begin
                     next_state = S_IN_CHECK;
                 end
-                else if ((tempX < endX) & (endX < tempX + 16) &
+                else if (((tempX < endX) & (endX < tempX + 16) &
                         (tempY < endY) & (endY < tempY + 16)) begin
                             found_stone = 1;
                             move_index = rope_index;
