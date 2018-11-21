@@ -254,7 +254,9 @@ module view(
 		.gold_count(gold_count),
 		.stone_count(stone_count),
 		.diamond_count(diamond_count),
-		.memory_counter(memory_counter),
+		.max_stone(1),
+		.max_gold(1),
+		.max_diamond(1),
 	
 		.game_end(1),
 	
@@ -523,6 +525,12 @@ module view(
     	.display_score_and_time_done(draw_num_done)
     );
 
+	wire frame;
+	rate_divider r1(
+	.resetn(resetn), 
+	.clock(clk), 
+	.Enable(frame)
+	);
 
 endmodule
 

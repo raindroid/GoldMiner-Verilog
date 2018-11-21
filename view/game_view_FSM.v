@@ -4,6 +4,7 @@ module game_view_FSM(
 	clk, 
 	resetn,
 	go,
+	frame,
 	
 	draw_gold_done,
 	draw_stone_done,
@@ -15,7 +16,10 @@ module game_view_FSM(
 	gold_count,
 	stone_count,
 	diamond_count,
-	memory_counter,
+	max_stone,
+	max_gold,
+	max_diamond,
+
 
 	game_end,
 	
@@ -32,7 +36,7 @@ module game_view_FSM(
 	);
 	input clk;
 	input resetn;
-	input go;
+	input go,frame;
 
 
 	input draw_gold_done,
@@ -45,14 +49,13 @@ module game_view_FSM(
 	input [7:0]gold_count;
 	input [7:0]stone_count;
 	input [7:0]diamond_count;
-	input [5:0]memory_counter;
 	
 	
 	input game_end;
 	
-	parameter max_stone = 4'd1;
-	parameter max_gold  = 4'd1;
-	parameter max_diamond = 4'd1;
+	input [4:0]max_stone;
+	input [4:0]max_gold;
+	input [4:0]max_diamond;
 	
 	output reg 	enable_draw_gold,
 					enable_draw_stone,
@@ -148,7 +151,9 @@ module game_view_FSM(
 					  	next_state = (draw_num_done) ? GAME : DRAW_NUM;
 					end
 					 GAME: begin
-						next_state = (game_end) ? GAME_DONE : DRAW_BACKGROUND;
+					 	if((game_end)) next_state = GAME_DONE;
+						else
+							next_state = (frame & go) ? DRAW_BACKGROUND : GAME;
 					 end
 					 GAME_DONE: begin
 						next_state = (go) ? DRAW_BACKGROUND : GAME_DONE;
