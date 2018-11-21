@@ -75,7 +75,7 @@ module Rope(
 
     //for score
     parameter SCORE_STONE = 1;
-    parameter SCORE_GOLE = 2;
+    parameter SCORE_GOLD = 2;
     parameter SCORE_DIAMOND = 5;
     reg scoreEn, scorePlus;
     reg [7:0] score_change;
@@ -270,8 +270,8 @@ module Rope(
                     scorePlus = 1'b1;
                     scoreEn = 1'b1;
                     tempType = tempData[3:2];
-                    score_change = (tempData == 2'b0 ? SCORE_STONE : 
-                            (tempData == 2'b1 ? SCORE_GOLE : SCORE_DIAMOND));
+                    score_change = (tempType == 2'b0 ? SCORE_STONE : 
+                            (tempType == 2'b1 ? SCORE_GOLD : SCORE_DIAMOND));
                     //Make the item invisible
                     data_write[1:0] = 2'b0; // 10 for visible, 1 for moving
 
@@ -295,7 +295,7 @@ module Rope(
                 end
             end
             S_AFTER_MOVE: begin
-                writeEn = 1;
+                // writeEn = 1;
                 if (rCW)
                     next_state = S_PRE_RCW;
                 else
