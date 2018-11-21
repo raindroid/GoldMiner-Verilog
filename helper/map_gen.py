@@ -36,7 +36,7 @@ CONTENT BEGIN""");
     __DEBUG = False
 
 
-    gold_q = q // 4
+    gold_q = q // 3
     stone_q = q // 2
     diamond_q = q - gold_q - stone_q
 
