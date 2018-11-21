@@ -172,6 +172,7 @@ module Rope(
                 if (enable) next_state = S_PRE_RCCW;
                 else next_state = S_STOP;
                 frame_counter = 0;
+                found_stone = 0;
             end
             S_PRE_RCCW: begin
                 found_stone = 0;
