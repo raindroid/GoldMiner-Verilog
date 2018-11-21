@@ -387,10 +387,10 @@ module Rope(
 
     always @(posedge clock) begin
         if (!resetn) begin
-            current_state < S_STOP;
+            current_state <= S_STOP;
         end            
         else begin
-            current_state < next_state;
+            current_state <= next_state;
         end
     end
 
