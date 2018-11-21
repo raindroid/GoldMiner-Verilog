@@ -19,7 +19,7 @@ module Rope(
     output [9:0] current_score,
 
     //Test only
-    input [9:0]LEDR
+    output [9:0]LEDR
     // output bomb_use
 
  );
@@ -124,6 +124,8 @@ module Rope(
     assign LEDR[2] = scoreEn;
     assign LEDR[3] = rCW;
     assign LEDR[4] = found_stone;
+    assign LEDR[5] = tempData[0];
+    assign LEDR[6] = tempData[1];
 
     localparam  S_STOP      = 5'd0,
                 S_PRE_RCCW  = 5'd1,
@@ -320,7 +322,6 @@ module Rope(
                 next_state = S_IN_CHECK;
             end
             S_IN_CHECK: begin
-                rope_index = rope_index + 1;
                 if (rope_index >= quantity) begin
                     //not found
                     next_state = S_PRE_DOWN;
@@ -337,6 +338,7 @@ module Rope(
             end
             S_IN_CHECK_CHECK: begin
                 if (tempData[0] | !tempData[1]) begin
+                    rope_index = rope_index + 1;
                     next_state = S_IN_CHECK;
                 end
                 else if (((tempX - 6 > 0 ? tempX - 6 : 0) <= endX) & 
@@ -348,8 +350,10 @@ module Rope(
                             next_state = S_SAVE;
                             frame_counter = 0;
                 end
-                else 
+                else begin
                     next_state = S_IN_CHECK;
+                    rope_index = rope_index + 1;
+                end
             end
             S_SAVE: begin
                 writeEn = 1'b1;
