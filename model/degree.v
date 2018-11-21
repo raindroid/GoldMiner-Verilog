@@ -10,7 +10,7 @@ module trig(
     assign sub_deg = degree >> 1;
 
     always @(*) begin
-        case (degree)
+        case (sub_deg)
 	0: begin
 		cos	= 9'd256;
 		sin	= 9'd  0;
