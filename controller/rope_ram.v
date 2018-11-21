@@ -41,6 +41,7 @@ module Rope(
 
     parameter FRAME_CLOCK = 833_334; //used for frame counter
     // parameter ROPE_MAX = 200;
+    parameter ROPE_MIN = 20;
     parameter UP_DELAY_TIMES = 3;
 
     reg [3:0] rope_index; //the index for rope to control
@@ -147,8 +148,8 @@ module Rope(
             S_STOP: begin
                 state = 2'b00;
                 rCW = 0;
-                length = 10 << 8;
-                degree = 170;
+                length = ROPE_MIN << 8;
+                degree = 165;
                 if (enable) next_state = S_PRE_RCCW;
                 else next_state = S_STOP;
                 frame_counter = 0;
@@ -166,6 +167,7 @@ module Rope(
             end
             S_IN_RCCW: begin
                 degree = degree - 1;
+                rCW = 0;
                 if (degree <= 15)
                     next_state = S_PRE_RCW;
                 else if (go)
@@ -187,6 +189,7 @@ module Rope(
             end
             S_IN_RCW: begin
                 degree = degree + 1;
+                rCW = 1;
                 if (degree >= 165)
                     next_state = S_PRE_RCCW;
                 else if (go)
@@ -206,8 +209,8 @@ module Rope(
                 end
             end
             S_IN_UP: begin
-                length = length - 1 << 3;
-                if (rope_len <= 10) begin
+                length = length - (1 << 3);
+                if (rope_len <= ROPE_MIN) begin
                   //reach the top
                     if (found_stone)
                         next_state = S_MOVE;
@@ -245,7 +248,7 @@ module Rope(
             S_MOVE_WRITE_WAIT: begin
                 writeEn = 1;
                 rope_index = move_index;
-                if (rope_len <= 10) begin
+                if (rope_len <= ROPE_MIN) begin
                     //Score part
                     scorePlus = 1'b1;
                     scoreEn = 1'b1;
@@ -293,8 +296,8 @@ module Rope(
             end
             S_IN_DOWN: begin
                 frame_counter = 0;
-                length = length + 1 << 8;
-                if (endX <= 10 | endX >= 310 | endY >= 230) 
+                length = length + (1 << 8);
+                if (endX <= 10 | endX >= 310 | endY >= 230 | length >= 275) 
                     next_state = S_PRE_UP;
                 else
                     next_state = S_PRE_CHECK;
@@ -323,7 +326,7 @@ module Rope(
                 if (tempData[0] | !tempData[1]) begin
                     next_state = S_IN_CHECK;
                 end
-                else if (((tempX < endX) & (endX < tempX + 16) &
+                else if ((tempX < endX) & (endX < tempX + 16) &
                         (tempY < endY) & (endY < tempY + 16)) begin
                             found_stone = 1;
                             move_index = rope_index;
