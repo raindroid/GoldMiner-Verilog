@@ -15,8 +15,8 @@ module Rope(
     output reg[9:0] rotation_speed, line_speed, endX, endY, degree, //not all the output is useful
     output reg[9:0]rope_len,
 
-    output [31:0] data
-    output [9:0] current_score;
+    output [31:0] data,
+    output [9:0] current_score
     // output bomb_use
 
  );
@@ -77,7 +77,7 @@ module Rope(
         .plus(scorePlus),
         .score_change_DATA(score_change),
         .score(current_score)
-    )
+    );
     
     //for trig formula
     wire [8:0] deg_sin, deg_cos;
@@ -106,7 +106,8 @@ module Rope(
         .clock(clock),
         .data(data_write),
         .wren(writeEn),
-        .q(read_data));
+        .q(read_data)
+    );
 
     localparam  S_STOP      = 5'd0,
                 S_PRE_RCCW  = 5'd1,
@@ -271,7 +272,7 @@ module Rope(
                 end
             end
             S_AFTER_MOVE: begin
-                writeEn = 1
+                writeEn = 1;
                 if (rCW)
                     next_state = S_PRE_RCW;
                 else
@@ -335,7 +336,7 @@ module Rope(
                 next_state = S_PRE_UP;
                 frame_counter = 0;
             end
-          default: 
+          default: next_state = S_STOP;
         endcase
     end
 
