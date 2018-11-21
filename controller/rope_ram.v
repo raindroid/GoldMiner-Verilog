@@ -88,7 +88,7 @@ module Rope(
     //for trig formula
     wire [8:0] deg_sin, deg_cos;
     wire deg_signSin, deg_signCos;
-    trig degree_trig(
+    trig deg_trig(
         .degree(degree),
         .cos(deg_cos),
         .sin(deg_sin),
@@ -141,8 +141,8 @@ module Rope(
 
     always @(posedge clock) begin
         //update x,y based on length and degree
-        endX <= originX + ((rope_len * deg_cos) >> 8) * (deg_signCos ? 64'd1 : -64'd1);
-        endY = originY + ((length * deg_sin) >> 16);
+        endX = originX + ((rope_len * deg_cos) >> 8) * (deg_signCos ? 64'd1 : -64'd1);
+        endY = originY + ((rope_len * deg_sin) >> 8) * 64'd1;
 
         scoreEn = 0;
         writeEn = 0;
