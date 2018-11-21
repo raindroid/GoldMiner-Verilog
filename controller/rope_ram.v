@@ -176,6 +176,7 @@ module Rope(
                 found_stone = 0;
                 tempData = 0;
                 rope_index = 0;
+                data_write = 0;
             end
             S_PRE_RCCW: begin
                 found_stone = 0;
