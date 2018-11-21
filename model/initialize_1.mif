@@ -1,10 +1,10 @@
 -- Copyright (C) 2018  Intel Corporation. All rights reserved.
--- Your use of Intel Corporation's design tools, logic functions 
--- and other software and tools, and its AMPP partner logic 
--- functions, and any output files from any of the foregoing 
--- (including device programming or simulation files), and any 
--- associated documentation or information are expressly subject 
--- to the terms and conditions of the Intel Program License 
+-- Your use of Intel Corporation's design tools, logic functions
+-- and other software and tools, and its AMPP partner logic
+-- functions, and any output files from any of the foregoing
+-- (including device programming or simulation files), and any
+-- associated documentation or information are expressly subject
+-- to the terms and conditions of the Intel Program License
 -- Subscription Agreement, the Intel Quartus Prime License Agreement,
 -- the Intel FPGA IP License Agreement, or other applicable license
 -- agreement, including, without limitation, that your use is for
@@ -21,8 +21,20 @@ ADDRESS_RADIX=BIN;
 DATA_RADIX=BIN;
 
 CONTENT BEGIN
-	0000   :   01010000000000110000000000000110;
-	0001   :   00111000000000111000000000000010;
-	0010   :   00101000000000110001000000001010;
-	[0011..1111]  :   0;
+0000		:	0111010100111010110000111000000110
+0001		:	0011110110101011010000110100000110
+0010		:	1001110110010010000110100000000110
+0011		:	1000110101101011001110100100000010
+0100		:	0011000100000011010001000000000010
+0101		:	0010010001001011010111101000000010
+0110		:	0111000010010010010101100000000010
+0111		:	0000111010000010011100000000001010
+1000		:	0011110010011010101101111000001010
+1001		:	0001111101101010010001110100001010
+1010		:	0010100101001010000000100100001010
+1011		:	1000100000101001101101101100001010
+1100		:	0101100111001010000001001100001010
+1101		:	0110100001101001110111001100001010
+1110		:	0000100111001011101010101100001010
+1111  :   0;
 END;
