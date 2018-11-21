@@ -65,7 +65,8 @@ module Rope(
     reg found_stone;     //a flag to tell should we move a stone or not
     reg [3:0] move_index;   //possibly store the stone we need to move
     reg [31:0] tempData;    
-    reg [1:0] tempType;
+    wire [1:0] tempType;
+    assign tempType = tempData[3:2];
 
     //for check part
     reg [3:0] check_counter;
@@ -216,7 +217,7 @@ module Rope(
             end
             S_PRE_UP: begin
                 frame_counter = frame_counter + 1;
-                if (frame_counter >= (FRAME_CLOCK + (found_stone * UP_DELAY_TIMES)) & (!draw_stone_flag)) begin
+                if (frame_counter >= (FRAME_CLOCK * 2 + (found_stone * UP_DELAY_TIMES)) & (!draw_stone_flag)) begin
                     next_state = S_IN_UP;
                     frame_counter = 0;
                 end
@@ -257,8 +258,8 @@ module Rope(
             S_MOVE_NEW_XY: begin
                 // tempData = tempData - ((DELTA_LEN * deg_sin) >> 1) * 64'd1 -
                 //         ((DELTA_LEN * deg_cos * (deg_signCos ? 64'd1 : -64'd1)) << 11);
-                tempData = (endX << 23) + (endY << 11) + tempData[1:0];
-                data_write <= tempData;
+                tempData = (endX << 23) + (endY << 11) + tempData[3:0];
+                data_write = tempData;
                 next_state = S_MOVE_WRITE;
             end
             S_MOVE_WRITE: begin
@@ -279,26 +280,25 @@ module Rope(
                 end
                 frame_counter = 0;
             end
-            S_MOVE_DELAY: begin
-                if (frame_counter == 1) writeEn = 1;
-                frame_counter = frame_counter + 1;
-                if (frame_counter >= FRAME_CLOCK * UP_DELAY_TIMES & (!draw_stone_flag)) begin
-                    next_state = S_AFTER_MOVE;
-                    frame_counter = 0;
-                end
-                else begin
-                    next_state = S_MOVE_DELAY;
-                end
-            end
+            // S_MOVE_DELAY: begin
+            //     if (frame_counter == 1) writeEn = 1;
+            //     frame_counter = frame_counter + 1;
+            //     if (frame_counter >= FRAME_CLOCK * UP_DELAY_TIMES & (!draw_stone_flag)) begin
+            //         next_state = S_AFTER_MOVE;
+            //         frame_counter = 0;
+            //     end
+            //     else begin
+            //         next_state = S_MOVE_DELAY;
+            //     end
+            // end
             S_AFTER_MOVE: begin
                 //Score part
                 scorePlus = 1'b1;
                 scoreEn = 1'b1;
-                tempType = tempData[3:2];
                 score_change = (tempType == 2'b0 ? SCORE_STONE : 
                         (tempType == 2'b1 ? SCORE_GOLD : SCORE_DIAMOND));
                 //Make the item invisible
-                data_write[1:0] = 2'b0; // 10 for visible, 1 for moving
+                data_write = {tempData[31:2], 2'b0}; // 10 for visible, 1 for moving
 
                 found_stone = 0;
                 if (rCW)
