@@ -54,7 +54,7 @@
 //Datapath part
 
     //Counter logic
-    always @(posedge clock) begin 
+    always @(posedge clock, posedge current_state) begin 
         if (current_state == S_LOAD_KEY_WAIT) begin
             pulse = 1;
             counter <= (counter + 1) % PULSE_LENGTH;

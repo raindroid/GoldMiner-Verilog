@@ -39,7 +39,7 @@ module gold_miner(
 		.plot(plot), 
 		.resetn(resetn),
 		.background(background),
-		.go(SW[9]),
+		.go(~KEY[3]),
 		.SW(SW),
 		.KEY(KEY),							// On Board Keys
 		// The ports below are for the VGA output.  Do not change.
@@ -143,6 +143,7 @@ module fill
 		.clk(CLOCK_50), 
 		.resetn(resetn),
 		.go(go),
+		.drop(drop),
 
 		.X_out(x),
 		.Y_out(y),

@@ -5,6 +5,7 @@ module view(
 		clk, 
 		resetn,
 		go,
+		drop,
 
 		X_out,
 		Y_out,
@@ -14,7 +15,7 @@ module view(
 		
 		);
 	input clk, resetn;
-	input go;
+	input go, drop;
 	
 	output reg[8:0]X_out;
 	output reg[7:0]Y_out;
@@ -124,14 +125,14 @@ module view(
 	end
 	*/
 	
-	wire [31:0]read_data;
-	wire [3:0]read_address = (stone_count + gold_count + diamond_count);
-	initialize_1 initial_1(
-	.address(read_address),
-	.clock(clk),
-	.data(1),
-	.wren(0),
-	.q(read_data));
+	// wire [31:0]read_data;
+	// wire [3:0]read_address = (stone_count + gold_count + diamond_count);
+	// initialize_1 initial_1(
+	// .address(read_address),
+	// .clock(clk),
+	// .data(1),
+	// .wren(0),
+	// .q(read_data));
 
 // 	wire [1023: 0] data;
 // 	wire [5:0]memory_counter;
@@ -498,8 +499,8 @@ module view(
 		.clock(clk), 
 		.resetn(resetn),
 		.enable(enable_draw_hook),
-		.length(50),
-		.degree(15),
+		.length(rope_len),
+		.degree(degree),
 		.outX(X_out_hook),
 		.outY(Y_out_hook),
 		.color(Color_out_hook),
@@ -519,7 +520,7 @@ module view(
 	score_and_time_display display_num(
     	.clk(clk),
     	.resetn(resetn),
-    	.score_to_display(1025),
+    	.score_to_display(current_score),
     	.time_remained(time_remained),
 		.goal(220),
     	.enable_score_and_time_display(enable_draw_num),
@@ -534,6 +535,7 @@ module view(
 
 	wire timer_enable, time_resetn;
 	wire time_up;
+	wire [31:0]read_data;
 
 	timer t0(
 		.clk(clk),
@@ -544,7 +546,34 @@ module view(
 		.time_up(time_up)
 	);
 
-	
+	wire [9:0] rotation_speed, line_speed, endX, endY, degree;
+	wire [9:0]rope_len;
+	wire [9:0] current_score;
+	Rope rope0(
+    .clock(clk),
+	.resetn(resetn), 
+	.enable(1),
+    
+	.draw_stone_flag(!draw_num_done), //on when the previous drawing is in process
+    .draw_index(stone_count + gold_count + diamond_count),
+    .quantity(3),
+
+    .go_KEY(drop), //physical key for the go input
+    //bomb_KEY,
+    // input bomb_quantity,
+
+    .rotation_speed(rotation_speed),
+	.line_speed(line_speed),
+	.endX(endX), 
+	.endY(endY), 
+	.degree(degree), //not all the output is useful
+    .rope_len(rope_len),
+
+    .data(read_data),
+    .current_score(current_score)
+    // output bomb_use
+
+ );
 
 	wire game_end;
 	assign game_end = time_up;
