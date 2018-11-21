@@ -216,7 +216,7 @@ module Rope(
             end
             S_PRE_UP: begin
                 frame_counter = frame_counter + 1;
-                if (frame_counter >= FRAME_CLOCK & (!draw_stone_flag)) begin
+                if (frame_counter >= (FRAME_CLOCK + (found_stone * UP_DELAY_TIMES)) & (!draw_stone_flag)) begin
                     next_state = S_IN_UP;
                     frame_counter = 0;
                 end
@@ -251,8 +251,9 @@ module Rope(
                 next_state = S_MOVE_NEW_XY;
             end
             S_MOVE_NEW_XY: begin
-                tempData = tempData - ((DELTA_LEN * deg_sin) << 7) -
-                        ((DELTA_LEN * deg_cos * deg_signCos) << 19);
+                tempData = tempData - ((DELTA_LEN * deg_sin) >> 1) * 64'd1 -
+                        ((DELTA_LEN * deg_cos * (deg_signCos ? 64'd1 : -64'd1)) << 11);
+                data_write <= tempData;
                 next_state = S_MOVE_WRITE;
             end
             S_MOVE_WRITE: begin
@@ -283,6 +284,7 @@ module Rope(
                 frame_counter = 0;
             end
             S_MOVE_DELAY: begin
+                if (frame_counter == 1) writeEn = 1;
                 frame_counter = frame_counter + 1;
                 if (frame_counter >= FRAME_CLOCK * UP_DELAY_TIMES & (!draw_stone_flag)) begin
                     next_state = S_AFTER_MOVE;
@@ -333,8 +335,8 @@ module Rope(
             end
             S_IN_CHECK_READ: begin
                 tempData = read_data;
-                tempX = {1'b0, read_data[31:23]};
-                tempY = {2'b0, read_data[18:11]};
+                tempX = {5'b0, read_data[31:23]};
+                tempY = {6'b0, read_data[18:11]};
                 next_state = S_IN_CHECK_CHECK;
             end
             S_IN_CHECK_CHECK: begin
@@ -345,7 +347,7 @@ module Rope(
                 else if (((tempX - 6 > 0 ? tempX - 6 : 0) <= endX) & 
                         (endX <= (tempX + 16 + 6 < 320 ? tempX + 16 + 6: 320)) &
                         ((tempY - 6 > 0 ? tempY - 6 : 0) <= endY) & 
-                        (endY <= (tempY + 16 + 6 < 320 ? tempY + 16 + 6 : 320))) begin
+                        (endY <= (tempY + 16 + 6 < 240 ? tempY + 16 + 6 : 240))) begin
                             found_stone = 1;
                             move_index = rope_index;
                             next_state = S_SAVE;
