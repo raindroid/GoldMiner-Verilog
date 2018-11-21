@@ -33,7 +33,7 @@ module Score(
         if (!resetn) begin
             score = 0;
         end
-        else if (enable) begin
+        else if (writeEn) begin
             score = score + (plus ? 1 : -1) * score_change_DATA;
         end
     end

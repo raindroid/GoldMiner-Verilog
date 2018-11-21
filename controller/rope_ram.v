@@ -13,7 +13,7 @@ module Rope(
     // input bomb_quantity,
 
     output reg[9:0] rotation_speed, line_speed, endX, endY, degree, //not all the output is useful
-    output reg[9:0]rope_len,
+    output [9:0]rope_len,
 
     output [31:0] data,
     output [9:0] current_score
@@ -98,7 +98,7 @@ module Rope(
         .key(go_KEY),
         .pulse(go)
     );
-    defparam PULSE_LENGTH = FRAME_CLOCK;
+    defparam go_DET.PULSE_LENGTH = FRAME_CLOCK;
 
     //for ram
 	initialize_1 initial_1(
@@ -231,7 +231,7 @@ module Rope(
             end
             S_MOVE_NEW_XY: begin
                 tempData = tempData - ((8'd8 * deg_sin) << 7) -
-                        ((9'd8 * deg_cos * signCos) << 19);
+                        ((9'd8 * deg_cos * deg_signCos) << 19);
                 next_state = S_MOVE_WRITE;
             end
             S_MOVE_WRITE: begin
@@ -313,7 +313,7 @@ module Rope(
             S_IN_CHECK_READ: begin
                 tempData = read_data;
                 tempX = {1'b0, read_data[31:19]};
-                tmepY = {2'b0, read_data[18:7]};
+                tempY = {2'b0, read_data[18:7]};
                 next_state = S_IN_CHECK_CHECK;
             end
             S_IN_CHECK_CHECK: begin
@@ -322,7 +322,7 @@ module Rope(
                 end
                 else if ((tempX < endX) & (endX < tempX + 16) &
                         (tempY < endY) & (endY < tempY + 16)) begin
-                            find_stone = 1;
+                            found_stone = 1;
                             move_index = rope_index;
                             next_state = S_SAVE;
                             frame_counter = 0;
