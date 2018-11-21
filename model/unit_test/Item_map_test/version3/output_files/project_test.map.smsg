@@ -1,0 +1,2 @@
+Warning (10268): Verilog HDL information at project_test.v(83): always construct contains both blocking and non-blocking assignments File: F:/UofT/ECE241/ece241project-test/project_test.v Line: 83
+Warning (10268): Verilog HDL information at project_test.v(216): always construct contains both blocking and non-blocking assignments File: F:/UofT/ECE241/ece241project-test/project_test.v Line: 216
