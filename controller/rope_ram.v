@@ -297,7 +297,7 @@ module Rope(
             S_IN_DOWN: begin
                 frame_counter = 0;
                 length = length + (1 << 8);
-                if (endX <= 10 | endX >= 310 | endY >= 230 | length >= 275) 
+                if (endX <= 10 | endX >= 310 | endY >= 230 | rope_len >= 275) 
                     next_state = S_PRE_UP;
                 else
                     next_state = S_PRE_CHECK;
