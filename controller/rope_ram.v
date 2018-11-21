@@ -251,8 +251,9 @@ module Rope(
                 next_state = S_MOVE_NEW_XY;
             end
             S_MOVE_NEW_XY: begin
-                tempData = tempData - ((DELTA_LEN * deg_sin) >> 1) * 64'd1 -
-                        ((DELTA_LEN * deg_cos * (deg_signCos ? 64'd1 : -64'd1)) << 11);
+                // tempData = tempData - ((DELTA_LEN * deg_sin) >> 1) * 64'd1 -
+                //         ((DELTA_LEN * deg_cos * (deg_signCos ? 64'd1 : -64'd1)) << 11);
+                tempData = endX << 23 + endY << 1 + tempData[1:0];
                 data_write <= tempData;
                 next_state = S_MOVE_WRITE;
             end
@@ -266,16 +267,7 @@ module Rope(
                 writeEn = 1;
                 rope_index = move_index;
                 if (rope_len <= ROPE_MIN) begin
-                    //Score part
-                    scorePlus = 1'b1;
-                    scoreEn = 1'b1;
-                    tempType = tempData[3:2];
-                    score_change = (tempType == 2'b0 ? SCORE_STONE : 
-                            (tempType == 2'b1 ? SCORE_GOLD : SCORE_DIAMOND));
-                    //Make the item invisible
-                    data_write[1:0] = 2'b0; // 10 for visible, 1 for moving
-
-                    next_state = S_MOVE_DELAY;
+                    next_state = S_AFTER_MOVE;
                 end
                 else begin
                     data_write = tempData;
@@ -295,7 +287,16 @@ module Rope(
                 end
             end
             S_AFTER_MOVE: begin
-                // writeEn = 1;
+                //Score part
+                scorePlus = 1'b1;
+                scoreEn = 1'b1;
+                tempType = tempData[3:2];
+                score_change = (tempType == 2'b0 ? SCORE_STONE : 
+                        (tempType == 2'b1 ? SCORE_GOLD : SCORE_DIAMOND));
+                //Make the item invisible
+                data_write[1:0] = 2'b0; // 10 for visible, 1 for moving
+
+                found_stone = 0;
                 if (rCW)
                     next_state = S_PRE_RCW;
                 else
