@@ -66,7 +66,7 @@ module Rope(
     reg [3:0] move_index;   //possibly store the stone we need to move
     reg [31:0] tempData;    
     wire [1:0] tempType;
-    assign tempType = tempData[3:2];
+    assign tempType[1:0] = read_data[3:2];
 
     //for check part
     wire [13:0] tempX, tempY;
@@ -270,7 +270,7 @@ module Rope(
                 // tempData = tempData - ((DELTA_LEN * deg_sin) >> 1) * 64'd1 -
                 //         ((DELTA_LEN * deg_cos * (deg_signCos ? 64'd1 : -64'd1)) << 11);
                 // writeEn = 1;
-                data_write = ((endX[8:0] - 4) << 23) + ((endY[7:0] - 4) << 11) + (tempType[1:0] << 2) + 2'b11;
+                data_write = (tempType[1:0] << 2) + ((endX[8:0] - 4) << 23) + ((endY[7:0] - 4) << 11) + 2'b11;
                 // data_write <= tempData;
                 next_state = S_MOVE_WRITE;
             end
