@@ -191,7 +191,7 @@ module Rope(
             S_IN_RCCW: begin
                 degree = degree - 1;
                 rCW = 0;
-                if (degree < 15)
+                if (degree < 15 + 1)
                     next_state = S_PRE_RCW;
                 else if (go)
                     next_state = S_PRE_DOWN;
@@ -213,7 +213,7 @@ module Rope(
             S_IN_RCW: begin
                 degree = degree + 1;
                 rCW = 1;
-                if (degree >= 165)
+                if (degree >= 165 - 1)
                     next_state = S_PRE_RCCW;
                 else if (go)
                     next_state = S_PRE_DOWN;
@@ -256,7 +256,10 @@ module Rope(
             end
             S_MOVE_READ: begin
                 rope_index = move_index;
-                next_state = S_MOVE_READ_WAIT;
+                if (draw_stone_flag) 
+                    next_state = S_MOVE_READ;
+                else 
+                    next_state = S_MOVE_READ_WAIT;
             end
             S_MOVE_READ_WAIT: begin
                 tempData = read_data;
@@ -266,7 +269,7 @@ module Rope(
                 // tempData = tempData - ((DELTA_LEN * deg_sin) >> 1) * 64'd1 -
                 //         ((DELTA_LEN * deg_cos * (deg_signCos ? 64'd1 : -64'd1)) << 11);
                 // writeEn = 1;
-                data_write = (endX[8:0] << 23) + (endY[7:0] << 11) + (tempType[1:0] << 2) + 2'b11;
+                data_write = ((endX[8:0] - 4) << 23) + ((endY[7:0] - 4) << 11) + (tempType[1:0] << 2) + 2'b11;
                 // data_write <= tempData;
                 next_state = S_MOVE_WRITE;
             end
@@ -279,7 +282,7 @@ module Rope(
             S_MOVE_WRITE_WAIT: begin
                 writeEn = 1;
                 rope_index = move_index;
-                if (rope_len < ROPE_MIN) begin
+                if (rope_len < ROPE_MIN + 1) begin
                     next_state = S_AFTER_MOVE;
                 end
                 else begin
