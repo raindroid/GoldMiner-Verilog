@@ -225,9 +225,11 @@ module game_view_FSM(
         case (current_state)
 			DRAW_GAMESTART: begin
 			  	enable_draw_gamestart = 1'b1;
+				  resetn_rope = 1'b0;
 			end
 			DRAW_GAMESTART_WAIT: begin
 			  	enable_draw_gamestart = 1'b1;
+				  resetn_rope = 1'b0;
 				  end
 
 			GENERATE_X_Y: begin
