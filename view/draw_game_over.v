@@ -9,22 +9,21 @@ module draw_gameover(
     Color_out_gameover,
     writeEn_gameover,
     draw_gameover_done,
-    gameover_count
 );
     input clk,resetn, enable_draw_gameover, resetn_gold_stone_gameover;
-    input [8:0]x_init;
-    input [7:0]y_init;
+    localparam x_init = 160-32;
+    localparam y_init = 120-32;
 
     output reg [8:0]X_out_gameover;
     output reg [7:0]Y_out_gameover;
     output reg [11:0]Color_out_gameover;
     output reg writeEn_gameover;
     output reg draw_gameover_done;
-    output reg [7:0]gameover_count;
+
    
 
-    reg [6:0]gameover_pixel_cout;
-    wire [5:0] gameover_mem_address = ({gameover_pixel_cout[5:3], 3'd0} + {gameover_pixel_cout[2:0]+1'b1});
+    reg [11:0]gameover_pixel_cout;
+    wire [11:0] gameover_mem_address = ({gameover_pixel_cout[11:6], 6'd0} + {gameover_pixel_cout[5:0]+1'b1});
 	reg  enable_c_gameover,
 		  load_x_gameover,
 		  load_y_gameover,
@@ -91,20 +90,14 @@ module draw_gameover(
 	
 
 	
-	//7-bit counter
+	//13-bit counter
 	always@(posedge clk)begin
-		if((resetn == 0) | (resetn_c_gameover == 0)) gameover_pixel_cout <= 7'b0;
+		if((resetn == 0) | (resetn_c_gameover == 0)) gameover_pixel_cout <= 13'b0;
 		else
 			if(enable_c_gameover)
 			gameover_pixel_cout <= gameover_pixel_cout + 1'b1;
 	end
 	
-		//gameover counter
-	always@(posedge clk)begin
-		if(!resetn | (!resetn_gold_stone_gameover)) gameover_count <= 3'b0;
-		else if(enable_gameover_count)
-			gameover_count <= gameover_count + 1'b1;
-	end
 
     reg [2:0] current_state, next_state; 
 
@@ -128,7 +121,7 @@ module draw_gameover(
 						next_state = DRAW; // Loop in current state until go signal goes low
 						end
 					 DRAW: begin
-						next_state =  (gameover_pixel_cout == 7'd64) ?  DRAW_DONE : DRAW_WAIT;
+						next_state =  (gameover_pixel_cout == 13'd4096) ?  DRAW_DONE : DRAW_WAIT;
 						end
 					 DRAW_WAIT: begin
 						next_state = DRAW;
