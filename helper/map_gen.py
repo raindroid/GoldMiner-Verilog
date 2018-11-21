@@ -40,7 +40,7 @@ CONTENT BEGIN""");
     stone_q = q // 2
     diamond_q = q - gold_q - stone_q
 
-    map = [[0 for y in range(240 * 16 +5)] for x in range(320 * 16 + 5)]
+    map = [[0 for y in range(240 * 16 + 5)] for x in range(320 * 16 + 5)]
     # print(map)
 
     for i in range(q):

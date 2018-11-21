@@ -20,6 +20,7 @@ module Rope(
 
     //Test only
     output [9:0]LEDR
+    output[6:0] HEX0, HEX1, HEX2, HEX3, HEX4, HEX5
     // output bomb_use
 
  );
@@ -128,7 +129,16 @@ module Rope(
     // assign LEDR[5] = tempType[0];
     // assign LEDR[6] = tempType[1];
     // assign LEDR[9:7] = move_index[2:0];
-    assign LEDR[9:0] = read_data[9:0];
+    assign LEDR[4:0] = current_score[4:0];
+    hex_decoder H0(
+        .hex_digit(rope_index), 
+        .segments(HEX0)
+        );
+    hex_decoder H1(
+        .hex_digit(read_address), 
+        .segments(HEX1)
+        );
+
 
     localparam  S_STOP      = 5'd0,
                 S_PRE_RCCW  = 5'd1,
@@ -337,7 +347,7 @@ module Rope(
             S_IN_DOWN: begin
                 frame_counter = 0;
                 length = length + (DELTA_LEN << 8);
-                if (endX < 10 | endX >= 310 | endY >= 230 | rope_len >= 275) begin
+                if (endX < 2 | endX >= 318 | endY >= 238 ) begin
                     next_state = S_PRE_UP;
                 end
                 else
@@ -370,9 +380,9 @@ module Rope(
                 //         ((tempY - 6 > 0 ? tempY - 6 : 0) < endY) & 
                 //         (endY < (tempY + 16 + 6 < 240 ? tempY + 16 + 6 : 240))) begin
                 else if (((tempX) < endX) & 
-                        (endX < (tempX + 16 < 320 ? tempX + 16: 320)) &
+                        (endX <= (tempX + 16 < 320 ? tempX + 16: 320)) &
                         ((tempY - 6 > 0 ? tempY - 6 : 0) < endY) & 
-                        (endY < (tempY + 16 < 240 ? tempY + 16 : 240))) begin
+                        (endY <= (tempY + 16 < 240 ? tempY + 16 : 240))) begin
                             found_stone = 1;
                             move_index = rope_index;
                             next_state = S_SAVE;
