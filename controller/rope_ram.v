@@ -129,7 +129,7 @@ module Rope(
     // assign LEDR[5] = tempType[0];
     // assign LEDR[6] = tempType[1];
     // assign LEDR[9:7] = move_index[2:0];
-    assign LEDR[4:0] = current_score[4:0];
+    assign LEDR[4:0] = current_state[4:0];
     hex_decoder H0(
         .hex_digit(rope_index), 
         .segments(HEX0)
