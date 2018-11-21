@@ -12,8 +12,8 @@ module Rope(
     //bomb_KEY,
     // input bomb_quantity,
 
-    output reg[9:0] rotation_speed, line_speed, endX, endY, degree, //not all the output is useful
-    output [9:0]rope_len,
+    output reg[9:0] rotation_speed, line_speed,  degree, //not all the output is useful
+    output [9:0]rope_len, endX, endY,
 
     output [31:0] data,
     output [9:0] current_score
@@ -34,7 +34,7 @@ module Rope(
      **/
     reg [1:0] state; 
     reg rCW; //Is or was in cw rotation
-    reg [17: 0] length; //more precise length
+    reg [31: 0] length; //more precise length
     assign rope_len = length[17:8];  //magnify by << 8, to get drawable length
     
     reg [4:0] current_state, next_state;
@@ -44,7 +44,10 @@ module Rope(
     // parameter ROPE_MAX = 200;
     parameter ROPE_MIN = 20;
     parameter UP_DELAY_TIMES = 3;
-    parameter DELTA_LEN = 18'd6;
+    parameter DELTA_LEN = 18'd2;
+    reg [31:0] tempEndX, tempEndY;
+    assign endX = tempEndX[9:0];
+    assign endY = tempEndY[9:0];
 
     reg [3:0] rope_index; //the index for rope to control
     reg [31:0] data_write; //used to write to the ram
@@ -140,8 +143,8 @@ module Rope(
 
     always @(posedge clock) begin
         //update x,y based on length and degree
-        endX = originX + ((rope_len * deg_cos) >> 8) * (deg_signCos ? 64'd1 : -64'd1);
-        endY = originY + ((rope_len * deg_sin) >> 8);
+        tempEndX = originX + ((length * deg_cos) >> 8) * (deg_signCos ? 64'd1 : -64'd1);
+        tempEndY = originY + ((length * deg_sin) >> 8);
 
         scoreEn = 0;
         writeEn = 0;
