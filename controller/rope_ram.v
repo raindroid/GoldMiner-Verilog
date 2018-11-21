@@ -12,7 +12,7 @@ module Rope(
     //bomb_KEY,
     // input bomb_quantity,
 
-    output reg[9:0] rotation_speed, line_speed,  degree, //not all the output is useful
+    output reg[9:0] rotation_speed, line_speed, endX, endY, degree, //not all the output is useful
     output [9:0]rope_len, endX, endY,
 
     output [31:0] data,
@@ -46,8 +46,6 @@ module Rope(
     parameter UP_DELAY_TIMES = 3;
     parameter DELTA_LEN = 18'd2;
     reg [31:0] tempEndX, tempEndY;
-    assign endX = tempEndX[9:0];
-    assign endY = tempEndY[9:0];
 
     reg [3:0] rope_index; //the index for rope to control
     reg [31:0] data_write; //used to write to the ram
@@ -143,8 +141,8 @@ module Rope(
 
     always @(posedge clock) begin
         //update x,y based on length and degree
-        tempEndX = originX + ((length * deg_cos) >> 8) * (deg_signCos ? 64'd1 : -64'd1);
-        tempEndY = originY + ((length * deg_sin) >> 8);
+        endX = originX + ((rope_len * deg_cos) >> 8) * (deg_signCos ? 64'd1 : -64'd1);
+        endY = originY + ((rope_len * deg_sin) >> 8);
 
         scoreEn = 0;
         writeEn = 0;
@@ -331,8 +329,8 @@ module Rope(
                 if (tempData[0] | !tempData[1]) begin
                     next_state = S_IN_CHECK;
                 end
-                else if ((tempX < endX) & (endX < tempX + 16) &
-                        (tempY < endY) & (endY < tempY + 16)) begin
+                else if ((tempX < endX) & (endX < (tempX + 16)) &
+                        (tempY < endY) & (endY < (tempY + 16))) begin
                             found_stone = 1;
                             move_index = rope_index;
                             next_state = S_SAVE;
