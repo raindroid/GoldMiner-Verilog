@@ -16,7 +16,10 @@ module Rope(
     output [9:0]rope_len,
 
     output [31:0] data,
-    output [9:0] current_score
+    output [9:0] current_score,
+
+    //Test only
+    input [9:0]LEDR
     // output bomb_use
 
  );
@@ -114,6 +117,13 @@ module Rope(
         .wren(writeEn),
         .q(read_data)
     );
+
+    //Debug
+    assign LEDR[0] = go;
+    assign LEDR[1] = writeEn;
+    assign LEDR[2] = scoreEn;
+    assign LEDR[3] = rCW;
+    assign LEDR[4] = found_stone;
 
     localparam  S_STOP      = 5'd0,
                 S_PRE_RCCW  = 5'd1,
@@ -329,8 +339,10 @@ module Rope(
                 if (tempData[0] | !tempData[1]) begin
                     next_state = S_IN_CHECK;
                 end
-                else if ((tempX < endX) & (endX < (tempX + 16)) &
-                        (tempY < endY) & (endY < (tempY + 16))) begin
+                else if (((tempX - 6 > 0 ? tempX - 6 : 0) <= endX) & 
+                        (endX <= (tempX + 16 + 6 < 320 ? tempX + 16 + 6: 320)) &
+                        ((tempY - 6 > 0 ? tempY - 6 : 0) <= endY) & 
+                        (endY <= (tempY + 16 + 6 < 320 ? tempY + 16 + 6 : 320))) begin
                             found_stone = 1;
                             move_index = rope_index;
                             next_state = S_SAVE;
