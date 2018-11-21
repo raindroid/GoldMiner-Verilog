@@ -148,6 +148,7 @@ module Rope(
                 S_MOVE_WRITE_WAIT   = 5'd17,
                 S_MOVE_DELAY    = 5'd22,
                 S_AFTER_MOVE    = 5'd21,
+                S_AFTER_MOVE_WAIT   = 5'd22,
                 S_UP_DELAY  = 5'd10,
                 S_PRE_CHECK = 5'd11,
                 S_IN_CHECK  = 5'd20,
@@ -264,7 +265,7 @@ module Rope(
             S_MOVE_NEW_XY: begin
                 // tempData = tempData - ((DELTA_LEN * deg_sin) >> 1) * 64'd1 -
                 //         ((DELTA_LEN * deg_cos * (deg_signCos ? 64'd1 : -64'd1)) << 11);
-                writeEn = 1;
+                // writeEn = 1;
                 data_write = (endX[8:0] << 23) + (endY[7:0] << 11) + (tempType[1:0] << 2) + 2'b11;
                 // data_write <= tempData;
                 next_state = S_MOVE_WRITE;
@@ -282,7 +283,7 @@ module Rope(
                     next_state = S_AFTER_MOVE;
                 end
                 else begin
-                    data_write = tempData;
+                    // data_write = tempData;
                     next_state = S_PRE_UP;
                 end
                 frame_counter = 0;
@@ -305,9 +306,11 @@ module Rope(
                 score_change = (tempType == 2'b0 ? SCORE_STONE : 
                         (tempType == 2'b1 ? SCORE_GOLD : SCORE_DIAMOND));
                 //Make the item invisible
+                data_write[1:0] = 2'b0; // 10 for visible, 1 for moving
+                next_state = S_AFTER_MOVE_WAIT;
+            end
+            S_AFTER_MOVE_WAIT: begin
                 writeEn = 1;
-                data_write = {tempData[31:2], 2'b00}; // 10 for visible, 1 for moving
-
                 found_stone = 0;
                 if (rCW)
                     next_state = S_PRE_RCW;
