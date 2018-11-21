@@ -8,7 +8,7 @@
             d[n * 32] moved?
             d[n * 32 + 1] visible?
             d[n * 32 + 3 : n * 32 + 2] type: 0 - stone, 1 - gold, 2 - diamond
-            d[n * 32 + 7 : n * 32 + 4] extendable data, not in use
+            d[n * 32 + 6 : n * 32 + 4] extendable data, not in use
  *
  * INPUT:
  *      clock

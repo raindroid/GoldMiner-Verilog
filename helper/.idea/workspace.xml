@@ -38,8 +38,8 @@
       <file leaf-file-name="map_gen.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/map_gen.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="279">
-              <caret line="75" column="33" lean-forward="true" selection-start-line="75" selection-start-column="33" selection-end-line="75" selection-end-column="35" />
+            <state relative-caret-position="243">
+              <caret line="73" column="78" selection-start-line="73" selection-start-column="78" selection-end-line="73" selection-end-column="78" />
             </state>
           </provider>
         </entry>
@@ -265,6 +265,7 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
+    <editor active="true" />
     <layout>
       <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.27771854" />
       <window_info anchor="bottom" id="TODO" order="6" />
@@ -454,8 +455,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/map_gen.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="279">
-          <caret line="75" column="33" lean-forward="true" selection-start-line="75" selection-start-column="33" selection-end-line="75" selection-end-column="35" />
+        <state relative-caret-position="243">
+          <caret line="73" column="78" selection-start-line="73" selection-start-column="78" selection-end-line="73" selection-end-column="78" />
         </state>
       </provider>
     </entry>
