@@ -291,6 +291,7 @@ module Rope(
             end
             S_IN_DOWN: begin
                 frame_counter = 0;
+                length = length + 1 << 8;
                 if (rope_len == ROPE_MAX) 
                     next_state = S_PRE_UP;
                 else

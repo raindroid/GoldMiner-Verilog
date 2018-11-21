@@ -52,7 +52,7 @@ module draw_hook(
                 S_DRAW_HOOK =5'd2,  //Draw hook
                 S_DRAW_DONE =5'd3;  //Finish and send done sig
 
-    localparam RADIUS = 64'd4;
+    localparam RADIUS = 64'd6;
     localparam MAX_C = 64'd256;
     localparam START_X = 64'd160,
                 START_Y = 64'd45;
@@ -69,7 +69,7 @@ module draw_hook(
     wire [8:0] deg_sin, deg_cos;
     wire deg_signSin, deg_signCos;
     trig degree_trig(
-        .degree(degree + 20),
+        .degree(degree),
         .cos(deg_cos),
         .sin(deg_sin),
         .signCos(deg_signCos),
@@ -140,7 +140,7 @@ module draw_hook(
                  tempY = (RADIUS * sin[8:0]) >> 8;
                  outY = centerY[7:0] + (signSin ? tempY[7:0] : -tempY[7:0]);
 
-                if (degree_counter < degree | degree_counter > (degree + 40))
+                if (degree_counter < (degree - 20 > 0 : degree - 20 : 0) | degree_counter > (degree + 20))
                     writeEn = 1'b1;
                 else    
                     writeEn = 1'b0;
