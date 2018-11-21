@@ -125,7 +125,8 @@ module Rope(
     assign LEDR[3] = rCW;
     assign LEDR[4] = found_stone;
     assign LEDR[5] = tempData[0];
-    assign LEDR[6] = tempData[1];
+    // assign LEDR[6] = tempData[1];
+    assign LEDR[9:7] = move_index;
 
     localparam  S_STOP      = 5'd0,
                 S_PRE_RCCW  = 5'd1,
