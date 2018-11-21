@@ -34,7 +34,7 @@ module Score(
             score = 0;
         end
         else if (writeEn) begin
-            score = score + (plus ? 1 : -1) * score_change_DATA;
+            score = score + (plus ? 64'd1 : -64'd1) * score_change_DATA;
         end
     end
 

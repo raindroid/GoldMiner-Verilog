@@ -77,9 +77,9 @@ module Rope(
     // assign rope_max = (endX < 0)
 
     //for score
-    parameter SCORE_STONE = 32'd1;
-    parameter SCORE_GOLD = 32'd2;
-    parameter SCORE_DIAMOND = 32'd5;
+    parameter SCORE_STONE = 8'd10;
+    parameter SCORE_GOLD = 8'd20;
+    parameter SCORE_DIAMOND = 8'd50;
     reg scoreEn, scorePlus;
     reg [7:0] score_change;
     Score my_score(
@@ -173,6 +173,8 @@ module Rope(
                 else next_state = S_STOP;
                 frame_counter = 0;
                 found_stone = 0;
+                tempData = 0;
+                rope_index = 0;
             end
             S_PRE_RCCW: begin
                 found_stone = 0;
@@ -262,14 +264,15 @@ module Rope(
             S_MOVE_NEW_XY: begin
                 // tempData = tempData - ((DELTA_LEN * deg_sin) >> 1) * 64'd1 -
                 //         ((DELTA_LEN * deg_cos * (deg_signCos ? 64'd1 : -64'd1)) << 11);
-                tempData = (endX[8:0] << 23) + (endY[7:0] << 11) + (tempType[1:0] << 2) + 2'b11;
-                data_write <= tempData;
+                writeEn = 1;
+                data_write = (endX[8:0] << 23) + (endY[7:0] << 11) + (tempType[1:0] << 2) + 2'b11;
+                // data_write <= tempData;
                 next_state = S_MOVE_WRITE;
             end
             S_MOVE_WRITE: begin
                 writeEn = 1;
-                rope_index = move_index;
-                data_write = tempData;
+                // rope_index = move_index;
+                // data_write = tempData;
                 next_state = S_MOVE_WRITE_WAIT;
             end
             S_MOVE_WRITE_WAIT: begin
@@ -303,7 +306,7 @@ module Rope(
                         (tempType == 2'b1 ? SCORE_GOLD : SCORE_DIAMOND));
                 //Make the item invisible
                 writeEn = 1;
-                data_write = {tempData[31:2], 2'b10}; // 10 for visible, 1 for moving
+                data_write = {tempData[31:2], 2'b00}; // 10 for visible, 1 for moving
 
                 found_stone = 0;
                 if (rCW)
