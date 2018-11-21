@@ -31,7 +31,8 @@ module draw_hook(
     output [11:0] color,
     output reg writeEn,
     output reg done,
-    output reg [0:0] LEDR
+    output reg [0:0] LEDR,
+    output [6:0]HEX4, HEX5
 );
 
     reg [63:0] centerX, centerY;
@@ -44,6 +45,15 @@ module draw_hook(
     wire [8: 0] cos, sin;
     wire signCos, signSin;
 
+    hex_decoder H4(
+        .hex_digit(centerY[3:0]), 
+        .segments(HEX4)
+        );
+	hex_decoder H5(
+        .hex_digit(centerY[7:4]), 
+        .segments(HEX5)
+        );
+    
     assign color = 12'b1011_1011_1011;
     
     localparam  S_START     =5'd0,  //Wait for enable signal
