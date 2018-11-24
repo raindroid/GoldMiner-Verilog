@@ -10,6 +10,8 @@ module gold_miner(
 		VGA_R,   						//	VGA Red[9:0]
 		VGA_G,	 						//	VGA Green[9:0]
 		VGA_B,
+		PS2_CLK,
+		PS2_DAT,
 		LEDR,
 		HEX0,
 		HEX1,
@@ -22,6 +24,8 @@ module gold_miner(
 		input [9:0]SW;
 		input	[3:0]KEY;
 		input	CLOCK_50;				//	50 MHz
+
+		inout PS2_CLK, PS2_DAT;
 		
 		output			VGA_CLK;   				//	VGA Clock
 		output			VGA_HS;					//	VGA H_SYNC
@@ -43,36 +47,37 @@ module gold_miner(
 		wire resetn;
 		assign resetn = KEY[0];
 
-
 		
 		fill f0
-	(
-		.CLOCK_50(CLOCK_50),						//	On Board 50 MHz
+		(
+			.CLOCK_50(CLOCK_50),						//	On Board 50 MHz
 		// Your inputs and outputs here
-		.plot(plot), 
-		.resetn(resetn),
-		.background(background),
-		.go(~KEY[3]),
-		.SW(SW),
-		.KEY(KEY),							// On Board Keys
+			.plot(plot), 
+			.resetn(resetn),
+			.background(background),
+			.go(~KEY[3]),
+			.SW(SW),
+			.KEY(KEY),							// On Board Keys
 		// The ports below are for the VGA output.  Do not change.
-		.VGA_CLK(VGA_CLK),   						//	VGA Clock
-		.VGA_HS(VGA_HS),							//	VGA H_SYNC
-		.VGA_VS(VGA_VS),							//	VGA V_SYNC
-		.VGA_BLANK_N(VGA_BLANK_N),						//	VGA BLANK
-		.VGA_SYNC_N(VGA_SYNC_N),						//	VGA SYNC
-		.VGA_R(VGA_R),   						//	VGA Red[9:0]
-		.VGA_G(VGA_G),	 						//	VGA Green[9:0]
-		.VGA_B(VGA_B),   						//	VGA Blue[9:0]
-		.LEDR(LEDR),
-		.HEX0(HEX0),
-		.HEX1(HEX1),
-		.HEX2(HEX2),
-		.HEX3(HEX3),
-		.HEX4(HEX4),
-		.HEX5(HEX5)
+			.VGA_CLK(VGA_CLK),   						//	VGA Clock
+			.VGA_HS(VGA_HS),							//	VGA H_SYNC
+			.VGA_VS(VGA_VS),							//	VGA V_SYNC
+			.VGA_BLANK_N(VGA_BLANK_N),						//	VGA BLANK
+			.VGA_SYNC_N(VGA_SYNC_N),						//	VGA SYNC
+			.VGA_R(VGA_R),   						//	VGA Red[9:0]
+			.VGA_G(VGA_G),	 						//	VGA Green[9:0]
+			.VGA_B(VGA_B),   						//	VGA Blue[9:0]
+			.PS2_CLK(PS2_CLK),
+			.PS2_DAT(PS2_DAT),
+			.LEDR(LEDR),
+			.HEX0(HEX0),
+			.HEX1(HEX1),
+			.HEX2(HEX2),
+			.HEX3(HEX3),
+			.HEX4(HEX4),
+			.HEX5(HEX5)
 
-	);
+		);
 	endmodule
 	
 	
@@ -95,6 +100,8 @@ module fill
 	VGA_R,   						//	VGA Red[9:0]
 	VGA_G,	 						//	VGA Green[9:0]
 	VGA_B,   						//	VGA Blue[9:0]
+	PS2_CLK,
+	PS2_DAT,
 	LEDR,
 	HEX0,
 	HEX1,
@@ -122,6 +129,10 @@ module fill
 	output	[7:0]	VGA_R;   				//	VGA Red[7:0] Changed from 10 to 8-bit DAC
 	output	[7:0]	VGA_G;	 				//	VGA Green[7:0]
 	output	[7:0]	VGA_B;   				//	VGA Blue[7:0]
+
+	inout PS2_CLK;
+	inout PS2_DAT;
+
 	output [9:0] 	LEDR;
 
 	output [6:0]HEX0;
@@ -139,7 +150,7 @@ module fill
 	wire [8:0] y;
 	wire writeEn;
 	wire game_end = ~KEY[1];
-	wire drop = ~KEY[2];
+	reg drop;
 	
 	
 
@@ -175,7 +186,7 @@ module fill
 		.clk(CLOCK_50), 
 		.resetn(resetn),
 		.go(go),
-		.drop(drop),
+		.drop(drop | ~KEY[2]),
 
 		.X_out(x),
 		.Y_out(y),
@@ -190,6 +201,61 @@ module fill
 		.HEX5(HEX5)
 		);
 	
+
+	reg [7:0]the_command;
+	wire send_command;
+	wire command_was_sent;
+	wire error_communication_timed_out;
+	wire [7:0]received_data;
+	reg [7:0] keyboard_data;
+	wire received_data_en;
+
+	always@(posedge CLOCK_50)begin
+		if(command_was_sent) the_command = 8'hFF;
+		else the_command = 8'hF4;
+	end
+
+
+	assign send_command = 1'b1;
+
+
+	PS2_Controller keyboard(
+		.CLOCK_50(CLOCK_50),
+		.reset(~resetn),
+
+		.the_command(the_command),
+		.send_command(send_command),
+
+
+		.PS2_CLK(PS2_CLK),					// PS2 Clock
+		.PS2_DAT(PS2_DAT),					// PS2 Data
+
+		// Outputs
+		.command_was_sent(command_was_sent),
+		.error_communication_timed_out(error_communication_timed_out),
+
+		.received_data(received_data),
+		.received_data_en(received_data_en)			// If 1 - new data has been received
+	);
+	
+	always@(posedge CLOCK_50)begin
+		if(keyboard_data == 8'h72)begin
+		  	drop = 1'b1;
+			keyboard_data = 8'h0;
+		end	
+		else if(received_data_en == 0)begin
+			drop = 1'b0;
+			keyboard_data = 8'h0;
+		end
+		else begin
+			drop = 1'b0;
+			keyboard_data = received_data;
+		end
+		
+	end
+
+
+
 
 endmodule
 
