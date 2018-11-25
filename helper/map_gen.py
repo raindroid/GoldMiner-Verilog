@@ -77,5 +77,5 @@ CONTENT BEGIN""");
                 get = True
 
 
-    print("""[0011..1111]  :   0;
+    print("""1111  :   0;
 END;""")
