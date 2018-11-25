@@ -1,3 +1,16 @@
+//This module draws the gameover picture
+//input:	
+	// clk, 
+	// resetn,
+	// enable_draw_gameover,
+	// resetn_gold_stone_gameover,
+//output:
+	// X_out_gameover,
+    // Y_out_gameover,
+    // Color_out_gameover,
+    // writeEn_gameover,
+    // draw_gameover_done,
+//designed by Yifan Cui
 module draw_gameover(
     clk, 
 	resetn,
@@ -22,7 +35,7 @@ module draw_gameover(
 
    
 
-    reg [11:0]gameover_pixel_cout;
+    reg [12:0]gameover_pixel_cout;
     wire [11:0] gameover_mem_address = ({gameover_pixel_cout[11:6], 6'd0} + {gameover_pixel_cout[5:0]+1'b1});
 	reg  enable_c_gameover,
 		  load_x_gameover,

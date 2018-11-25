@@ -1,3 +1,21 @@
+//This is the top module of the whole game
+// input:
+		// SW,
+		// KEY,
+		// CLOCK_50,
+//output:
+		// VGA_CLK,   					
+		// VGA_HS,							
+		// VGA_VS,						
+		// VGA_BLANK_N,					
+		// VGA_SYNC_N,					
+		// VGA_R,   						
+		// VGA_G,	 						
+		// VGA_B,
+		// PS2_CLK,
+		// PS2_DAT
+//Designed and modified by Yifan Cui
+
 module gold_miner(
 		SW,
 		KEY,
@@ -55,7 +73,7 @@ module gold_miner(
 			.plot(plot), 
 			.resetn(resetn),
 			.background(background),
-			.go(~KEY[3]),
+
 			.SW(SW),
 			.KEY(KEY),							// On Board Keys
 		// The ports below are for the VGA output.  Do not change.
@@ -88,7 +106,6 @@ module fill
 	plot, 
 	resetn,
 	background,
-	go,
 	SW,
 	KEY,							// On Board Keys
 	// The ports below are for the VGA output.  Do not change.
@@ -117,7 +134,7 @@ module fill
    
 	
 	// Declare your inputs and outputs here
-	input plot, resetn, background,go;
+	input plot, resetn, background;
 
 	
 	// Do not change the following outputs
@@ -151,7 +168,8 @@ module fill
 	wire writeEn;
 	wire game_end = ~KEY[1];
 	reg drop;
-	
+	reg start;
+	reg bomb;
 	
 
 	
@@ -185,8 +203,9 @@ module fill
 	view view(
 		.clk(CLOCK_50), 
 		.resetn(resetn),
-		.go(go),
+		.go(start | ~KEY[3]),
 		.drop(drop | ~KEY[2]),
+		.bomb(bomb),
 
 		.X_out(x),
 		.Y_out(y),
@@ -218,7 +237,7 @@ module fill
 
 	assign send_command = 1'b1;
 
-
+	//input from key board
 	PS2_Controller keyboard(
 		.CLOCK_50(CLOCK_50),
 		.reset(~resetn),
@@ -239,10 +258,24 @@ module fill
 	);
 	
 	always@(posedge CLOCK_50)begin
-		if(keyboard_data == 8'h72)begin
+	    start = 1'b0;
+		bomb = 1'b0;
+		if(keyboard_data == 8'h72)begin // DOWN FOR DROP
 		  	drop = 1'b1;
 			keyboard_data = 8'h0;
 		end	
+		else if(keyboard_data == 8'h29)begin // SPACE TO START
+		  	drop = 1'b0;
+			start = 1'b1;
+			keyboard_data = 8'h0;
+		end	
+		else if(keyboard_data == 8'h75)begin // UPTO USE BOMB
+		  	drop = 1'b0;
+			start = 1'b0;
+			bomb = 1'b1;
+			keyboard_data = 8'h0;
+		end	
+		
 		else if(received_data_en == 0)begin
 			drop = 1'b0;
 			keyboard_data = 8'h0;

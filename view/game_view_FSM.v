@@ -1,9 +1,53 @@
-//view_fsm
+//this module controls the view module
+// input:	
+	// clk, 
+	// resetn,
+	// go,
+	// next_level,
+	
+	// draw_gold_done,
+	// draw_stone_done,
+	// draw_diamond_done,
+	// draw_background_done,
+	// draw_hook_done,
+	// draw_num_done,
+	// draw_gameover_done,
+	// draw_gamestart_done,
+	// draw_game_next_level_done,
+	// draw_stone_flag,
+	// level_up,
+	
+	// gold_count,
+	// stone_count,
+	// diamond_count,
+	// max_stone,
+	// max_gold,
+	// max_diamond,
+
+//output:
+	// game_end,
+	
+	// enable_draw_gold,
+	// enable_draw_stone,
+	// enable_draw_diamond,
+	// enable_draw_background,
+	// enable_draw_gameover,
+	// enable_draw_game_next_level,
+	// enable_draw_gamestart,
+	// enable_random,
+	// enable_draw_hook,
+	// enable_draw_num,
+	// timer_enable,
+	// time_resetn,
+	// resetn_rope,
+	// 	resetn_gold_stone_diamond
+
 //designed by Yifan Cui
 module game_view_FSM(
 	clk, 
 	resetn,
 	go,
+	next_level,
 	
 	draw_gold_done,
 	draw_stone_done,
@@ -13,7 +57,9 @@ module game_view_FSM(
 	draw_num_done,
 	draw_gameover_done,
 	draw_gamestart_done,
+	draw_game_next_level_done,
 	draw_stone_flag,
+	level_up,
 	
 	gold_count,
 	stone_count,
@@ -30,6 +76,7 @@ module game_view_FSM(
 	enable_draw_diamond,
 	enable_draw_background,
 	enable_draw_gameover,
+	enable_draw_game_next_level,
 	enable_draw_gamestart,
 	enable_random,
 	enable_draw_hook,
@@ -38,12 +85,14 @@ module game_view_FSM(
 	time_resetn,
 	resetn_rope,
 
-	resetn_gold_stone_diamond
+	resetn_gold_stone_diamond,
+	LEDR
 
 	);
 	input clk;
 	input resetn;
 	input go;
+	input next_level;
 
 
 	input draw_gold_done,
@@ -53,6 +102,7 @@ module game_view_FSM(
 			draw_hook_done,
 			draw_num_done,
 			draw_gameover_done,
+			draw_game_next_level_done,
 			draw_gamestart_done;
 			
 	
@@ -75,12 +125,16 @@ module game_view_FSM(
 					enable_draw_hook,
 					enable_draw_num,
 					enable_draw_gameover,
+					enable_draw_game_next_level,
 					enable_draw_gamestart,
 					resetn_gold_stone_diamond,
 					timer_enable,
 					time_resetn,
 					draw_stone_flag,
-					resetn_rope;
+					resetn_rope,
+					level_up;
+	output  reg [9:0] LEDR;
+	
 
 	reg [6:0] current_state, next_state; 
     
@@ -108,9 +162,13 @@ module game_view_FSM(
 					DRAW_NUM 			= 6'd14,
 					GAME						 = 6'd15,
 					DRAW_GAMEOVER                = 6'd21,
-					DRAW_GAMEOVER_WAIT               = 6'd21,
-					 
-					GAME_DONE				 = 6'd16;
+
+					DRAW_GAME_NEXT_LEVEL         =6'd25,
+
+					GAME_DONE1				 = 6'd16,
+					GAME_DONE1_WAIT        = 6'd17,
+					GAME_DONE2              = 6'd28,
+					LEVEL_UP                = 6'd29;
 					 
     
     // Next state logic aka our state table
@@ -179,21 +237,31 @@ module game_view_FSM(
 					DRAW_NUM : begin
 					  	next_state = (draw_num_done) ? GAME : DRAW_NUM;
 					end
-					 GAME: begin
-					 	if((game_end)) next_state = DRAW_GAMEOVER;
+					GAME: begin
+					 	if(game_end & next_level == 1'b0) next_state = DRAW_GAMEOVER;
+						else if (game_end & next_level == 1'b1) next_state = DRAW_GAME_NEXT_LEVEL;
 						else
 							next_state = (frame) ? DRAW_BACKGROUND : GAME;
 					 end
 					 DRAW_GAMEOVER: begin
-						next_state = DRAW_GAMEOVER_WAIT;
+						next_state = (draw_gameover_done) ? GAME_DONE1 : DRAW_GAMEOVER;
 					 end
-					 DRAW_GAMEOVER_WAIT:begin
-					   	next_state = (draw_gameover_done) ? GAME_DONE : DRAW_GAMEOVER_WAIT;
+					 DRAW_GAME_NEXT_LEVEL: begin
+						next_state = (draw_game_next_level_done) ? GAME_DONE2 : DRAW_GAME_NEXT_LEVEL;
 					 end
-					 GAME_DONE: begin
-						next_state = (go) ? DRAW_BACKGROUND : GAME_DONE;
-					 
+					 GAME_DONE1: begin
+						next_state = (go)? GAME_DONE1_WAIT : GAME_DONE1;
 					 end
+					 GAME_DONE1_WAIT:begin
+					 	next_state = (~go)? DRAW_GAMESTART : GAME_DONE1;
+					 end
+					 GAME_DONE2:begin
+					   	next_state = (go) ? LEVEL_UP : GAME_DONE2;
+					 end
+					 LEVEL_UP: begin
+						next_state = DRAW_BACKGROUND;
+					 end
+
 
             default:     next_state = START;
         endcase
@@ -204,7 +272,7 @@ module game_view_FSM(
     always @(*)
     begin: enable_signals
         // By default make all our signals 0 to avoid latches.
-        
+			
 			enable_draw_gold = 1'b0;
 			enable_draw_stone = 1'b0;
 			enable_draw_diamond =1'b0;
@@ -213,12 +281,15 @@ module game_view_FSM(
 			enable_draw_hook = 1'b0;
 			enable_draw_num = 1'b0;
 			enable_draw_gameover = 1'b0;
+			enable_draw_game_next_level = 1'b0;
 			enable_draw_gamestart = 1'b0;
 			resetn_gold_stone_diamond = 1'b1;
 			timer_enable = 1'b0;
 			time_resetn = 1'b1;
 			draw_stone_flag =1'b1;
 			resetn_rope = 1'b1;
+			level_up = 1'b0;
+			LEDR[9:0] = 0;
 			
 
 
@@ -256,33 +327,50 @@ module game_view_FSM(
 			DRAW_HOOK: begin
 				draw_stone_flag = 1'b0;
 			  	enable_draw_hook = 1'b1;
-				  timer_enable = 1'b1;
+				timer_enable = 1'b1;
 			end
 			DRAW_HOOK_WAIT: begin
-			draw_stone_flag = 1'b0;
+				draw_stone_flag = 1'b0;
 			  	enable_draw_hook = 1'b1;
-				  timer_enable = 1'b1;
+				timer_enable = 1'b1;
 			end
 			DRAW_NUM: begin
-			draw_stone_flag = 1'b0;
+				draw_stone_flag = 1'b0;
 			  	enable_draw_num = 1'b1;
-				  timer_enable = 1'b1;
+				timer_enable = 1'b1;
 			end
 			DRAW_GAMEOVER: begin
-			draw_stone_flag = 1'b0;
+				draw_stone_flag = 1'b0;
 			  	enable_draw_gameover = 1'b1;
-				  timer_enable = 1'b1;
+				
 			end
-			DRAW_GAMEOVER_WAIT: begin
-			draw_stone_flag = 1'b0;
-			  	enable_draw_gameover = 1'b1;
-				  timer_enable = 1'b1;
-				  end
+
+			DRAW_GAME_NEXT_LEVEL: begin
+				draw_stone_flag = 1'b0;
+			  	enable_draw_game_next_level = 1'b1;
+				
+				LEDR[8] = 1'b1;
+			end
 			GAME: begin
 				draw_stone_flag = 1'b0;
 				resetn_gold_stone_diamond = 1'b0;
 				timer_enable = 1'b1;
 				end
+			GAME_DONE1:begin
+				time_resetn = 1'b0;
+				resetn_gold_stone_diamond = 1'b0;
+				resetn_rope = 1'b0;
+				
+			end
+			GAME_DONE2:begin
+				time_resetn = 1'b0;
+				resetn_gold_stone_diamond = 1'b0;
+				resetn_rope = 1'b0;
+				LEDR[9] = 1'b1;
+			end
+			LEVEL_UP: begin
+			  level_up = 1'b1;
+			end
 			
 				
         // default:    // don't need default since we already made sure all of our outputs were assigned a value at the start of the always block

@@ -1,4 +1,5 @@
 //this module draw a diamond at a given positon
+//designed by Yifan Cui
 
 
 module draw_diamond(

@@ -1,3 +1,17 @@
+//this module draw the game start picture
+//input:
+	// clk, 
+	// resetn,
+	// enable_draw_gamestart,
+	// resetn_gold_stone_gamestart,
+//output:
+	// X_out_gamestart,
+    // Y_out_gamestart,
+    // Color_out_gamestart,
+    // writeEn_gamestart,
+    // draw_gamestart_done,
+
+//designed by Yifan Cui
 module draw_gamestart(
     clk, 
 	resetn,

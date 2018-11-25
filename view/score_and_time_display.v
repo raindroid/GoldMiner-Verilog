@@ -428,6 +428,8 @@ module score_and_time_display(
                     default: color = 12'b0;
                 endcase
             end
+            if(color == 12'hfff & time_remained <=10)
+                color = 12'b1111_0000_0000;
         end
     end
     

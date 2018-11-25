@@ -1,11 +1,23 @@
 //view_data module
 // This module is the for game view data 
+// input:
+// 		clk, 
+// 		resetn,
+// 		go,
+// 		drop,
+// 		bomb,
+// output:
+// 		X_out,
+// 		Y_out,
+// 		Color_out,
+// 		writeEn,
 //designed by Yifan Cui
 module view(
 		clk, 
 		resetn,
 		go,
 		drop,
+		bomb,
 
 		X_out,
 		Y_out,
@@ -21,7 +33,7 @@ module view(
 		
 		);
 	input clk, resetn;
-	input go, drop;
+	input go, drop,bomb;
 
 	
 	output reg[8:0]X_out;
@@ -96,6 +108,13 @@ module view(
 			Y_out <= Y_out_gameover;
 			Color_out <= Color_out_gameover;
 			writeEn <= writeEn_gameover;
+		end
+
+		else if(enable_draw_game_next_level)begin
+			X_out <= X_out_game_next_level;
+			Y_out <= Y_out_game_next_level;
+			Color_out <= Color_out_game_next_level;
+			writeEn <= writeEn_game_next_level;
 		end
 
 		else if(enable_draw_gamestart)begin
@@ -271,6 +290,7 @@ module view(
 		.clk(clk), 
 		.resetn(resetn),
 		.go(go),
+		.next_level(next_level),
 	
 		.draw_gold_done(draw_gold_done),
 		.draw_stone_done(draw_stone_done),
@@ -280,6 +300,7 @@ module view(
 		.draw_hook_done(draw_hook_done), 
 		.draw_num_done(draw_num_done),
 		.draw_gameover_done(draw_gameover_done),
+		.draw_game_next_level_done(draw_game_next_level_done),
 		.draw_gamestart_done(draw_gamestart_done),
 		.draw_stone_flag(draw_stone_flag),
 	
@@ -290,7 +311,7 @@ module view(
 		.max_gold(max_gold),
 		.max_diamond(max_diamond),
 	
-		.game_end(time_up),
+		.game_end(game_end),
 	
 		.enable_draw_gold(enable_draw_gold),
 		.enable_draw_stone(enable_draw_stone),
@@ -300,17 +321,22 @@ module view(
 		.enable_random(enable_random),
 		.enable_draw_num(enable_draw_num),
 		.enable_draw_gameover(enable_draw_gameover),
+		.enable_draw_game_next_level(enable_draw_game_next_level),
 		.enable_draw_gamestart(enable_draw_gamestart),
 		.resetn_gold_stone_diamond(resetn_gold_stone_diamond),
 		.timer_enable(timer_enable),
 		.time_resetn(time_resetn),
-		.resetn_rope(resetn_rope)
+		.resetn_rope(resetn_rope),
+		.level_up(level_up),
+		//.LEDR(LEDR)
 
 	);
 	
 	wire resetn_rope;
 	
+	wire level_up;
 	
+
 	//instantiate all the drawing datapath and FSMs
 	
 	wire resetn_c_gold, 
@@ -537,7 +563,7 @@ module view(
 		.outY(Y_out_hook),
 		.color(Color_out_hook),
 		.writeEn(writeEn_hook),
-		.done(draw_hook_done),
+		.done(draw_hook_done)
 
 	);
 
@@ -549,12 +575,13 @@ module view(
 		enable_draw_num;
 	wire [7:0] time_remained;
 
+	wire [11:0]goal = 12'd50;
 	score_and_time_display display_num(
     	.clk(clk),
     	.resetn(resetn),
     	.score_to_display(current_score),
     	.time_remained(time_remained),
-		.goal(220),
+		.goal(goal),
     	.enable_score_and_time_display(enable_draw_num),
 
     	.outX(X_out_num),
@@ -564,6 +591,15 @@ module view(
 
     	.display_score_and_time_done(draw_num_done)
     );
+	 
+	reg next_level;
+	always@(posedge clk)begin
+		if(!resetn | !time_resetn) next_level = 1'b0;
+		else if(current_score >= goal)
+			next_level = 1'b1;
+		else next_level = 1'b0;
+	end
+	
 
 	wire timer_enable, time_resetn;
 	wire time_up;
@@ -606,7 +642,7 @@ module view(
 
 		.data(read_data),
 		.current_score(current_score),
-		.LEDR(LEDR),
+		//.LEDR(LEDR),
 		.HEX0(HEX0),
 		.HEX1(HEX1),
 		.HEX2(HEX2),
@@ -644,8 +680,34 @@ module view(
     .Y_out_gameover(Y_out_gameover),
     .Color_out_gameover(Color_out_gameover),
     .writeEn_gameover(writeEn_gameover),
-    .draw_gameover_done(draw_gameover_done),
+    .draw_gameover_done(draw_gameover_done)
 );
+
+	wire enable_draw_game_next_level;
+	wire [8:0]X_out_game_next_level;
+	wire [7:0]Y_out_game_next_level;
+	wire [11:0]Color_out_game_next_level;
+	wire draw_game_next_level_done;
+	wire writeEn_game_next_level;
+	
+	assign LEDR[0] = draw_game_next_level_done;
+
+	draw_game_next_level dgn0(
+    .clk(clk), 
+	.resetn(resetn),
+	.enable_draw_game_next_level(enable_draw_game_next_level),
+	.resetn_gold_stone_game_next_level(resetn_gold_stone_diamond),
+	.level_up(level_up),
+
+	.X_out_game_next_level(X_out_game_next_level),
+    .Y_out_game_next_level(Y_out_game_next_level),
+    .Color_out_game_next_level(Color_out_game_next_level),
+    .writeEn_game_next_level(writeEn_game_next_level),
+    .draw_game_next_level_done(draw_game_next_level_done)
+);
+
+
+
 
 	wire enable_draw_gamestart;
 	wire [8:0]X_out_gamestart;
@@ -663,7 +725,7 @@ module view(
     .Y_out_gamestart(Y_out_gamestart),
     .Color_out_gamestart(Color_out_gamestart),
     .writeEn_gamestart(writeEn_gamestart),
-    .draw_gamestart_done(draw_gamestart_done),
+    .draw_gamestart_done(draw_gamestart_done)
 );
 
 	wire game_end;

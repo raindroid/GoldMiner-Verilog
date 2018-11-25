@@ -18,7 +18,7 @@ module timer(
 	
 	output reg [7:0]time_remain;
 
-	output time_up;
+	output reg time_up;
 	
 	wire time_counter_enable;
 
@@ -38,12 +38,15 @@ module timer(
 	always@(posedge clk)begin
 		if(!resetn | !time_resetn)begin
 			time_remain <= time_remaining;
+			time_up = 0;
 		end
 		else if(timer_enable & time_counter_enable)begin
 			time_remain <= time_remain - 1'b1;
 			end
+		if(time_remain == 0)
+			time_up = 1'b1;
 	end
-	assign time_up = (time_remain == 0)?1:0;
+	
 endmodule
 
 
@@ -71,7 +74,7 @@ module rate_divider(resetn, clock, Enable);
 	input resetn;
 	output Enable;
 	parameter D = 25'd3333333;//d833333
-	reg [22:0]RateDivider;
+	reg [24:0]RateDivider;
 	always@(negedge resetn ,posedge clock)begin
 		if(resetn == 0)
 			RateDivider <= D;
