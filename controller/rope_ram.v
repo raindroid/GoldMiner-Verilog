@@ -48,7 +48,7 @@ module Rope(
     // parameter ROPE_MAX = 200;
     parameter ROPE_MIN = 10'd20;
     parameter UP_DELAY_TIMES = 3;
-    parameter DELTA_LEN = 18'd60;
+    parameter DELTA_LEN = 18'd12;
     
 
     reg [3:0] rope_index; //the index for rope to control
