@@ -12,17 +12,17 @@ add wave -color red -unsigned rotation_speed line_speed endX endY degree current
 
 force {clock} 0 0, 1 10ns -r 20ns
 force {resetn} 0 0, 1 20ns
-force {enable} 0 0, 1 20ns
+force {enable} 1
 force {draw_stone_flag} 0
+force {draw_index} 0
 force {quantity} 1
-#force {FRAME_CLOCK} 100
 #x = 267, y = 229, gold
 force {read_data} 10000101110111110010111010000110
 force {go_KEY} 0
 run 12010ns
 force {go_KEY} 1
-run 30ns
+run 300ns
 force {go_KEY} 0
 run 100000ns
 force {go_KEY} 1
-run 1000ns
+run 10000ns

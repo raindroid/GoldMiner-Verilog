@@ -63,7 +63,7 @@ module draw_hook(
 
     localparam RADIUS = 64'd4;
     localparam MAX_C = 64'd256;
-    localparam START_X = 64'd160,
+    parameter START_X = 64'd160,
                 START_Y = 64'd45;
     reg [63:0]rope_len;
 

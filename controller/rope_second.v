@@ -2,10 +2,10 @@
  *  module for rope and it's movement
  **/
 
-module Rope(
+module Rope2(
     input clock, resetn, enable,
-    input draw_stone_flag, //on when the previous drawing is in process
-    input [3:0] draw_index,
+    // input draw_stone_flag, //on when the previous drawing is in process
+    // input [3:0] draw_index,
     input [3:0] quantity,
 
     input go_KEY, //physical key for the go input
@@ -18,14 +18,18 @@ module Rope(
     output [31:0] data,
     output [9:0] current_score,
 
+    //Control from rope1
+    output [3:0] rope_index,
+    output flag
+
     //Test only
-    output [9:0]LEDR,
-    output[6:0] HEX0, HEX1, HEX2, HEX3, HEX4, HEX5
+    // output [9:0]LEDR,
+    // output[6:0] HEX0, HEX1, HEX2, HEX3, HEX4, HEX5
     // output bomb_use
 
  );
-    parameter mode = 1'b0;
-    parameter player = 1'b0;
+    parameter mode = 1'b1;
+    parameter player = 1'b1;
     parameter originX = ((!mode) ? 10'd160 : (player ? 10'd237 : 10'd77));
     parameter originY = 64'd45;
 
@@ -380,7 +384,7 @@ module Rope(
                 frame_counter = 0;
                 length = length + (DELTA_LEN << 8);
                 if (endX < 2 | endX >= 318 | endY >= 238 ) begin
-                    next_state = S_IN_UP;
+                    next_state = S_PRE_UP;
                 end
                 else
                     next_state = S_PRE_CHECK;

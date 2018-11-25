@@ -305,7 +305,7 @@ module Rope(
                     next_state = S_MOVE_READ_WAIT;
             end
             S_MOVE_READ_WAIT: begin
-                tempData = read_data;
+                // tempData = read_data;
                 next_state = S_MOVE_NEW_XY;
             end
             S_MOVE_NEW_XY: begin
