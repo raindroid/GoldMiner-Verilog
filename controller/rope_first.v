@@ -12,7 +12,7 @@ module Rope1(
     //bomb_KEY,
     // input bomb_quantity,
 
-    output reg[9:0] rotation_speed, line_speed, endX, endY, degree, //not all the output is useful
+    output reg[9:0] endX, endY, degree, //not all the output is useful
     output [9:0]rope_len,
 
     output [31:0] data,
@@ -24,8 +24,11 @@ module Rope1(
     // output bomb_use
 
     //Second user control part
-    input [3:0] sec_index,
-    output sec_flag
+    output reg second_live, //Connect to Rope2::live
+    input [3:0] second_index, //Connect to Rope2::read_address
+    input [31:0] second_data_write, //Connect to Rope2::data_write
+    input second_writeEn, //Connect to Rope2::writeEn
+    output [31:0] second_read_data //Connect to Rope2::read_data
 
  );
     parameter mode = 1'b1;
@@ -58,12 +61,17 @@ module Rope1(
     reg [3:0] rope_index; //the index for rope to control
     reg [31:0] data_write; //used to write to the ram
     reg writeEn;
+    wire globalWriteEn;
+    assign globalWriteEn = (second_live ? second_writeEn : writeEn);
+    wire [31:0]global_data_write;
+    assign global_data_write = (second_live ? second_data_write : data_write);
     
     //for data manipulation
     wire [31:0]read_data; //data output
     assign data = read_data;
 	wire [3:0]read_address;
-    assign read_address = draw_stone_flag ? draw_index : rope_index;
+    assign read_address = draw_stone_flag ? draw_index : 
+        (second_live ? second_index : rope_index);
 
     //some info
     reg [31:0] frame_counter;
@@ -78,6 +86,9 @@ module Rope1(
     assign tempX = {5'b0, read_data[31:23]};
     assign tempY = {6'b0, read_data[18:11]};
     // assign rope_max = (endX < 0)
+
+    //for second rope
+    assign second_read_data = read_data;
 
     //for score
     parameter SCORE_STONE = 8'd10;
@@ -119,8 +130,8 @@ module Rope1(
 	initialize_1 initial_1(
         .address(read_address),
         .clock(clock),
-        .data(data_write),
-        .wren(writeEn),
+        .data(global_data_write),
+        .wren(globalWriteEn),
         .q(read_data)
     );
 
@@ -133,28 +144,28 @@ module Rope1(
     // assign LEDR[5] = tempType[0];
     // assign LEDR[6] = tempType[1];
     // assign LEDR[9:7] = move_index[2:0];
-    assign LEDR[4:0] = current_state[4:0];
-    hex_decoder H0(
-        .hex_digit(rope_index), 
-        .segments(HEX0)
-        );
-    hex_decoder H1(
-        .hex_digit(read_address), 
-        .segments(HEX1)
-        );
+    // assign LEDR[4:0] = current_state[4:0];
+    // hex_decoder H0(
+    //     .hex_digit(rope_index), 
+    //     .segments(HEX0)
+    //     );
+    // hex_decoder H1(
+    //     .hex_digit(read_address), 
+    //     .segments(HEX1)
+    //     );
 
-    hex_decoder H3(
-        .hex_digit(rope_len[3:0]), 
-        .segments(HEX3)
-        );
-    hex_decoder H4(
-        .hex_digit(rope_len[7:4]), 
-        .segments(HEX4)
-        );
-    hex_decoder H5(
-        .hex_digit({3'b0,rope_len[8]}), 
-        .segments(HEX5)
-        );
+    // hex_decoder H3(
+    //     .hex_digit(rope_len[3:0]), 
+    //     .segments(HEX3)
+    //     );
+    // hex_decoder H4(
+    //     .hex_digit(rope_len[7:4]), 
+    //     .segments(HEX4)
+    //     );
+    // hex_decoder H5(
+    //     .hex_digit({3'b0,rope_len[8]}), 
+    //     .segments(HEX5)
+    //     );
 
 
 
@@ -190,6 +201,7 @@ module Rope1(
 
         scoreEn = 0;
         writeEn = 0;
+        second_live = 0;
 
         case (current_state)
             S_STOP: begin
@@ -207,6 +219,7 @@ module Rope1(
                 move_index = 0;
             end
             S_PRE_RCCW: begin
+                second_live = 1;
                  if (rope_len < ROPE_MIN + 1) begin
                   //reach the top
                     if (found_stone)
@@ -238,6 +251,7 @@ module Rope1(
                 frame_counter = 0;
             end
             S_PRE_RCW: begin
+                second_live = 1;
                  if (rope_len < ROPE_MIN + 1) begin
                   //reach the top
                     if (found_stone)
@@ -269,6 +283,7 @@ module Rope1(
                 frame_counter = 0;
             end
             S_PRE_UP: begin
+                second_live = 1;
                 frame_counter = frame_counter + 1;
                 if (frame_counter >= (FRAME_CLOCK * 2 + (64'b1 * found_stone * UP_DELAY_TIMES * FRAME_CLOCK)) 
                     & (!draw_stone_flag)) begin
@@ -370,6 +385,7 @@ module Rope1(
                 frame_counter = 0;
             end
             S_PRE_DOWN: begin
+                second_live = 1;
                 found_stone = 0;
                 frame_counter = frame_counter + 1;
                 if (frame_counter >= FRAME_CLOCK & (!draw_stone_flag)) begin

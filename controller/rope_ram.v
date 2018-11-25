@@ -380,7 +380,7 @@ module Rope(
                 frame_counter = 0;
                 length = length + (DELTA_LEN << 8);
                 if (endX < 2 | endX >= 318 | endY >= 238 ) begin
-                    next_state = S_IN_UP;
+                    next_state = S_IN_UP;   // ??
                 end
                 else
                     next_state = S_PRE_CHECK;
