@@ -1,0 +1,36 @@
+[1mdiff --git a/controller/rope_ram.v b/controller/rope_ram.v[m
+[1mindex afad9d5..3ca1547 100644[m
+[1m--- a/controller/rope_ram.v[m
+[1m+++ b/controller/rope_ram.v[m
+[36m@@ -203,6 +203,15 @@[m [mmodule Rope([m
+                 move_index = 0;[m
+             end[m
+             S_PRE_RCCW: begin[m
+[32m+[m[32m                 if (rope_len < ROPE_MIN + 1) begin[m
+[32m+[m[32m                  //reach the top[m
+[32m+[m[32m                    if (found_stone)[m
+[32m+[m[32m                        next_state = S_MOVE;[m
+[32m+[m[32m                    else if (rCW)[m
+[32m+[m[32m                        next_state = S_PRE_RCW;[m
+[32m+[m[32m                    else[m
+[32m+[m[32m                        next_state = S_PRE_RCCW;[m
+[32m+[m[32m                end[m
+                 found_stone = 0;[m
+                 frame_counter = frame_counter + 1;[m
+                 if (frame_counter >= FRAME_CLOCK & (!draw_stone_flag)) begin[m
+[36m@@ -225,6 +234,15 @@[m [mmodule Rope([m
+                 frame_counter = 0;[m
+             end[m
+             S_PRE_RCW: begin[m
+[32m+[m[32m                 if (rope_len < ROPE_MIN + 1) begin[m
+[32m+[m[32m                  //reach the top[m
+[32m+[m[32m                    if (found_stone)[m
+[32m+[m[32m                        next_state = S_MOVE;[m
+[32m+[m[32m                    else if (rCW)[m
+[32m+[m[32m                        next_state = S_PRE_RCW;[m
+[32m+[m[32m                    else[m
+[32m+[m[32m                        next_state = S_PRE_RCCW;[m
+[32m+[m[32m                end[m
+                 found_stone = 0;[m
+                 frame_counter = frame_counter + 1;[m
+                 if (frame_counter >= FRAME_CLOCK & (!draw_stone_flag)) begin[m

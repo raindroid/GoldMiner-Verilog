@@ -5,8 +5,8 @@
 module Rope(
     input clock, resetn, enable,
     input draw_stone_flag, //on when the previous drawing is in process
-    input [3:0] draw_index,
-    input [3:0] quantity,
+    input [3:0] draw_index, //read index for drawing
+    input [3:0] quantity, //total number of items
 
     input go_KEY, //physical key for the go input
     //bomb_KEY,
@@ -44,11 +44,11 @@ module Rope(
     reg [4:0] current_state, next_state;
 
     //Game data
-    parameter FRAME_CLOCK = 833_3340; //used for frame counter
+    parameter FRAME_CLOCK = 10'd4; //used for frame counter ??
     // parameter ROPE_MAX = 200;
     parameter ROPE_MIN = 10'd20;
     parameter UP_DELAY_TIMES = 3;
-    parameter DELTA_LEN = 18'd60;
+    parameter DELTA_LEN = 18'd6;
     
 
     reg [3:0] rope_index; //the index for rope to control
@@ -112,13 +112,13 @@ module Rope(
     defparam go_DET.PULSE_LENGTH = FRAME_CLOCK;
 
     //for ram
-	initialize_1 initial_1(
-        .address(read_address),
-        .clock(clock),
-        .data(data_write),
-        .wren(writeEn),
-        .q(read_data)
-    );
+	// initialize_1 initial_1(
+    //     .address(read_address),
+    //     .clock(clock),
+    //     .data(data_write),
+    //     .wren(writeEn),
+    //     .q(read_data)
+    // );
 
     //Debug
     // assign LEDR[0] = (rope_len < ROPE_MIN);
@@ -129,28 +129,28 @@ module Rope(
     // assign LEDR[5] = tempType[0];
     // assign LEDR[6] = tempType[1];
     // assign LEDR[9:7] = move_index[2:0];
-    assign LEDR[4:0] = current_state[4:0];
-    hex_decoder H0(
-        .hex_digit(rope_index), 
-        .segments(HEX0)
-        );
-    hex_decoder H1(
-        .hex_digit(read_address), 
-        .segments(HEX1)
-        );
+    // assign LEDR[4:0] = current_state[4:0];
+    // hex_decoder H0(
+    //     .hex_digit(rope_index), 
+    //     .segments(HEX0)
+    //     );
+    // hex_decoder H1(
+    //     .hex_digit(read_address), 
+    //     .segments(HEX1)
+    //     );
 
-    hex_decoder H3(
-        .hex_digit(rope_len[3:0]), 
-        .segments(HEX3)
-        );
-    hex_decoder H4(
-        .hex_digit(rope_len[7:4]), 
-        .segments(HEX4)
-        );
-    hex_decoder H5(
-        .hex_digit({3'b0,rope_len[8]}), 
-        .segments(HEX5)
-        );
+    // hex_decoder H3(
+    //     .hex_digit(rope_len[3:0]), 
+    //     .segments(HEX3)
+    //     );
+    // hex_decoder H4(
+    //     .hex_digit(rope_len[7:4]), 
+    //     .segments(HEX4)
+    //     );
+    // hex_decoder H5(
+    //     .hex_digit({3'b0,rope_len[8]}), 
+    //     .segments(HEX5)
+    //     );
 
 
 
@@ -203,7 +203,7 @@ module Rope(
                 move_index = 0;
             end
             S_PRE_RCCW: begin
-                 if (rope_len < ROPE_MIN + 1) begin
+                 if (rope_len <= ROPE_MIN + 1) begin
                   //reach the top
                     if (found_stone)
                         next_state = S_MOVE;
@@ -234,7 +234,7 @@ module Rope(
                 frame_counter = 0;
             end
             S_PRE_RCW: begin
-                 if (rope_len < ROPE_MIN + 1) begin
+                 if (rope_len <= ROPE_MIN + 1) begin
                   //reach the top
                     if (found_stone)
                         next_state = S_MOVE;
@@ -277,7 +277,7 @@ module Rope(
             end
             S_IN_UP: begin
                 length = length - (DELTA_LEN << 8);
-                if (rope_len < ROPE_MIN + 1) begin
+                if (rope_len <= ROPE_MIN + 1) begin
                   //reach the top
                     if (found_stone)
                         next_state = S_MOVE;
@@ -325,7 +325,7 @@ module Rope(
             S_MOVE_WRITE_WAIT: begin
                 writeEn = 1;
                 // rope_index = move_index;
-                if (rope_len < ROPE_MIN + 1) begin
+                if (rope_len <= ROPE_MIN + 1) begin
                     next_state = S_AFTER_MOVE;
                 end
                 else begin
@@ -445,3 +445,70 @@ module Rope(
     end
 
 endmodule // Rope
+
+module key_detector(
+     input clock, resetn,
+     input key,
+     output reg pulse
+ );
+    parameter PULSE_LENGTH = 5; //define the length of output pulse
+
+    reg [1:0] current_state, next_state; 
+    reg [25: 0] counter; //Just make sure it is big enough for at least 1 frame 
+                          //(around 833_333 clock cycles)
+    
+//Control part
+
+    //Define all the states
+    localparam      S_LOAD_KEY      = 2'b0,
+                    S_LOAD_KEY_WAIT = 2'b1;
+
+    //State table
+    always @(*) begin
+        case (current_state)
+            S_LOAD_KEY: next_state = (!key) ? S_LOAD_KEY : S_LOAD_KEY_WAIT;
+            S_LOAD_KEY_WAIT: next_state = (counter == PULSE_LENGTH - 1) ? S_LOAD_KEY : S_LOAD_KEY_WAIT;
+            default: next_state = S_LOAD_KEY;
+        endcase
+    end
+
+//Datapath part
+
+    //Counter logic
+    always @(posedge clock) begin 
+        if (current_state == S_LOAD_KEY_WAIT) begin
+            pulse = 1;
+            counter <= (counter + 1) % PULSE_LENGTH;
+        end else begin
+            pulse = 0;
+            counter = 0;
+        end
+    end
+
+    always @(posedge clock) begin
+        if (!resetn)
+            current_state <= S_LOAD_KEY;
+        else
+            current_state <= next_state;
+    end
+
+endmodule // key_detector
+
+module Score(
+    input clock, resetn,
+    input writeEn, plus,
+    input [7:0] score_change_DATA,
+
+    output reg [9:0] score
+);
+
+    always @(posedge clock) begin
+        if (!resetn) begin
+            score = 0;
+        end
+        else if (writeEn) begin
+            score = score + (plus ? 64'd1 : -64'd1) * score_change_DATA;
+        end
+    end
+
+endmodule // Scores
