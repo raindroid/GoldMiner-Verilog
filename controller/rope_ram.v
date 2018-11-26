@@ -113,9 +113,9 @@ module Rope(
     defparam go_DET.PULSE_LENGTH = FRAME_CLOCK;
 
     //for ram
-    reg [31:0]data_write1, data_write2;
-    reg writeEn1, writeEn2;
-    wire [31:0]read_data1, read_data2;
+    reg [31:0]data_write1, data_write2, data_write3, data_write4;
+    reg writeEn1, writeEn2, writeEn3, writeEn4;
+    wire [31:0]read_data1, read_data2, read_data3, read_data4;
     always@(*)begin
         if(level == 0)begin
             data_write1 = data_write;
@@ -126,6 +126,16 @@ module Rope(
             data_write2 = data_write;
             read_data = read_data2;
             writeEn2 = writeEn;
+        end
+        else if(level == 2'd2)begin
+            data_write3 = data_write;
+            read_data = read_data3;
+            writeEn3 = writeEn;
+        end
+        else if(level == 2'd3)begin
+            data_write4 = data_write;
+            read_data = read_data4;
+            writeEn4 = writeEn;
         end
     end
     
@@ -143,6 +153,21 @@ module Rope(
         .data(data_write2),
         .wren(writeEn2),
         .q(read_data2)
+    );
+    initialize_3 initial_3(
+        .address(read_address),
+        .clock(clock),
+        .data(data_write3),
+        .wren(writeEn3),
+        .q(read_data3)
+    );
+
+    initialize_4 initial_4(
+        .address(read_address),
+        .clock(clock),
+        .data(data_write4),
+        .wren(writeEn4),
+        .q(read_data4)
     );
 
 

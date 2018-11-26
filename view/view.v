@@ -540,7 +540,7 @@ module view(
 	wire [7:0] time_remained;
 
 	wire [11:0]goal;
-	assign goal = 12'd50 + 100 * level;
+	assign goal = 12'd50 + 75 * level;
 	score_and_time_display display_num(
     	.clk(clk),
     	.resetn(resetn),
