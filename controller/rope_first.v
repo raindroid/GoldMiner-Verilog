@@ -62,9 +62,9 @@ module Rope1(
     reg [31:0] data_write; //used to write to the ram
     reg writeEn;
     wire globalWriteEn;
-    assign globalWriteEn = writeEn//(second_live ? second_writeEn : writeEn);
+    assign globalWriteEn = (second_live ? second_writeEn : writeEn);
     wire [31:0]global_data_write;
-    assign global_data_write = data_write;//(second_live ? second_data_write : data_write);
+    assign global_data_write = (second_live ? second_data_write : data_write);
     
     //for data manipulation
     wire [31:0]read_data; //data output
