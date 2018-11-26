@@ -479,8 +479,8 @@ module view(
 		.outY(Y_out_hook),
 		.color(Color_out_hook),
 		.writeEn(writeEn_hook),
-		.done(draw_hook_done)
-
+		.done(draw_hook_done),
+		.START_X(64'd160)
 	);
 
 	//for 2-player mode
@@ -501,8 +501,8 @@ module view(
 		.outY(Y_out_hook1),
 		.color(Color_out_hook1),
 		.writeEn(writeEn_hook1),
-		.done(draw_hook_done1)
-
+		.done(draw_hook_done1),
+		.START_X(64'd77)
 	);
 
 
@@ -523,8 +523,8 @@ module view(
 		.outY(Y_out_hook2),
 		.color(Color_out_hook2),
 		.writeEn(writeEn_hook2),
-		.done(draw_hook_done2)
-
+		.done(draw_hook_done2),
+		.START_X(64'dd237)
 	);
 
 
@@ -586,7 +586,7 @@ module view(
 	Rope rope0(
 		.clock(clk),
 		.resetn(resetn_rope), 
-		.enable(1),
+		.enable(!p2),
 		
 		.draw_stone_flag(draw_stone_flag), //on when the previous drawing is in process
 		.draw_index(stone_count + gold_count + diamond_count),
@@ -625,7 +625,7 @@ module view(
 	Rope1 rope1(
 		.clock(clk),
 		.resetn(resetn_rope), 
-		.enable(1),
+		.enable(p2),
 		
 		.draw_stone_flag(draw_stone_flag), //on when the previous drawing is in process
 		.draw_index(stone_count + gold_count + diamond_count),
@@ -653,10 +653,10 @@ module view(
 	Rope2 rope2(
 		.clock(clk),
 		.resetn(resetn_rope), 
-		.enable(1),
+		.enable(p2),
 		
-		.draw_stone_flag(draw_stone_flag), //on when the previous drawing is in process
-		.draw_index(stone_count + gold_count + diamond_count),
+		// .draw_stone_flag(draw_stone_flag), //on when the previous drawing is in process
+		// .draw_index(stone_count + gold_count + diamond_count),
 		.quantity(max_gold+max_diamond+max_stone),
 
 		.go_KEY(drop2), //physical key for the go input

@@ -33,7 +33,7 @@ module Rope1(
  );
     parameter mode = 1'b1;
     parameter player = 1'b0;
-    parameter originX = ((!mode) ? 10'd160 : (player ? 10'd237 : 10'd77));
+    parameter originX = 64'd77;
     parameter originY = 64'd45;
 
     /**

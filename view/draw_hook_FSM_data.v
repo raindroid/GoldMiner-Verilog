@@ -31,7 +31,8 @@ module draw_hook(
     output [11:0] color,
     output reg writeEn,
     output reg done,
-    output [6:0]HEX4, HEX5
+    output [6:0]HEX4, HEX5,
+    input [63:0] START_X
 );
 
     reg [63:0] centerX, centerY;
@@ -63,8 +64,7 @@ module draw_hook(
 
     localparam RADIUS = 64'd4;
     localparam MAX_C = 64'd256;
-    parameter START_X = 64'd160,
-                START_Y = 64'd45;
+    parameter START_Y = 64'd45;
     reg [63:0]rope_len;
 
     trig counter_trig(

@@ -2,38 +2,31 @@
  *  module for rope and it's movement
  **/
 
-module Rope2(
+module Rope(
     input clock, resetn, enable,
-    // input draw_stone_flag, //on when the previous drawing is in process
-    // input [3:0] draw_index,
+    input draw_stone_flag, //on when the previous drawing is in process
+    input [3:0] draw_index,
     input [3:0] quantity,
 
     input go_KEY, //physical key for the go input
     //bomb_KEY,
     // input bomb_quantity,
 
-    output reg[9:0] endX, endY, degree, //not all the output is useful
+    output reg[9:0] rotation_speed, line_speed, endX, endY, degree, //not all the output is useful
     output [9:0]rope_len,
 
     output [31:0] data,
     output [9:0] current_score,
 
-    //Control from rope1
-    input live,
-    output [3:0] read_address,
-    output reg [31:0] data_write,
-    output reg writeEn,
-    input [31:0] read_data
-
     //Test only
-    // output [9:0]LEDR,
-    // output[6:0] HEX0, HEX1, HEX2, HEX3, HEX4, HEX5
+    output [9:0]LEDR,
+    output[6:0] HEX0, HEX1, HEX2, HEX3, HEX4, HEX5
     // output bomb_use
 
  );
-    parameter mode = 1'b1;
-    parameter player = 1'b1;
-    parameter originX = 64'd237;
+    parameter mode = 1'b0;
+    parameter player = 1'b0;
+    parameter originX = ((!mode) ? 10'd160 : (player ? 10'd237 : 10'd77));
     parameter originY = 64'd45;
 
     /**
@@ -59,14 +52,14 @@ module Rope2(
     
 
     reg [3:0] rope_index; //the index for rope to control
-    // reg [31:0] data_write; //used to write to the ram
-    // reg writeEn;
+    reg [31:0] data_write; //used to write to the ram
+    reg writeEn;
     
     //for data manipulation
-    // wire [31:0]read_data; //data output
+    wire [31:0]read_data; //data output
     assign data = read_data;
-	// wire [3:0]read_address;
-    assign read_address = rope_index;
+	wire [3:0]read_address;
+    assign read_address = draw_stone_flag ? draw_index : rope_index;
 
     //some info
     reg [31:0] frame_counter;
@@ -118,14 +111,14 @@ module Rope2(
     );
     defparam go_DET.PULSE_LENGTH = FRAME_CLOCK;
 
-    // //for ram
-	// initialize_1 initial_1(
-    //     .address(read_address),
-    //     .clock(clock),
-    //     .data(data_write),
-    //     .wren(writeEn),
-    //     .q(read_data)
-    // );
+    //for ram
+	initialize_1 initial_1(
+        .address(read_address),
+        .clock(clock),
+        .data(data_write),
+        .wren(writeEn),
+        .q(read_data)
+    );
 
     //Debug
     // assign LEDR[0] = (rope_len < ROPE_MIN);
@@ -136,28 +129,28 @@ module Rope2(
     // assign LEDR[5] = tempType[0];
     // assign LEDR[6] = tempType[1];
     // assign LEDR[9:7] = move_index[2:0];
-    // assign LEDR[4:0] = current_state[4:0];
-    // hex_decoder H0(
-    //     .hex_digit(rope_index), 
-    //     .segments(HEX0)
-    //     );
-    // hex_decoder H1(
-    //     .hex_digit(read_address), 
-    //     .segments(HEX1)
-    //     );
+    assign LEDR[4:0] = current_state[4:0];
+    hex_decoder H0(
+        .hex_digit(rope_index), 
+        .segments(HEX0)
+        );
+    hex_decoder H1(
+        .hex_digit(read_address), 
+        .segments(HEX1)
+        );
 
-    // hex_decoder H3(
-    //     .hex_digit(rope_len[3:0]), 
-    //     .segments(HEX3)
-    //     );
-    // hex_decoder H4(
-    //     .hex_digit(rope_len[7:4]), 
-    //     .segments(HEX4)
-    //     );
-    // hex_decoder H5(
-    //     .hex_digit({3'b0,rope_len[8]}), 
-    //     .segments(HEX5)
-    //     );
+    hex_decoder H3(
+        .hex_digit(rope_len[3:0]), 
+        .segments(HEX3)
+        );
+    hex_decoder H4(
+        .hex_digit(rope_len[7:4]), 
+        .segments(HEX4)
+        );
+    hex_decoder H5(
+        .hex_digit({3'b0,rope_len[8]}), 
+        .segments(HEX5)
+        );
 
 
 
@@ -184,8 +177,7 @@ module Rope2(
                 S_IN_CHECK  = 5'd20,
                 S_IN_CHECK_READ     = 5'd12,
                 S_IN_CHECK_CHECK    = 5'd19,
-                S_SAVE      = 5'd13,
-                S_WAIT_FOR_LIVE = 5'd23; //Basically do nothing
+                S_SAVE      = 5'd13;
 
     always @(posedge clock) begin
         //update x,y based on length and degree
@@ -222,7 +214,7 @@ module Rope2(
                 end
                 found_stone = 0;
                 frame_counter = frame_counter + 1;
-                if (frame_counter >= FRAME_CLOCK) begin
+                if (frame_counter >= FRAME_CLOCK & (!draw_stone_flag)) begin
                     next_state = S_IN_RCCW;
                     frame_counter = 0;
                 end
@@ -253,7 +245,7 @@ module Rope2(
                 end
                 found_stone = 0;
                 frame_counter = frame_counter + 1;
-                if (frame_counter >= FRAME_CLOCK) begin
+                if (frame_counter >= FRAME_CLOCK & (!draw_stone_flag)) begin
                     next_state = S_IN_RCW;
                     frame_counter = 0;
                 end
@@ -274,7 +266,8 @@ module Rope2(
             end
             S_PRE_UP: begin
                 frame_counter = frame_counter + 1;
-                if (frame_counter >= (FRAME_CLOCK * 2 + (64'b1 * found_stone * UP_DELAY_TIMES * FRAME_CLOCK))) begin
+                if (frame_counter >= (FRAME_CLOCK * 2 + (64'b1 * found_stone * UP_DELAY_TIMES * FRAME_CLOCK)) 
+                    & (!draw_stone_flag)) begin
                     next_state = S_IN_UP;
                     frame_counter = 0;
                 end
@@ -306,7 +299,10 @@ module Rope2(
             end
             S_MOVE_READ: begin
                 rope_index = move_index;
-                next_state = S_MOVE_READ_WAIT;
+                if (draw_stone_flag) 
+                    next_state = S_MOVE_READ;
+                else 
+                    next_state = S_MOVE_READ_WAIT;
             end
             S_MOVE_READ_WAIT: begin
                 tempData = read_data;
@@ -372,7 +368,7 @@ module Rope2(
             S_PRE_DOWN: begin
                 found_stone = 0;
                 frame_counter = frame_counter + 1;
-                if (frame_counter >= FRAME_CLOCK) begin
+                if (frame_counter >= FRAME_CLOCK & (!draw_stone_flag)) begin
                     next_state = S_IN_DOWN;
                     frame_counter = 0;
                 end
@@ -384,7 +380,7 @@ module Rope2(
                 frame_counter = 0;
                 length = length + (DELTA_LEN << 8);
                 if (endX < 2 | endX >= 318 | endY >= 238 ) begin
-                    next_state = S_PRE_UP;
+                    next_state = S_IN_UP;   // ??
                 end
                 else
                     next_state = S_PRE_CHECK;
@@ -435,22 +431,16 @@ module Rope2(
                 next_state = S_PRE_UP;
                 frame_counter = 0;
             end
-            S_WAIT_FOR_LIVE: begin
-              //Do nothing
-            end
           default: next_state = S_STOP;
         endcase
     end
 
     always @(posedge clock) begin
         if (!resetn) begin
-            current_state = S_STOP;
+            current_state <= S_STOP;
         end            
-        else if (live) begin
-            current_state = next_state;
-        end
         else begin
-            current_state = S_WAIT_FOR_LIVE;
+            current_state <= next_state;
         end
     end
 
