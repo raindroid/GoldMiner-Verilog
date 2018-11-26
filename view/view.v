@@ -595,6 +595,7 @@ module view(
 		.clock(clk),
 		.resetn(resetn_rope), 
 		.enable(!p2),
+		.level(level),
 		
 		.draw_stone_flag(draw_stone_flag), //on when the previous drawing is in process
 		.draw_index(stone_count + gold_count + diamond_count),
@@ -641,7 +642,7 @@ module view(
 		.clock(clk),
 		.resetn(resetn_rope), 
 		.enable(p2),
-		
+			
 		.draw_stone_flag(draw_stone_flag), //on when the previous drawing is in process
 		.draw_index(stone_count + gold_count + diamond_count),
 		.quantity(max_gold+max_diamond+max_stone),
@@ -784,7 +785,7 @@ module view(
 
 	//level register
 	wire resetn_level;
-	reg [4:0]level;
+	reg [2:0]level;
 	always@(posedge clk)begin
 		if(!resetn | !resetn_level) level <= 0;
 		else if(level_up) level <= level + 1'b1;

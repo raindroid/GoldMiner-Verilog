@@ -7,6 +7,7 @@ module Rope(
     input draw_stone_flag, //on when the previous drawing is in process
     input [3:0] draw_index,
     input [3:0] quantity,
+    input [2:0]level,
 
     input go_KEY, //physical key for the go input
     //bomb_KEY,
@@ -56,7 +57,7 @@ module Rope(
     reg writeEn;
     
     //for data manipulation
-    wire [31:0]read_data; //data output
+    reg [31:0]read_data; //data output
     assign data = read_data;
 	wire [3:0]read_address;
     assign read_address = draw_stone_flag ? draw_index : rope_index;
@@ -112,13 +113,38 @@ module Rope(
     defparam go_DET.PULSE_LENGTH = FRAME_CLOCK;
 
     //for ram
+    reg [31:0]data_write1, data_write2;
+    reg writeEn1, writeEn2;
+    wire [31:0]read_data1, read_data2;
+    always@(*)begin
+        if(level == 0)begin
+            data_write1 = data_write;
+            read_data = read_data1;
+            writeEn1 = writeEn;
+        end
+        else if(level == 1)begin
+            data_write2 = data_write;
+            read_data = read_data2;
+            writeEn2 = writeEn;
+        end
+    end
+    
 	initialize_1 initial_1(
         .address(read_address),
         .clock(clock),
-        .data(data_write),
-        .wren(writeEn),
-        .q(read_data)
+        .data(data_write1),
+        .wren(writeEn1),
+        .q(read_data1)
     );
+
+    initialize_2 initial_2(
+        .address(read_address),
+        .clock(clock),
+        .data(data_write2),
+        .wren(writeEn2),
+        .q(read_data2)
+    );
+
 
     //Debug
     // assign LEDR[0] = (rope_len < ROPE_MIN);
