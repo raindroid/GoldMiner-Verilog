@@ -244,6 +244,7 @@ module view(
 		.time_resetn(time_resetn),
 		.resetn_rope(resetn_rope),
 		.level_up(level_up),
+		.resetn_level(resetn_level),
 		.LEDR(LEDR)
 
 	);
@@ -538,7 +539,8 @@ module view(
 		enable_draw_num;
 	wire [7:0] time_remained;
 
-	wire [11:0]goal = 12'd50;
+	wire [11:0]goal;
+	assign goal = 12'd50 + 100 * level;
 	score_and_time_display display_num(
     	.clk(clk),
     	.resetn(resetn),
@@ -659,10 +661,9 @@ module view(
 
 		//Connection to Rope2
 		.second_live(second_live), //Connect to Rope2::live
-		.second_index(0), //Connect to Rope2::read_address
-		.second_data_write(0), //Connect to Rope2::data_write
-		.second_writeEn(0),
-		// .second_writeEn(second_writeEn), //Connect to Rope2::writeEn
+		.second_index(second_index), //Connect to Rope2::read_address
+		.second_data_write(second_data_write), //Connect to Rope2::data_write
+		.second_writeEn(second_writeEn), //Connect to Rope2::writeEn
 		.second_read_data(second_read_data) //Connect to Rope2::read_data
 
  	);
@@ -781,8 +782,13 @@ module view(
 	wire game_end;
 	assign game_end = time_up;
 
-	
-
+	//level register
+	wire resetn_level;
+	reg [4:0]level;
+	always@(posedge clk)begin
+		if(!resetn | !resetn_level) level <= 0;
+		else if(level_up) level <= level + 1'b1;
+	end
 
 endmodule
 

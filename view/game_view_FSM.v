@@ -63,6 +63,7 @@ module game_view_FSM(
 	draw_game_next_level_done,
 	draw_stone_flag,
 	level_up,
+	resetn_level,
 	
 	gold_count,
 	stone_count,
@@ -142,7 +143,8 @@ module game_view_FSM(
 					time_resetn,
 					draw_stone_flag,
 					resetn_rope,
-					level_up;
+					level_up,
+					resetn_level;
 	output  reg [9:0] LEDR;
 	
 
@@ -328,6 +330,7 @@ module game_view_FSM(
 			draw_stone_flag =1'b1;
 			resetn_rope = 1'b1;
 			level_up = 1'b0;
+			resetn_level = 1'b1;
 			LEDR[9:0] = 0;
 			
 
@@ -423,6 +426,7 @@ module game_view_FSM(
 				time_resetn = 1'b0;
 				resetn_gold_stone_diamond = 1'b0;
 				resetn_rope = 1'b0;
+				resetn_level = 1'b0;
 				
 			end
 			GAME_DONE2:begin
