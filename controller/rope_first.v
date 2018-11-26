@@ -320,7 +320,7 @@ module Rope1(
                 next_state = S_MOVE_READ_WAIT;
             end
             S_MOVE_READ_WAIT: begin
-                if (read_address != rope_index)
+                if (read_address != rope_index) begin
                     next_state = S_MOVE_READ;
                 end
                 else begin
