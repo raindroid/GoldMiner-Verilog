@@ -192,7 +192,8 @@ module Rope1(
                 S_IN_CHECK  = 5'd20,
                 S_IN_CHECK_READ     = 5'd12,
                 S_IN_CHECK_CHECK    = 5'd19,
-                S_SAVE      = 5'd13;
+                S_SAVE      = 5'd13,
+                S_PRE_AFTER_MOVE_WAIT   = 5'd24;
 
     always @(posedge clock) begin
         //update x,y based on length and degree
@@ -338,13 +339,13 @@ module Rope1(
             end
             S_MOVE_WRITE: begin
                 // writeEn = 1;
-                // rope_index = move_index;
+                rope_index = move_index;
                 // data_write = tempData;
                 next_state = S_MOVE_WRITE_WAIT;
             end
             S_MOVE_WRITE_WAIT: begin
-                if (draw_stone_flag)
-                    next_state = S_MOVE_WRITE_WAIT;
+                if (read_address != rope_index)
+                    next_state = S_MOVE_WRITE;
                 else begin 
                     writeEn = 1;
                     // rope_index = move_index;
@@ -379,9 +380,12 @@ module Rope1(
                 data_write[1:0] = 2'b0; // 10 for visible, 1 for moving
                 next_state = S_AFTER_MOVE_WAIT;
             end
+            S_PRE_AFTER_MOVE_WAIT: begin
+                rope_index = move_index;
+            end
             S_AFTER_MOVE_WAIT: begin
-                if (draw_stone_flag)
-                    next_state = S_AFTER_MOVE_WAIT;
+                if (read_address != rope_index)
+                    next_state = S_PRE_AFTER_MOVE_WAIT;
                 else begin 
                     writeEn = 1;
                     found_stone = 0;
