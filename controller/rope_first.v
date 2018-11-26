@@ -320,9 +320,7 @@ module Rope1(
                 next_state = S_MOVE_READ_WAIT;
             end
             S_MOVE_READ_WAIT: begin
-                if (draw_stone_flag)
-                    next_state = S_MOVE_READ;
-                else if (second_live) begin
+                if (read_address != rope_index)
                     next_state = S_MOVE_READ;
                 end
                 else begin
@@ -429,7 +427,7 @@ module Rope1(
                 if (read_address != rope_index)
                     next_state = S_IN_CHECK;
                 else begin 
-                    tempData <= read_data;
+                    tempData = read_data;
                     next_state = S_IN_CHECK_CHECK;
                 end
             end
