@@ -434,13 +434,13 @@ module Rope(
 
     always @(posedge clock) begin
         if (!resetn) begin
-            current_state = S_STOP;
+            current_state <= S_STOP;
         end            
         else if (!draw_stone_flag) begin
-            current_state = next_state;
+            current_state <= next_state;
         end
         else begin
-            current_score = S_WAIT_FOR_LIVE;
+            current_score <= S_WAIT_FOR_LIVE;
         end
     end
 
