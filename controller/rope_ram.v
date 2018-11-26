@@ -18,6 +18,7 @@ module Rope(
 
     output [31:0] data,
     output [9:0] current_score,
+    output reg reset_done,
 
     //Test only
     output [9:0]LEDR,
@@ -52,7 +53,7 @@ module Rope(
     parameter DELTA_LEN = 18'd5;
     
 
-    reg [3:0] rope_index; //the index for rope to control
+    reg [4:0] rope_index; //the index for rope to control
     reg [31:0] data_write; //used to write to the ram
     reg writeEn;
     
@@ -60,7 +61,7 @@ module Rope(
     reg [31:0]read_data; //data output
     assign data = read_data;
 	wire [3:0]read_address;
-    assign read_address = draw_stone_flag ? draw_index : rope_index;
+    assign read_address = draw_stone_flag ? draw_index : rope_index[3:0];
 
     //some info
     reg [31:0] frame_counter;
@@ -116,26 +117,33 @@ module Rope(
     reg [31:0]data_write1, data_write2, data_write3, data_write4;
     reg writeEn1, writeEn2, writeEn3, writeEn4;
     wire [31:0]read_data1, read_data2, read_data3, read_data4;
+    wire [31:0]data_mif1, data_mif2, data_mif3, data_mif4;
+    reg [31:0]data_mif;
+
     always@(*)begin
         if(level == 0)begin
             data_write1 = data_write;
             read_data = read_data1;
             writeEn1 = writeEn;
+            data_mif = data_mif1;
         end
         else if(level == 1)begin
             data_write2 = data_write;
             read_data = read_data2;
             writeEn2 = writeEn;
+            data_mif = data_mif2;
         end
         else if(level == 2'd2)begin
             data_write3 = data_write;
             read_data = read_data3;
             writeEn3 = writeEn;
+            data_mif = data_mif3;
         end
         else if(level == 2'd3)begin
             data_write4 = data_write;
             read_data = read_data4;
             writeEn4 = writeEn;
+            data_mif =  data_mif4;
         end
     end
     
@@ -169,6 +177,31 @@ module Rope(
         .wren(writeEn4),
         .q(read_data4)
     );
+
+    map1 map1(
+        .address(read_address),
+	    .clock(clock),
+	    .q(data_mif1)
+    );
+
+    map2 map2(
+        .address(read_address),
+	    .clock(clock),
+	    .q(data_mif2)
+    );
+
+    map3 map3(
+        .address(read_address),
+	    .clock(clock),
+	    .q(data_mif3)
+    );
+    map4 map4(
+        .address(read_address),
+	    .clock(clock),
+	    .q(data_mif4)
+    );
+
+
 
 
     //Debug
@@ -205,7 +238,12 @@ module Rope(
 
 
 
-    localparam  S_STOP      = 5'd0,
+    localparam  S_START        = 5'd25,
+                S_RESET_MEMORY = 5'd24,
+                S_RESET_MEMORY_WAIT = 5'd26,
+                S_RESET_MEMORY_WRITE = 5'd28,
+                S_RESET_MEMORY_AFTER = 5'd27,
+                S_STOP      = 5'd0,
                 S_PRE_RCCW  = 5'd1,
                 S_IN_RCCW   = 5'd2,
                 S_PRE_RCW   = 5'd3,
@@ -222,7 +260,7 @@ module Rope(
                 S_MOVE_WRITE_WAIT   = 5'd17,
                 S_MOVE_DELAY    = 5'd22,
                 S_AFTER_MOVE    = 5'd21,
-                S_AFTER_MOVE_WAIT   = 5'd22,
+                S_AFTER_MOVE_WAIT   = 5'd23,
                 S_UP_DELAY  = 5'd10,
                 S_PRE_CHECK = 5'd11,
                 S_IN_CHECK  = 5'd20,
@@ -238,15 +276,47 @@ module Rope(
 
         scoreEn = 0;
         writeEn = 0;
+        reset_done = 0;
 
         case (current_state)
+            S_START:begin
+                frame_counter = 0;
+                found_stone = 0;
+                tempData = 0;
+                rope_index = 0;
+                data_write = 0;
+                move_index = 0;
+                next_state = (enable)? S_RESET_MEMORY : S_START;
+            end
+            S_RESET_MEMORY:begin
+                if(rope_index >= quantity)begin
+                    reset_done = 1'b1;
+                    next_state = S_STOP;
+                end
+                else begin
+                    data_write = data_mif;
+                    next_state = S_RESET_MEMORY_WAIT;
+                    end
+            end
+            S_RESET_MEMORY_WAIT:begin
+                next_state = S_RESET_MEMORY_WRITE;
+            end
+            S_RESET_MEMORY_WRITE :begin
+                writeEn = 1'b1;
+                next_state = S_RESET_MEMORY_AFTER;
+            end
+            S_RESET_MEMORY_AFTER:begin
+              rope_index = rope_index  + 1'b1;
+              next_state = S_RESET_MEMORY;
+            end
+
             S_STOP: begin
                 state = 2'b00;
                 rCW = 0;
                 length = ROPE_MIN << 8;
                 degree = 10'd90;
-                if (enable) next_state = S_PRE_RCCW;
-                else next_state = S_STOP;
+                next_state = S_PRE_RCCW;
+
                 frame_counter = 0;
                 found_stone = 0;
                 tempData = 0;
@@ -494,13 +564,13 @@ module Rope(
             S_WAIT_FOR_LIVE: begin
                 //Do nothing, keep calm
             end
-          default: next_state = S_STOP;
+          default: next_state = S_START;
         endcase
     end
 
     always @(posedge clock) begin
         if (!resetn) begin
-            current_state <= S_STOP;
+            current_state <= S_START;
         end            
         // else if (draw_stone_flag) begin
         //     current_state <=S_WAIT_FOR_LIVE ;

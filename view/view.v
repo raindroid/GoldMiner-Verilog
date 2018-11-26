@@ -210,6 +210,7 @@ module view(
 		.go(go),
 		.mode(p2),
 		.next_level(next_level),
+		.reset_done(reset_done),
 	
 		.draw_gold_done(draw_gold_done),
 		.draw_stone_done(draw_stone_done),
@@ -255,7 +256,7 @@ module view(
 		.resetn_rope(resetn_rope),
 		.level_up(level_up),
 		.resetn_level(resetn_level),
-		.LEDR(LEDR)
+		//.LEDR(LEDR)
 
 	);
 	
@@ -600,6 +601,7 @@ module view(
 
 	wire [31:0] read_data0;
 	wire [9:0] current_score0;
+	wire reset_done;
 
 	//rope ram module instanciation
 	Rope rope0(
@@ -625,7 +627,8 @@ module view(
 
 		.data(read_data0),
 		.current_score(current_score0),
-		//.LEDR(LEDR),
+		.reset_done(reset_done),
+		.LEDR(LEDR),
 		.HEX0(HEX0),
 		.HEX1(HEX1),
 		.HEX2(HEX2),

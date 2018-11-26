@@ -49,6 +49,7 @@ module game_view_FSM(
 	go,
 	mode,
 	next_level,
+	reset_done,
 	
 	draw_gold_done,
 	draw_stone_done,
@@ -103,6 +104,7 @@ module game_view_FSM(
 	input go;
 	input mode;
 	input next_level;
+	input reset_done;
 
 
 	input draw_gold_done,
@@ -161,6 +163,7 @@ module game_view_FSM(
 					DRAW_GAMESTART                = 6'd22,
 					DRAW_GAMESTART_WAIT               = 6'd23,
 					 GENERATE_X_Y         = 6'd3,
+					 RESET_DONE           = 6'd36,
 					 DRAW_BACKGROUND      = 6'd0,
 					 
 
@@ -210,13 +213,18 @@ module game_view_FSM(
 						next_state = DRAW_GAMESTART_WAIT;
 					 end
 					 DRAW_GAMESTART_WAIT:begin
-					   	next_state = (draw_gamestart_done) ? GENERATE_X_Y : DRAW_GAMESTART_WAIT;
+					   	next_state = (draw_gamestart_done) ? RESET_DONE : DRAW_GAMESTART_WAIT;
 					 end
 					
-
+					
+					RESET_DONE:begin
+						next_state = (reset_done) ? GENERATE_X_Y : RESET_DONE;
+					end
+					
 					GENERATE_X_Y: begin
 						next_state = (go)? DRAW_BACKGROUND : GENERATE_X_Y;
 					end
+
                 	DRAW_BACKGROUND: begin
 						next_state = (draw_background_done) ? DRAW_BACKGROUND_WAIT : DRAW_BACKGROUND;
 						end // Loop in current state until value is input
@@ -357,10 +365,12 @@ module game_view_FSM(
 			DRAW_GAMESTART: begin
 			  	enable_draw_gamestart = 1'b1;
 				  resetn_rope = 1'b0;
+				  draw_stone_flag = 1'b0;
 			end
 			DRAW_GAMESTART_WAIT: begin
 			  	enable_draw_gamestart = 1'b1;
 				  resetn_rope = 1'b0;
+				  draw_stone_flag = 1'b0;
 				  end
 
 			GENERATE_X_Y: begin
