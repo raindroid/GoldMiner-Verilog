@@ -180,7 +180,7 @@ module Rope(
                 S_SAVE      = 5'd13,
                 S_WAIT_FOR_LIVE = 5'd23; //Basically do nothing
 
-    always @(*) begin
+    always @(posedge clock) begin
         //update x,y based on length and degree
         endX = originX + ((rope_len * deg_cos) >> 8) * (deg_signCos ? 64'd1 : -64'd1);
         endY = originY + ((rope_len * deg_sin) >> 8) * 64'd1;
@@ -428,6 +428,9 @@ module Rope(
                 next_state = S_PRE_UP;
                 frame_counter = 0;
             end
+            S_WAIT_FOR_LIVE: begin
+                //Do nothing, keep calm
+            end
           default: next_state = S_STOP;
         endcase
     end
@@ -440,7 +443,7 @@ module Rope(
             current_state <= next_state;
         end
         else begin
-            current_score <= S_WAIT_FOR_LIVE;
+            current_state <= S_WAIT_FOR_LIVE;
         end
     end
 
