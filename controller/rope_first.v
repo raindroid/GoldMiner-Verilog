@@ -62,16 +62,16 @@ module Rope1(
     reg [31:0] data_write; //used to write to the ram
     reg writeEn;
     wire globalWriteEn;
-    assign globalWriteEn = (second_live ? second_writeEn : writeEn);
+    assign globalWriteEn = writeEn//(second_live ? second_writeEn : writeEn);
     wire [31:0]global_data_write;
-    assign global_data_write = (second_live ? second_data_write : data_write);
+    assign global_data_write = data_write;//(second_live ? second_data_write : data_write);
     
     //for data manipulation
     wire [31:0]read_data; //data output
     assign data = read_data;
 	wire [3:0]read_address;
     assign read_address = draw_stone_flag ? draw_index : 
-        (second_live ? second_index : rope_index);
+        rope_index; //(second_live ? second_index : rope_index);
 
     //some info
     reg [31:0] frame_counter;
@@ -426,7 +426,7 @@ module Rope1(
                 if (draw_stone_flag)
                     next_state = S_IN_CHECK_READ;
                 else begin 
-                    tempData <= read_data;
+                    tempData = read_data;
                     next_state = S_IN_CHECK_CHECK;
                 end
             end
