@@ -524,7 +524,7 @@ module view(
 		.color(Color_out_hook2),
 		.writeEn(writeEn_hook2),
 		.done(draw_hook_done2),
-		.START_X(64'dd237)
+		.START_X(64'd237)
 	);
 
 

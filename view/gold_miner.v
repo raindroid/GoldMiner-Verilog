@@ -209,7 +209,7 @@ module fill
 		.drop(drop | ~KEY[2]),
 		.drop2(drop2 | ~KEY[1]),
 		.bomb(bomb),
-		.mode(mode),
+		.mode(mode | SW[9]),
 
 		.X_out(x),
 		.Y_out(y),
