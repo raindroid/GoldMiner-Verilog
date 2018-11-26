@@ -54,7 +54,7 @@ module draw_hook(
         .segments(HEX5)
         );
     
-    assign color = 12'b1011_1011_1011;
+    assign color = 12'b1011_1011_1101;
     
     localparam  S_START     =5'd0,  //Wait for enable signal
                 S_DRAW      =5'd1,  //Prepare for drawing

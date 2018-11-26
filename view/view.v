@@ -659,9 +659,10 @@ module view(
 
 		//Connection to Rope2
 		.second_live(second_live), //Connect to Rope2::live
-		.second_index(second_index), //Connect to Rope2::read_address
-		.second_data_write(second_data_write), //Connect to Rope2::data_write
-		.second_writeEn(second_writeEn), //Connect to Rope2::writeEn
+		.second_index(0), //Connect to Rope2::read_address
+		.second_data_write(0), //Connect to Rope2::data_write
+		.second_writeEn(0),
+		// .second_writeEn(second_writeEn), //Connect to Rope2::writeEn
 		.second_read_data(second_read_data) //Connect to Rope2::read_data
 
  	);
