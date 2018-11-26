@@ -382,6 +382,7 @@ module Rope1(
             end
             S_PRE_AFTER_MOVE_WAIT: begin
                 rope_index = move_index;
+                next_state = S_AFTER_MOVE_WAIT;
             end
             S_AFTER_MOVE_WAIT: begin
                 if (read_address != rope_index)
