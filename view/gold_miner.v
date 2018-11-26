@@ -272,7 +272,7 @@ module fill
 			keyboard_data = 8'h0;
 		end	
 
-		if(keyboard_data == 8'h1B)begin // S FOR P2 DROP
+		else if(keyboard_data == 8'h1B)begin // S FOR P2 DROP
 		  	drop = 1'b0;
 			drop2 = 1'b1;
 			keyboard_data = 8'h0;
@@ -288,7 +288,7 @@ module fill
 			mode = 1'b1;
 			keyboard_data = 8'h0;
 		end	
-		else if(keyboard_data == 8'h75)begin // UPTO USE BOMB
+		else if(keyboard_data == 8'h75)begin // UP TO USE BOMB
 		  	drop = 1'b0;
 			start = 1'b0;
 			bomb = 1'b1;

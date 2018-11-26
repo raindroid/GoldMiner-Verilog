@@ -609,7 +609,7 @@ module view(
 		.degree(degree), //not all the output is useful
 		.rope_len(rope_len),
 
-		.data(read_data),
+		.data(read_data0),
 		.current_score(current_score0),
 		//.LEDR(LEDR),
 		.HEX0(HEX0),
@@ -659,7 +659,7 @@ module view(
 
 		//Connection to Rope2
 		.second_live(second_live), //Connect to Rope2::live
-		.second_index(second_index) //Connect to Rope2::read_address
+		.second_index(second_index), //Connect to Rope2::read_address
 		.second_data_write(second_data_write), //Connect to Rope2::data_write
 		.second_writeEn(second_writeEn), //Connect to Rope2::writeEn
 		.second_read_data(second_read_data) //Connect to Rope2::read_data
