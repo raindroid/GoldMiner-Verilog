@@ -139,6 +139,13 @@ module view(
 			writeEn <= writeEn_gamestart;
 		end
 
+		else if(enable_draw_game_win)begin
+			X_out <= X_out_game_win;
+			Y_out <= Y_out_game_win;
+			Color_out <= Color_out_game_win;
+			writeEn <= writeEn_game_win;
+		end
+
 	end
 	
 	//reg mode
@@ -215,6 +222,7 @@ module view(
 		.draw_num_done(draw_num_done),
 		.draw_gameover_done(draw_gameover_done),
 		.draw_game_next_level_done(draw_game_next_level_done),
+		.draw_game_win_done(draw_game_win_done),
 		.draw_gamestart_done(draw_gamestart_done),
 		.draw_stone_flag(draw_stone_flag),
 	
@@ -224,6 +232,7 @@ module view(
 		.max_stone(max_stone),
 		.max_gold(max_gold),
 		.max_diamond(max_diamond),
+		.level(level),
 	
 		.game_end(game_end),
 	
@@ -238,6 +247,7 @@ module view(
 		.enable_draw_num(enable_draw_num),
 		.enable_draw_gameover(enable_draw_gameover),
 		.enable_draw_game_next_level(enable_draw_game_next_level),
+		.enable_draw_game_win(enable_draw_game_win),
 		.enable_draw_gamestart(enable_draw_gamestart),
 		.resetn_gold_stone_diamond(resetn_gold_stone_diamond),
 		.timer_enable(timer_enable),
@@ -540,7 +550,8 @@ module view(
 	wire [7:0] time_remained;
 
 	wire [11:0]goal;
-	assign goal = 12'd50 + 75 * level;
+	//assign goal = 12'd0 + 0 * level;
+	assign goal = 12'd75 + 75 * level;
 	score_and_time_display display_num(
     	.clk(clk),
     	.resetn(resetn),
@@ -756,6 +767,27 @@ module view(
     .Color_out_game_next_level(Color_out_game_next_level),
     .writeEn_game_next_level(writeEn_game_next_level),
     .draw_game_next_level_done(draw_game_next_level_done)
+);
+
+	wire enable_draw_game_win;
+	wire [8:0]X_out_game_win;
+	wire [7:0]Y_out_game_win;
+	wire [11:0]Color_out_game_win;
+	wire draw_game_win_done;
+	wire writeEn_game_win;
+	
+
+	draw_game_win dgw0(
+    .clk(clk), 
+	.resetn(resetn),
+	.enable_draw_game_win(enable_draw_game_win),
+	.resetn_gold_stone_game_win(resetn_gold_stone_diamond),
+
+	.X_out_game_win(X_out_game_win),
+    .Y_out_game_win(Y_out_game_win),
+    .Color_out_game_win(Color_out_game_win),
+    .writeEn_game_win(writeEn_game_win),
+    .draw_game_win_done(draw_game_win_done)
 );
 
 

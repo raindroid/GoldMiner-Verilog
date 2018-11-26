@@ -61,6 +61,7 @@ module game_view_FSM(
 	draw_gameover_done,
 	draw_gamestart_done,
 	draw_game_next_level_done,
+	draw_game_win_done,
 	draw_stone_flag,
 	level_up,
 	resetn_level,
@@ -71,6 +72,7 @@ module game_view_FSM(
 	max_stone,
 	max_gold,
 	max_diamond,
+	level,
 
 
 	game_end,
@@ -81,6 +83,7 @@ module game_view_FSM(
 	enable_draw_background,
 	enable_draw_gameover,
 	enable_draw_game_next_level,
+	enable_draw_game_win,
 	enable_draw_gamestart,
 	enable_random,
 	enable_draw_hook,
@@ -112,12 +115,14 @@ module game_view_FSM(
 			draw_num_done,
 			draw_gameover_done,
 			draw_game_next_level_done,
+			draw_game_win_done,
 			draw_gamestart_done;
 			
 	
 	input [7:0]gold_count;
 	input [7:0]stone_count;
 	input [7:0]diamond_count;
+	input [2:0]level;
 	
 	
 	input game_end;
@@ -137,6 +142,7 @@ module game_view_FSM(
 					enable_draw_num,
 					enable_draw_gameover,
 					enable_draw_game_next_level,
+					enable_draw_game_win,
 					enable_draw_gamestart,
 					resetn_gold_stone_diamond,
 					timer_enable,
@@ -187,7 +193,9 @@ module game_view_FSM(
 					GAME_DONE1				 = 6'd16,
 					GAME_DONE1_WAIT        = 6'd17,
 					GAME_DONE2              = 6'd28,
-					LEVEL_UP                = 6'd29;
+					LEVEL_UP                = 6'd29,
+					DRAW_GAMEWIN                = 6'd34,
+					DRAW_GAMEWIN_DONE                = 6'd35;
 					 
     
     // Next state logic aka our state table
@@ -294,7 +302,16 @@ module game_view_FSM(
 					 	next_state = (~go)? DRAW_GAMESTART : GAME_DONE1;
 					 end
 					 GAME_DONE2:begin
-					   	next_state = (go) ? LEVEL_UP : GAME_DONE2;
+					 	if(level == 2'd3) 
+						 	next_state = DRAW_GAMEWIN;
+						else
+					   		next_state = (go) ? LEVEL_UP : GAME_DONE2;
+					 end
+					 DRAW_GAMEWIN:begin
+						next_state = (draw_game_win_done)? DRAW_GAMEWIN_DONE : DRAW_GAMEWIN;
+					 end
+					 DRAW_GAMEWIN_DONE:begin
+						next_state = (go)? DRAW_GAMESTART : DRAW_GAMEWIN_DONE;
 					 end
 					 LEVEL_UP: begin
 						next_state = DRAW_BACKGROUND;
@@ -323,6 +340,7 @@ module game_view_FSM(
 			enable_draw_num = 1'b0;
 			enable_draw_gameover = 1'b0;
 			enable_draw_game_next_level = 1'b0;
+			enable_draw_game_win = 1'b0;
 			enable_draw_gamestart = 1'b0;
 			resetn_gold_stone_diamond = 1'b1;
 			timer_enable = 1'b0;
@@ -434,6 +452,13 @@ module game_view_FSM(
 				resetn_gold_stone_diamond = 1'b0;
 				resetn_rope = 1'b0;
 
+			end
+			DRAW_GAMEWIN:begin
+				draw_stone_flag = 1'b0;
+			  	enable_draw_game_win = 1'b1;
+			end
+			DRAW_GAMEWIN_DONE:begin
+				resetn_level = 1'b0;
 			end
 			LEVEL_UP: begin
 			  level_up = 1'b1;
