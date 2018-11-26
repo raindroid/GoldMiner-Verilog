@@ -4,8 +4,8 @@
 
 module Rope2(
     input clock, resetn, enable,
-    input draw_stone_flag, //on when the previous drawing is in process
-    input [3:0] draw_index,
+    // input draw_stone_flag, //on when the previous drawing is in process
+    // input [3:0] draw_index,
     input [3:0] quantity,
 
     input go_KEY, //physical key for the go input
@@ -454,7 +454,7 @@ module Rope2(
             current_state = next_state;
         end
         else begin
-            current_state = S_WAIT_FOR_LIVE;
+            current_score = S_WAIT_FOR_LIVE;
         end
     end
 

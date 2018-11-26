@@ -47,6 +47,7 @@ module game_view_FSM(
 	clk, 
 	resetn,
 	go,
+	mode,
 	next_level,
 	
 	draw_gold_done,
@@ -54,6 +55,8 @@ module game_view_FSM(
 	draw_diamond_done,
 	draw_background_done,
 	draw_hook_done,
+	draw_hook_done1,
+	draw_hook_done2,
 	draw_num_done,
 	draw_gameover_done,
 	draw_gamestart_done,
@@ -80,6 +83,8 @@ module game_view_FSM(
 	enable_draw_gamestart,
 	enable_random,
 	enable_draw_hook,
+	enable_draw_hook1,
+	enable_draw_hook2,
 	enable_draw_num,
 	timer_enable,
 	time_resetn,
@@ -92,6 +97,7 @@ module game_view_FSM(
 	input clk;
 	input resetn;
 	input go;
+	input mode;
 	input next_level;
 
 
@@ -100,6 +106,8 @@ module game_view_FSM(
 			draw_diamond_done,
 			draw_background_done,
 			draw_hook_done,
+			draw_hook_done1,
+			draw_hook_done2,
 			draw_num_done,
 			draw_gameover_done,
 			draw_game_next_level_done,
@@ -123,6 +131,8 @@ module game_view_FSM(
 					enable_draw_background,
 					enable_random,
 					enable_draw_hook,
+					enable_draw_hook1,
+					enable_draw_hook2,
 					enable_draw_num,
 					enable_draw_gameover,
 					enable_draw_game_next_level,
@@ -158,6 +168,13 @@ module game_view_FSM(
 
 					DRAW_HOOK			= 6'd12,
 					DRAW_HOOK_WAIT		= 6'd13,
+
+					DRAW_HOOK1			= 6'd30,
+					DRAW_HOOK_WAIT1		= 6'd31,
+
+					DRAW_HOOK2			= 6'd32,
+					DRAW_HOOK_WAIT2		= 6'd33,
+
 
 					DRAW_NUM 			= 6'd14,
 					GAME						 = 6'd15,
@@ -195,7 +212,7 @@ module game_view_FSM(
 						end // Loop in current state until value is input
                 	DRAW_BACKGROUND_WAIT:begin
 						if ((stone_count == max_stone) & (gold_count == max_gold) & (diamond_count == max_diamond))
-							next_state = DRAW_HOOK;
+							next_state = (mode) ? DRAW_HOOK1 : DRAW_HOOK;
 						else if((gold_count == max_gold) & (stone_count == max_stone))
 							next_state = DRAW_DIAMOND;
 						else
@@ -226,13 +243,32 @@ module game_view_FSM(
 						next_state = DRAW_BACKGROUND_WAIT;
 					 end
 
-					 DRAW_HOOK: begin
+					DRAW_HOOK: begin
 					 	next_state = DRAW_HOOK_WAIT;
 					end
 					
 					DRAW_HOOK_WAIT: begin
 					  	next_state = (draw_hook_done) ? DRAW_NUM : DRAW_HOOK_WAIT;
 					end
+
+
+					DRAW_HOOK1: begin
+					 	next_state = DRAW_HOOK_WAIT1;
+					end
+					
+					DRAW_HOOK_WAIT1: begin
+					  	next_state = (draw_hook_done1) ? DRAW_HOOK2 : DRAW_HOOK_WAIT1;
+					end
+
+
+					DRAW_HOOK2: begin
+					 	next_state = DRAW_HOOK_WAIT2;
+					end
+					
+					DRAW_HOOK_WAIT2: begin
+					  	next_state = (draw_hook_done2) ? DRAW_NUM : DRAW_HOOK_WAIT2;
+					end
+
 
 					DRAW_NUM : begin
 					  	next_state = (draw_num_done) ? GAME : DRAW_NUM;
@@ -279,6 +315,9 @@ module game_view_FSM(
 			enable_draw_background = 1'b0;
 			enable_random = 1'b0;
 			enable_draw_hook = 1'b0;
+			enable_draw_hook1 = 1'b0;
+			enable_draw_hook2 = 1'b0;
+
 			enable_draw_num = 1'b0;
 			enable_draw_gameover = 1'b0;
 			enable_draw_game_next_level = 1'b0;
@@ -334,6 +373,31 @@ module game_view_FSM(
 			  	enable_draw_hook = 1'b1;
 				timer_enable = 1'b1;
 			end
+
+			DRAW_HOOK1: begin
+				draw_stone_flag = 1'b0;
+			  	enable_draw_hook1 = 1'b1;
+				timer_enable = 1'b1;
+			end
+			DRAW_HOOK_WAIT1: begin
+				draw_stone_flag = 1'b0;
+			  	enable_draw_hook1 = 1'b1;
+				timer_enable = 1'b1;
+				LEDR[0] = 1;
+			end
+
+			DRAW_HOOK2: begin
+				draw_stone_flag = 1'b0;
+			  	enable_draw_hook2 = 1'b1;
+				timer_enable = 1'b1;
+			end
+			DRAW_HOOK_WAIT2: begin
+				draw_stone_flag = 1'b0;
+			  	enable_draw_hook2 = 1'b1;
+				timer_enable = 1'b1;
+				LEDR[1] = 1;
+			end
+
 			DRAW_NUM: begin
 				draw_stone_flag = 1'b0;
 			  	enable_draw_num = 1'b1;
@@ -348,8 +412,7 @@ module game_view_FSM(
 			DRAW_GAME_NEXT_LEVEL: begin
 				draw_stone_flag = 1'b0;
 			  	enable_draw_game_next_level = 1'b1;
-				
-				LEDR[8] = 1'b1;
+
 			end
 			GAME: begin
 				draw_stone_flag = 1'b0;
@@ -366,7 +429,7 @@ module game_view_FSM(
 				time_resetn = 1'b0;
 				resetn_gold_stone_diamond = 1'b0;
 				resetn_rope = 1'b0;
-				LEDR[9] = 1'b1;
+
 			end
 			LEVEL_UP: begin
 			  level_up = 1'b1;

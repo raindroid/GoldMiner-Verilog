@@ -168,8 +168,10 @@ module fill
 	wire writeEn;
 	wire game_end = ~KEY[1];
 	reg drop;
+	reg drop2;
 	reg start;
 	reg bomb;
+	reg mode;
 	
 
 	
@@ -205,7 +207,9 @@ module fill
 		.resetn(resetn),
 		.go(start | ~KEY[3]),
 		.drop(drop | ~KEY[2]),
+		.drop2(drop2 | ~KEY[1]),
 		.bomb(bomb),
+		.mode(mode),
 
 		.X_out(x),
 		.Y_out(y),
@@ -260,13 +264,28 @@ module fill
 	always@(posedge CLOCK_50)begin
 	    start = 1'b0;
 		bomb = 1'b0;
+		mode =  1'b0;
+		drop = 1'b0;
+		drop2 = 1'b0;
 		if(keyboard_data == 8'h72)begin // DOWN FOR DROP
 		  	drop = 1'b1;
+			keyboard_data = 8'h0;
+		end	
+
+		if(keyboard_data == 8'h1B)begin // S FOR P2 DROP
+		  	drop = 1'b0;
+			drop2 = 1'b1;
 			keyboard_data = 8'h0;
 		end	
 		else if(keyboard_data == 8'h29)begin // SPACE TO START
 		  	drop = 1'b0;
 			start = 1'b1;
+			keyboard_data = 8'h0;
+		end	
+		else if(keyboard_data == 8'h1E)begin // 2 FOR 2-PLAYER
+		  	drop = 1'b0;
+			start = 1'b1;
+			mode = 1'b1;
 			keyboard_data = 8'h0;
 		end	
 		else if(keyboard_data == 8'h75)begin // UPTO USE BOMB

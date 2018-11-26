@@ -17,6 +17,8 @@ module view(
 		resetn,
 		go,
 		drop,
+		drop2,
+		mode,
 		bomb,
 
 		X_out,
@@ -33,7 +35,7 @@ module view(
 		
 		);
 	input clk, resetn;
-	input go, drop,bomb;
+	input go, drop, drop2, mode, bomb;
 
 	
 	output reg[8:0]X_out;
@@ -94,6 +96,19 @@ module view(
 			Color_out = Color_out_hook;
 			writeEn = writeEn_hook;
 		end
+		else if (enable_draw_hook1) begin
+			X_out = X_out_hook1;
+			Y_out = Y_out_hook1;
+			Color_out = Color_out_hook1;
+			writeEn = writeEn_hook1;
+		end
+		else if (enable_draw_hook2) begin
+			X_out = X_out_hook2;
+			Y_out = Y_out_hook2;
+			Color_out = Color_out_hook2;
+			writeEn = writeEn_hook2;
+		end
+
 		else if (enable_draw_num) begin
 		  	X_out = X_out_num;
 			Y_out = Y_out_num;
@@ -126,7 +141,13 @@ module view(
 
 	end
 	
-	
+	//reg mode
+	reg p2;
+	always@(*)begin
+		if(!resetn) p2 = 0;
+		else if(mode) p2 =1'b1;
+		else if(game_end) p2 = 0;
+	end
 	
 	
 	//instanciate lfsr to generate random x and y;
@@ -165,121 +186,11 @@ module view(
 		end
 	end
 	*/
-	
-	// wire [31:0]read_data;
-	// wire [3:0]read_address = (stone_count + gold_count + diamond_count);
-	// initialize_1 initial_1(
-	// .address(read_address),
-	// .clock(clk),
-	// .data(1),
-	// .wren(0),
-	// .q(read_data));
 
-// 	wire [1023: 0] data;
-// 	wire [5:0]memory_counter;
-// 	wire [63:0]moveIndex;
-// 	assign moveIndex = 0;
-// 	 ItemMap item_map(
-//     .clock(clk),
-//     .resetn(resetn), 
-//     .generateEn(enable_random), 
-//     .data(data),
-//     .counter(memory_counter),
-//     .stoneQuantity(1), 
-//     .goldQuantity(1), 
-//     .diamondQuantity(1),
-		
-
-//     .moveEn(0),
-//     .moveIndex(0),
-//     .moveX(0),      //please multiple by << 4
-//     .moveY(0),   
-
-//     .moveEn2(0),
-//     .moveIndex2(0),
-//     .moveX2(0),      //please multiple by << 4
-//     .moveY2(0),   
-
-//     .moveState2(0),
-//     .visible2(0),
-//     .moveState(0),
-//     .visible(0)
-//  );
 	
 	
 	assign x_init = read_data[31:23];
 	assign y_init = read_data[18:11];
-
-	// wire [8:0] x_init_gold,x_init_stone,x_init_diamond;
-	// wire [7:0] y_init_gold,y_init_stone,y_init_diamond;
-	
-	// //assign LEDR [9:1] = data[1 * 32 +31 : 1 * 32 + 23];
-	// assign x_init_stone = read_data[31:23];
-	// assign y_init_stone = read_data[18:11] + 80;
-
-	// // assign x_init_gold = data[(1 * 32 + 31):(1 * 32 + 23)];
-	// // assign y_init_gold = data[(1 * 32 + 18):(1 * 32 + 11)];
-
-	// // assign x_init_diamond = data[(2 * 32 + 31):(2 * 32 + 23)];
-	// // assign y_init_diamond = data[(2 * 32 + 18):(2 * 32 + 11)];
-
-	// assign x_init_gold = (data[1 * 32 + 31] << 8) + 
-    //                 (data[1 * 32 + 30] << 7) + 
-    //                 (data[1 * 32 + 29] << 6) + 
-    //                 (data[1 * 32 + 28] << 5) + 
-    //                 (data[1 * 32 + 27] << 4) + 
-    //                 (data[1 * 32 + 26] << 3) + 
-    //                 (data[1 * 32 + 25] << 2) + 
-    //                 (data[1 * 32 + 24] << 1) + 
-	//                 (data[1 * 32 + 23] << 0);
-
-	// assign y_init_gold = (data[1 * 32 + 18] << 7) + 
-    //                  (data[1 * 32 + 17] << 6) + 
-    //                  (data[1 * 32 + 16] << 5) + 
-    //                  (data[1 * 32 + 15] << 4) + 
-    //                  (data[1 * 32 + 14] << 3) + 
-    //                  (data[1 * 32 + 13] << 2) + 
-    //                  (data[1 * 32 + 12] << 1) + 
-    //                  (data[1 * 32 + 11] << 0) + 80;
-
-
-	// // assign x_init_stone = (data[(0) * 32 + 31] << 8) + 
-    // //                 (data[(0)  * 32 + 30] << 7) + 
-    // //                 (data[(0)  * 32 + 29] << 6) + 
-    // //                 (data[(0)  * 32 + 28] << 5) + 
-    // //                 (data[(0)  * 32 + 27] << 4) + 
-    // //                 (data[(0)  * 32 + 26] << 3) + 
-    // //                 (data[(0)  * 32 + 25] << 2) + 
-    // //                 (data[(0)  * 32 + 24] << 1) + 
-	// //                 (data[(0)  * 32 + 23] << 0);
-	
-    // // assign y_init_stone = (data[(0) * 32 + 18] << 7) + 
-    // //                  (data[(0) * 32 + 17] << 6) + 
-    // //                  (data[(0) * 32 + 16] << 5) + 
-    // //                  (data[(0) * 32 + 15] << 4) + 
-    // //                  (data[(0) * 32 + 14] << 3) + 
-    // //                  (data[(0) * 32 + 13] << 2) + 
-    // //                  (data[(0) * 32 + 12] << 1) + 
-    // //                  (data[(0) * 32 + 11] << 0) + 80;
-
-	// assign x_init_diamond = (data[(2) * 32 + 31] << 8) + 
-    //                 (data[(2)  * 32 + 30] << 7) + 
-    //                 (data[(2)  * 32 + 29] << 6) + 
-    //                 (data[(2)  * 32 + 28] << 5) + 
-    //                 (data[(2)  * 32 + 27] << 4) + 
-    //                 (data[(2)  * 32 + 26] << 3) + 
-    //                 (data[(2)  * 32 + 25] << 2) + 
-    //                 (data[(2)  * 32 + 24] << 1) + 
-	//                 (data[(2)  * 32 + 23] << 0);
-	
-    // assign y_init_diamond= (data[(2) * 32 + 18] << 7) + 
-    //                  (data[(2) * 32 + 17] << 6) + 
-    //                  (data[(2) * 32 + 16] << 5) + 
-    //                  (data[(2) * 32 + 15] << 4) + 
-    //                  (data[(2) * 32 + 14] << 3) + 
-    //                  (data[(2) * 32 + 13] << 2) + 
-    //                  (data[(2) * 32 + 12] << 1) + 
-    //                  (data[(2) * 32 + 11] << 0) + 80;
 
 	localparam max_gold = 4'd5;
 	localparam max_stone = 4'd7;
@@ -290,6 +201,7 @@ module view(
 		.clk(clk), 
 		.resetn(resetn),
 		.go(go),
+		.mode(p2),
 		.next_level(next_level),
 	
 		.draw_gold_done(draw_gold_done),
@@ -298,6 +210,8 @@ module view(
 		.draw_background_done(draw_background_done),
 		
 		.draw_hook_done(draw_hook_done), 
+		.draw_hook_done1(draw_hook_done1), 
+		.draw_hook_done2(draw_hook_done2), 
 		.draw_num_done(draw_num_done),
 		.draw_gameover_done(draw_gameover_done),
 		.draw_game_next_level_done(draw_game_next_level_done),
@@ -318,6 +232,8 @@ module view(
 		.enable_draw_diamond(enable_draw_diamond),
 		.enable_draw_background(enable_draw_background),
 		.enable_draw_hook(enable_draw_hook),
+		.enable_draw_hook1(enable_draw_hook1),
+		.enable_draw_hook2(enable_draw_hook2),
 		.enable_random(enable_random),
 		.enable_draw_num(enable_draw_num),
 		.enable_draw_gameover(enable_draw_gameover),
@@ -328,7 +244,7 @@ module view(
 		.time_resetn(time_resetn),
 		.resetn_rope(resetn_rope),
 		.level_up(level_up),
-		//.LEDR(LEDR)
+		.LEDR(LEDR)
 
 	);
 	
@@ -553,7 +469,7 @@ module view(
 		draw_hook_done,
 		enable_draw_hook;
 
-	draw_hook hook1(
+	draw_hook hook0(
 		.clock(clk), 
 		.resetn(resetn),
 		.enable(enable_draw_hook),
@@ -566,6 +482,53 @@ module view(
 		.done(draw_hook_done)
 
 	);
+
+	//for 2-player mode
+	wire 	[8:0] X_out_hook1;
+	wire	[7:0] Y_out_hook1;
+	wire	[11:0] Color_out_hook1;
+	wire	writeEn_hook1,
+		draw_hook_done1,
+		enable_draw_hook1;
+
+	draw_hook hook1(
+		.clock(clk), 
+		.resetn(resetn),
+		.enable(enable_draw_hook1),
+		.length(rope_len1),
+		.degree(degree1),
+		.outX(X_out_hook1),
+		.outY(Y_out_hook1),
+		.color(Color_out_hook1),
+		.writeEn(writeEn_hook1),
+		.done(draw_hook_done1)
+
+	);
+
+
+	wire 	[8:0] X_out_hook2;
+	wire	[7:0] Y_out_hook2;
+	wire	[11:0] Color_out_hook2;
+	wire	writeEn_hook2,
+		draw_hook_done2,
+		enable_draw_hook2;
+
+	draw_hook hook2(
+		.clock(clk), 
+		.resetn(resetn),
+		.enable(enable_draw_hook2),
+		.length(rope_len2),
+		.degree(degree2),
+		.outX(X_out_hook2),
+		.outY(Y_out_hook2),
+		.color(Color_out_hook2),
+		.writeEn(writeEn_hook2),
+		.done(draw_hook_done2)
+
+	);
+
+
+
 
 	wire 	[8:0] X_out_num;
 	wire	[7:0] Y_out_num;
@@ -603,7 +566,7 @@ module view(
 
 	wire timer_enable, time_resetn;
 	wire time_up;
-	wire [31:0]read_data;
+	
 
 	timer t0(
 		.clk(clk),
@@ -617,7 +580,7 @@ module view(
 	wire [9:0] rotation_speed, line_speed, endX, endY, degree, draw_stone_flag;
 	wire [9:0]rope_len;
 	wire [9:0] current_score;
-
+	wire [31:0]read_data;
 
 	//rope ram module instanciation
 	Rope rope0(
@@ -652,6 +615,67 @@ module view(
 		// output bomb_use
 
  	);
+
+
+	//for 2 players mode
+	wire [9:0] endX1, endY1, degree1;
+	wire [9:0]rope_len1;
+	wire [9:0] current_score1;
+	wire [31:0]read_data1;
+	Rope1 rope1(
+		.clock(clk),
+		.resetn(resetn_rope), 
+		.enable(1),
+		
+		.draw_stone_flag(draw_stone_flag), //on when the previous drawing is in process
+		.draw_index(stone_count + gold_count + diamond_count),
+		.quantity(max_gold+max_diamond+max_stone),
+
+		.go_KEY(drop), //physical key for the go input
+		//bomb_KEY,
+		// input bomb_quantity,
+
+		.endX(endX1), 
+		.endY(endY1), 
+		.degree(degree1), //not all the output is useful
+		.rope_len(rope_len1),
+
+		.data(read_data1),
+		.current_score(current_score1)
+		// output bomb_use
+
+ 	);
+
+	wire [9:0] endX2, endY2, degree2;
+	wire [9:0]rope_len2;
+	wire [9:0] current_score2;
+	wire [31:0]read_data2;
+	Rope2 rope2(
+		.clock(clk),
+		.resetn(resetn_rope), 
+		.enable(1),
+		
+		.draw_stone_flag(draw_stone_flag), //on when the previous drawing is in process
+		.draw_index(stone_count + gold_count + diamond_count),
+		.quantity(max_gold+max_diamond+max_stone),
+
+		.go_KEY(drop2), //physical key for the go input
+		//bomb_KEY,
+		// input bomb_quantity,
+
+		.endX(endX2), 
+		.endY(endY2), 
+		.degree(degree2), //not all the output is useful
+		.rope_len(rope_len2),
+
+		.data(read_data2),
+		.current_score(current_score2)
+		// output bomb_use
+
+ 	);
+
+
+
 	// reg [7:0]max_degree,min_degree;
 	// always@(posedge clk)begin
 	// 	if(!resetn) begin
@@ -690,7 +714,6 @@ module view(
 	wire draw_game_next_level_done;
 	wire writeEn_game_next_level;
 	
-	assign LEDR[0] = draw_game_next_level_done;
 
 	draw_game_next_level dgn0(
     .clk(clk), 
