@@ -426,7 +426,7 @@ module Rope1(
                     next_state = S_IN_CHECK_READ;
             end
             S_IN_CHECK_READ: begin
-                if (draw_stone_flag | second_live)
+                if (read_address != rope_index)
                     next_state = S_IN_CHECK;
                 else begin 
                     tempData <= read_data;
