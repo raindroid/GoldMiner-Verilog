@@ -71,7 +71,7 @@ module Rope1(
     assign data = read_data;
 	wire [3:0]read_address;
     assign read_address = draw_stone_flag ? draw_index : 
-        (0 ? second_index : rope_index); //BUG STARTS
+        rope_index; //(second_live ? second_index : rope_index); //BUG STARTS
 
     //some info
     reg [31:0] frame_counter;
@@ -221,6 +221,7 @@ module Rope1(
             end
             S_PRE_RCCW: begin
                 second_live = 1;
+                rope_index = second_index;
                  if (rope_len < ROPE_MIN + 1) begin
                   //reach the top
                     if (found_stone)
@@ -253,6 +254,7 @@ module Rope1(
             end
             S_PRE_RCW: begin
                 second_live = 1;
+                rope_index = second_index;
                  if (rope_len < ROPE_MIN + 1) begin
                   //reach the top
                     if (found_stone)
@@ -285,6 +287,7 @@ module Rope1(
             end
             S_PRE_UP: begin
                 second_live = 1;
+                rope_index = second_index;
                 frame_counter = frame_counter + 1;
                 if (frame_counter >= (FRAME_CLOCK * 2 + (64'b1 * found_stone * UP_DELAY_TIMES * FRAME_CLOCK))) begin
                     next_state = S_IN_UP;
@@ -396,6 +399,7 @@ module Rope1(
             end
             S_PRE_DOWN: begin
                 second_live = 1;
+                rope_index = second_index;
                 found_stone = 0;
                 frame_counter = frame_counter + 1;
                 if (frame_counter >= FRAME_CLOCK) begin
