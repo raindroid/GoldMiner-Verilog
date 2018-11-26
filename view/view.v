@@ -581,6 +581,12 @@ module view(
 	wire [9:0]rope_len;
 	wire [9:0] current_score;
 	wire [31:0]read_data;
+	assign read_data = p2 ? read_data1 : read_data0;
+	assign current_score = p2 ? (current_score1 + current_score2) : current_score0;
+
+
+	wire [31:0] read_data0;
+	wire [9:0] current_score0;
 
 	//rope ram module instanciation
 	Rope rope0(
@@ -604,7 +610,7 @@ module view(
 		.rope_len(rope_len),
 
 		.data(read_data),
-		.current_score(current_score),
+		.current_score(current_score0),
 		//.LEDR(LEDR),
 		.HEX0(HEX0),
 		.HEX1(HEX1),
@@ -618,6 +624,13 @@ module view(
 
 
 	//for 2 players mode
+	//General variable
+	wire second_live;
+	wire [3:0] second_index;
+	wire [31:0] second_data_write;
+	wire second_writeEn;
+	wire [31:0] second_read_data;
+	//Player 1
 	wire [9:0] endX1, endY1, degree1;
 	wire [9:0]rope_len1;
 	wire [9:0] current_score1;
@@ -641,15 +654,22 @@ module view(
 		.rope_len(rope_len1),
 
 		.data(read_data1),
-		.current_score(current_score1)
+		.current_score(current_score1),
 		// output bomb_use
+
+		//Connection to Rope2
+		.second_live(second_live), //Connect to Rope2::live
+		.second_index(second_index) //Connect to Rope2::read_address
+		.second_data_write(second_data_write), //Connect to Rope2::data_write
+		.second_writeEn(second_writeEn), //Connect to Rope2::writeEn
+		.second_read_data(second_read_data) //Connect to Rope2::read_data
 
  	);
 
+	//Player 2
 	wire [9:0] endX2, endY2, degree2;
 	wire [9:0]rope_len2;
 	wire [9:0] current_score2;
-	wire [31:0]read_data2;
 	Rope2 rope2(
 		.clock(clk),
 		.resetn(resetn_rope), 
@@ -668,9 +688,15 @@ module view(
 		.degree(degree2), //not all the output is useful
 		.rope_len(rope_len2),
 
-		.data(read_data2),
-		.current_score(current_score2)
+		.current_score(current_score2),
 		// output bomb_use
+
+		//Control from rope1
+		.live(second_live),
+		.read_address(second_index),
+		.data_write(second_data_write),
+		.writeEn(second_writeEn),
+		.read_data(second_read_data)
 
  	);
 

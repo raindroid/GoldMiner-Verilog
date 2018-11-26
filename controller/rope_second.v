@@ -15,7 +15,7 @@ module Rope2(
     output reg[9:0] endX, endY, degree, //not all the output is useful
     output [9:0]rope_len,
 
-    output [31:0] data,
+    // output [31:0] data,
     output [9:0] current_score,
 
     //Control from rope1
@@ -64,7 +64,7 @@ module Rope2(
     
     //for data manipulation
     // wire [31:0]read_data; //data output
-    assign data = read_data;
+    // assign data = read_data;
 	// wire [3:0]read_address;
     assign read_address = rope_index;
 
