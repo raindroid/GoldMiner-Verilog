@@ -79,12 +79,12 @@ module Rope1(
     reg [3:0] move_index;   //possibly store the stone we need to move
     reg [31:0] tempData;    
     wire [1:0] tempType;
-    assign tempType[1:0] = read_data[3:2];
+    assign tempType[1:0] = tempData[3:2];
 
     //for check part
     wire [13:0] tempX, tempY;
-    assign tempX = {5'b0, read_data[31:23]};
-    assign tempY = {6'b0, read_data[18:11]};
+    assign tempX = {5'b0, tempData[31:23]};
+    assign tempY = {6'b0, tempData[18:11]};
     // assign rope_max = (endX < 0)
 
     //for second rope
@@ -231,7 +231,7 @@ module Rope1(
                 end
                 found_stone = 0;
                 frame_counter = frame_counter + 1;
-                if (frame_counter >= FRAME_CLOCK & (!draw_stone_flag)) begin
+                if (frame_counter >= FRAME_CLOCK) begin
                     next_state = S_IN_RCCW;
                     frame_counter = 0;
                 end
@@ -263,7 +263,7 @@ module Rope1(
                 end
                 found_stone = 0;
                 frame_counter = frame_counter + 1;
-                if (frame_counter >= FRAME_CLOCK & (!draw_stone_flag)) begin
+                if (frame_counter >= FRAME_CLOCK) begin
                     next_state = S_IN_RCW;
                     frame_counter = 0;
                 end
@@ -285,8 +285,7 @@ module Rope1(
             S_PRE_UP: begin
                 second_live = 1;
                 frame_counter = frame_counter + 1;
-                if (frame_counter >= (FRAME_CLOCK * 2 + (64'b1 * found_stone * UP_DELAY_TIMES * FRAME_CLOCK)) 
-                    & (!draw_stone_flag)) begin
+                if (frame_counter >= (FRAME_CLOCK * 2 + (64'b1 * found_stone * UP_DELAY_TIMES * FRAME_CLOCK))) begin
                     next_state = S_IN_UP;
                     frame_counter = 0;
                 end
@@ -318,14 +317,15 @@ module Rope1(
             end
             S_MOVE_READ: begin
                 rope_index = move_index;
-                if (draw_stone_flag) 
-                    next_state = S_MOVE_READ;
-                else 
-                    next_state = S_MOVE_READ_WAIT;
+                next_state = S_MOVE_READ_WAIT;
             end
             S_MOVE_READ_WAIT: begin
-                tempData = read_data;
-                next_state = S_MOVE_NEW_XY;
+                if (draw_stone_flag)
+                    next_state = S_MOVE_READ_WAIT;
+                else begin
+                    tempData = read_data;
+                    next_state = S_MOVE_NEW_XY;
+                end
             end
             S_MOVE_NEW_XY: begin
                 // tempData = tempData - ((DELTA_LEN * deg_sin) >> 1) * 64'd1 -
@@ -342,16 +342,20 @@ module Rope1(
                 next_state = S_MOVE_WRITE_WAIT;
             end
             S_MOVE_WRITE_WAIT: begin
-                writeEn = 1;
-                // rope_index = move_index;
-                if (rope_len < ROPE_MIN + 10'd10) begin
-                    next_state = S_AFTER_MOVE;
+                if (draw_stone_flag)
+                    next_state = S_MOVE_WRITE_WAIT;
+                else begin 
+                    writeEn = 1;
+                    // rope_index = move_index;
+                    if (rope_len < ROPE_MIN + 10'd10) begin
+                        next_state = S_AFTER_MOVE;
+                    end
+                    else begin
+                        // data_write = tempData;
+                        next_state = S_PRE_UP;
+                    end
+                    frame_counter = 0;
                 end
-                else begin
-                    // data_write = tempData;
-                    next_state = S_PRE_UP;
-                end
-                frame_counter = 0;
             end
             // S_MOVE_DELAY: begin
             //     if (frame_counter == 1) writeEn = 1;
@@ -375,20 +379,20 @@ module Rope1(
                 next_state = S_AFTER_MOVE_WAIT;
             end
             S_AFTER_MOVE_WAIT: begin
-                writeEn = 1;
-                found_stone = 0;
-                next_state = S_PRE_UP;
-                // if (rCW)
-                //     next_state = S_PRE_RCW;
-                // else
-                //     next_state = S_PRE_RCCW;
-                frame_counter = 0;
+                if (draw_stone_flag)
+                    next_state = S_AFTER_MOVE_WAIT;
+                else begin 
+                    writeEn = 1;
+                    found_stone = 0;
+                    next_state = S_PRE_UP;
+                    frame_counter = 0;
+                end
             end
             S_PRE_DOWN: begin
                 second_live = 1;
                 found_stone = 0;
                 frame_counter = frame_counter + 1;
-                if (frame_counter >= FRAME_CLOCK & (!draw_stone_flag)) begin
+                if (frame_counter >= FRAME_CLOCK) begin
                     next_state = S_IN_DOWN;
                     frame_counter = 0;
                 end
@@ -400,7 +404,7 @@ module Rope1(
                 frame_counter = 0;
                 length = length + (DELTA_LEN << 8);
                 if (endX < 2 | endX >= 318 | endY >= 238 ) begin
-                    next_state = S_PRE_UP;
+                    next_state = S_IN_UP;
                 end
                 else
                     next_state = S_PRE_CHECK;
@@ -419,8 +423,12 @@ module Rope1(
                     next_state = S_IN_CHECK_READ;
             end
             S_IN_CHECK_READ: begin
-                tempData = read_data;
-                next_state = S_IN_CHECK_CHECK;
+                if (draw_stone_flag)
+                    next_state = S_IN_CHECK_READ;
+                else begin 
+                    tempData <= read_data;
+                    next_state = S_IN_CHECK_CHECK;
+                end
             end
             S_IN_CHECK_CHECK: begin
                 if (tempData[0] | !tempData[1]) begin
