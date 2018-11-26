@@ -71,7 +71,7 @@ module Rope1(
     assign data = read_data;
 	wire [3:0]read_address;
     assign read_address = draw_stone_flag ? draw_index : 
-        (second_live ? second_index : rope_index);
+        (second_live ? second_index : rope_index); //BUG STARTS
 
     //some info
     reg [31:0] frame_counter;
@@ -321,7 +321,10 @@ module Rope1(
             end
             S_MOVE_READ_WAIT: begin
                 if (draw_stone_flag)
-                    next_state = S_MOVE_READ_WAIT;
+                    next_state = S_MOVE_READ;
+                else if (second_live) begin
+                    next_state = S_MOVE_READ;
+                end
                 else begin
                     tempData = read_data;
                     next_state = S_MOVE_NEW_XY;
@@ -423,10 +426,10 @@ module Rope1(
                     next_state = S_IN_CHECK_READ;
             end
             S_IN_CHECK_READ: begin
-                if (draw_stone_flag)
-                    next_state = S_IN_CHECK_READ;
+                if (draw_stone_flag | second_live)
+                    next_state = S_IN_CHECK;
                 else begin 
-                    tempData = read_data;
+                    tempData <= read_data;
                     next_state = S_IN_CHECK_CHECK;
                 end
             end
