@@ -71,7 +71,7 @@ module Rope1(
     assign data = read_data;
 	wire [3:0]read_address;
     assign read_address = draw_stone_flag ? draw_index : 
-        rope_index; //(second_live ? second_index : rope_index);
+        (second_live ? second_index : rope_index);
 
     //some info
     reg [31:0] frame_counter;
