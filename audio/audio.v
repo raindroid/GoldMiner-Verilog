@@ -1,4 +1,5 @@
 module audio(
+	input [9:0]SW,
 	input               resetn,
 	input               clk,
 	input               enable,
@@ -94,16 +95,16 @@ module audio(
 
 	reg snd;
 
-	always @(posedge CLOCK_50)
+	always @(posedge clk)
 		if(delay_cnt == delay) begin
 			delay_cnt <= 0;
 			snd <= !snd;
 		end
 		else delay_cnt <= delay_cnt + 1;
 
-	assign delay = {sound_sample, 15'd3000};
+	assign delay = {SW[3:0], 15'd3000};
 
-	wire [31:0] sound = (sound_sample == 0) ? 0 : snd ? 32'd10000000 : -32'd10000000;
+	wire [31:0] sound = (SW == 0) ? 0 : snd ? 32'd10000000 : -32'd10000000;
 
 
 	assign read_audio_in			= audio_in_available & audio_out_allowed;

@@ -74,7 +74,7 @@ module NewRope(
     parameter DELTA_LEN = 18'd5;
         
     //for data manipulation
-    
+    reg [31:0]read_data; //data output
     assign address = rope_index;
 
     //some info
@@ -392,13 +392,13 @@ module NewRope(
                     next_state = S_PRE_UP;              
                 end
             end
-          default: next_state = S_STOP;
+          default: next_state = S_START;
         endcase
     end
 
     always @(posedge clock) begin
         if (!resetn) begin
-            current_state <= S_STOP;
+            current_state <= S_START;
         end            
         // else if (draw_stone_flag) begin
         //     current_state <=S_WAIT_FOR_LIVE ;

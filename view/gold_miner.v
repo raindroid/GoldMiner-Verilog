@@ -384,6 +384,7 @@ module fill
 	//Audio
 	wire enable_audio = 1;
 	audio audio0(
+		.SW(SW[9:0]),
 		.resetn(resetn),
 		.clk(CLOCK_50),
 		.enable(enable_audio),
