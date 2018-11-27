@@ -602,7 +602,7 @@ module view(
 	wire address0, address1, address2;
 	wire [31:0] write_data1, write_data2;
 	wire read_done_draw, read_done_rope1, read_done_rope2;
-	wire write_done_rope1, write_done_rope2;
+	wire write_done_draw, write_done_rope1, write_done_rope2;
 	wire [31:0]read_data;
 	assign read_req_draw = draw_stone_flag;
 	assign address0 = stone_count + gold_count + diamond_count;
@@ -622,7 +622,7 @@ module view(
 		.write_data2(write_data2),
 
 		.read_data_done({read_done_draw, read_done_rope1, read_done_rope2}), 
-		.write_data_done({1'd0, write_done_rope1, write_done_rope2}),
+		.write_data_done({write_done_draw, write_done_rope1, write_done_rope2}),
 		.data(read_data)
 	);
 
