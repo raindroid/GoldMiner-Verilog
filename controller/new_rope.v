@@ -87,8 +87,8 @@ module NewRope(
 
     //for check part
     wire [13:0] tempX, tempY;
-    assign tempX = {5'b0, read_data[31:23]};
-    assign tempY = {6'b0, read_data[18:11]};
+    assign tempX = {5'b0, tempData[31:23]};
+    assign tempY = {6'b0, tempData[18:11]};
 
     //for score
     parameter SCORE_STONE = 8'd10;
