@@ -1,0 +1,20 @@
+
+State Machine - |top|MapRam:map|current_state
+Name current_state.S_READ_REQ_2_R current_state.S_READ_REQ_1_R current_state.S_WRITE_REQ_2_R current_state.S_WRITE_REQ_1_R current_state.S_READ_REQ_0_R current_state.S_FUNC_SEL current_state.S_START 
+current_state.S_START 0 0 0 0 0 0 0 
+current_state.S_FUNC_SEL 0 0 0 0 0 1 1 
+current_state.S_READ_REQ_0_R 0 0 0 0 1 0 1 
+current_state.S_WRITE_REQ_1_R 0 0 0 1 0 0 1 
+current_state.S_WRITE_REQ_2_R 0 0 1 0 0 0 1 
+current_state.S_READ_REQ_1_R 0 1 0 0 0 0 1 
+current_state.S_READ_REQ_2_R 1 0 0 0 0 0 1 
+
+State Machine - |top|MapRam:map|next_state
+Name next_state.S_READ_REQ_2_R next_state.S_READ_REQ_1_R next_state.S_WRITE_REQ_2_R next_state.S_WRITE_REQ_1_R next_state.S_READ_REQ_0_R next_state.S_FUNC_SEL next_state.S_START 
+next_state.S_START 0 0 0 0 0 0 0 
+next_state.S_FUNC_SEL 0 0 0 0 0 1 1 
+next_state.S_READ_REQ_0_R 0 0 0 0 1 0 1 
+next_state.S_WRITE_REQ_1_R 0 0 0 1 0 0 1 
+next_state.S_WRITE_REQ_2_R 0 0 1 0 0 0 1 
+next_state.S_READ_REQ_1_R 0 1 0 0 0 0 1 
+next_state.S_READ_REQ_2_R 1 0 0 0 0 0 1 

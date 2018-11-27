@@ -591,7 +591,8 @@ module view(
 		.time_up(time_up)
 	);
 
-	wire [9:0] endX, endY, degree, draw_stone_flag;
+	wire [9:0] endX, endY, degree;
+	wire draw_stone_flag;
 	wire [9:0] rope_len;
 	wire [9:0] current_score;
 	assign current_score = p2 ? (current_score1 + current_score2) : current_score1;
