@@ -44,7 +44,7 @@ module initialize_1(
             q <= rdata;
         end
         else begin
-            
+
             rdata <= data;
             q <= data;
         end
@@ -150,9 +150,9 @@ module MapRam(
 
     always @(posedge clock) begin
         if (!resetn)
-            current_state = S_START;
+            current_state <= S_START;
         else
-            current_state = next_state;
+            current_state <= next_state;
     end
     
 endmodule // MapRam

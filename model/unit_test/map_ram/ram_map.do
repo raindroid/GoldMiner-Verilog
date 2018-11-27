@@ -18,24 +18,24 @@ force {resetn} 0 0, 1 20ns
 force {enable} 1
 force {write_data1} 1
 force {write_data2} 10
-run 30ns
+run 130ns
 
 force {read_req_code} 111
 force {write_req_code} 000
 force {address0} 0
-run 40ns
+run 140ns
 
 force {read_req_code} 110
 force {write_req_code} 000
 force {address1} 0
-run 40ns
+run 140ns
 
 force {read_req_code} 000
 force {write_req_code} 110
 force {address1} 0
 force {write_data1} 1
 force {write_data2} 10
-run 40ns
+run 140ns
 
 force {read_req_code} 000
 force {write_req_code} 100

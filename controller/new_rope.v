@@ -20,6 +20,7 @@ module NewRope(
     output [3:0] address,
     output reg [31:0] write_data,
     input read_done, write_done,
+    output release_resource,
 
     //Test only
     output [9:0]LEDR,
@@ -160,6 +161,7 @@ module NewRope(
 
         read_req = 0;
         write_req = 0;
+        release_resource = 0;
         
         case (current_state)
             S_STOP: begin
@@ -262,6 +264,7 @@ module NewRope(
                     next_state = S_MOVE_READ_WAIT;
                 end
                 else begin 
+                    release_resource = 1;
                     tempData = read_data;
                     next_state = S_MOVE_NEW_XY;
                 end
@@ -275,9 +278,12 @@ module NewRope(
                 next_state = S_MOVE_WRITE_WAIT;
             end
             S_MOVE_WRITE_WAIT: begin
-                if (!write_done)
+                if (!write_done) begin
+                    write_req = 1;
                     next_state = S_MOVE_WRITE_WAIT;
+                end
                 else begin 
+                    release_resource = 1;
                     if (rope_len < ROPE_MIN + 10'd10) begin
                         next_state = S_AFTER_MOVE;
                     end
@@ -307,6 +313,7 @@ module NewRope(
                     next_state = S_AFTER_MOVE_WAIT;
                 end
                 else begin 
+                    release_resource = 1;
                     found_stone = 0;
                     next_state = S_PRE_UP;
                     frame_counter = 0;
@@ -353,6 +360,7 @@ module NewRope(
                     next_state = S_IN_CHECK_READ;
                 end
                 else begin 
+                    release_resource = 1;
                     tempData = read_data;
                     next_state = S_IN_CHECK_CHECK;
                 end
@@ -386,9 +394,11 @@ module NewRope(
             end
             S_SAVE_WAIT: begin
                 if (!write_done) begin
+                    write_req = 1;
                     next_state = S_SAVE_WAIT;
                 end
                 else begin 
+                    release_resource = 1;
                     next_state = S_PRE_UP;              
                 end
             end

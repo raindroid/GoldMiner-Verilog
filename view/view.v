@@ -621,6 +621,7 @@ module view(
 		.address2(address2),
 		.write_data1(write_data1),
 		.write_data2(write_data2),
+		.release_resource(release_resource1 | release_resource2),
 
 		.read_data_done({read_done_draw, read_done_rope1, read_done_rope2}), 
 		.write_data_done({write_done_draw, write_done_rope1, write_done_rope2}),
@@ -676,6 +677,7 @@ module view(
 	wire [9:0]rope_len1;
 	wire [9:0] current_score1;
 	wire [31:0]read_data1;
+	wire release_resource1;
 	NewRope rope1(
 		.clock(clk),
 		.resetn(resetn_rope), 
@@ -702,13 +704,15 @@ module view(
 		.address(address1),
 		.write_data(write_data1),
 		.read_done(read_done_rope1), 
-		.write_done(write_done_rope1)
+		.write_done(write_done_rope1),
+		.release_resource(release_resource1)
  	);
 
 	//Player 2
 	wire [9:0] endX2, endY2, degree2;
 	wire [9:0]rope_len2;
 	wire [9:0] current_score2;
+	wire release_resource2;
 	NewRope rope2(
 		.clock(clk),
 		.resetn(resetn_rope), 
@@ -732,7 +736,8 @@ module view(
 		.address(address2),
 		.write_data(write_data2),
 		.read_done(read_done_rope2), 
-		.write_done(write_done_rope2)
+		.write_done(write_done_rope2),
+		.release_resource(release_resource2)
  	);
 
 

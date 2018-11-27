@@ -35,6 +35,8 @@ module MapRam(
     input [3:0] address0, address1, address2,
     input [31:0] write_data1, write_data2,
 
+    input release_resource;
+
     output reg [2:0] read_data_done, write_data_done,
     output [31:0] data
  );
@@ -43,10 +45,12 @@ module MapRam(
     
     reg writeEn;
     reg [31:0] write_data;
+
+    assign gen_address = (read_req_code[0]) ? address0 : address;
     
     //I dont know the name right now
     initialize_1 map(
-        .address(address),
+        .address(gen_address),
         .clock(clock),
         .data(write_data),
         .wren(writeEn),
@@ -61,12 +65,13 @@ module MapRam(
                 S_WRITE_REQ_1_R = 6'd    5,
                 S_WRITE_REQ_2_R = 6'd    7,
                 S_READ_REQ_1_R  = 6'd    9,
-                S_READ_REQ_2_R  = 6'd   11;
+                S_READ_REQ_2_R  = 6'd   11,
+                S_WAIT_FOR_RELEASE = 6'd13;
     
     always @(posedge clock) begin
         writeEn = 0;
-        read_data_done = 0;
-        write_data_done = 0;
+        // read_data_done = 0;
+        // write_data_done = 0;
         case (current_state)
             S_START: begin
                 next_state = S_FUNC_SEL;
@@ -74,7 +79,7 @@ module MapRam(
             S_FUNC_SEL: begin
                 if (read_req_code[0]) begin
                     address = address0;
-                    next_state = S_READ_REQ_0_R;
+                    next_state = S_FUNC_SEL;
                 end
                 else if (write_req_code[1]) begin
                     address = address1;
@@ -101,33 +106,44 @@ module MapRam(
                 end
             end
             S_READ_REQ_0_R: begin
-                read_data_done[0] = 1;
-                next_state = S_START;
+                read_data_done = 3'b1;
+                write_data_done = 3'b0;
+                next_state = S_WAIT_FOR_RELEASE;
             end
             S_WRITE_REQ_1_R: begin
-                write_data_done[1] = 1;
-                next_state = S_START;
+                read_data_done = 3'b0;
+                write_data_done = 3'b10;
+                next_state = S_WAIT_FOR_RELEASE;
             end
             S_WRITE_REQ_2_R: begin
-                write_data_done[2] = 1;
-                next_state = S_START;
+                read_data_done = 3'b0;
+                write_data_done = 3'b100;
+                next_state = S_WAIT_FOR_RELEASE;
             end
             S_READ_REQ_1_R: begin
-                read_data_done[1] = 1;
-                next_state = S_START;
+                read_data_done = 3'b10;
+                write_data_done = 3'b0;
+                next_state = S_WAIT_FOR_RELEASE;
             end
             S_READ_REQ_2_R: begin
-                read_data_done[2] = 1;
-                next_state = S_START;
+                read_data_done = 3'b100;
+                write_data_done = 3'b0;
+                next_state = S_WAIT_FOR_RELEASE;
+            end
+            S_WAIT_FOR_RELEASE: begin
+                if (release_resource)
+                    next_state = S_START;
+                else
+                    next_state = S_WAIT_FOR_RELEASE;
             end
         endcase
     end
 
     always @(posedge clock) begin
         if (!resetn)
-            current_state = S_START;
+            current_state <= S_START;
         else
-            current_state = next_state;
+            current_state <= next_state;
     end
     
 endmodule // MapRam
