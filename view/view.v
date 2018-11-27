@@ -481,19 +481,19 @@ module view(
 		draw_hook_done,
 		enable_draw_hook;
 
-	draw_hook hook0(
-		.clock(clk), 
-		.resetn(resetn),
-		.enable(enable_draw_hook),
-		.length(rope_len),
-		.degree(degree),
-		.outX(X_out_hook),
-		.outY(Y_out_hook),
-		.color(Color_out_hook),
-		.writeEn(writeEn_hook),
-		.done(draw_hook_done),
-		.START_X(64'd160)
-	);
+	// draw_hook hook0(
+	// 	.clock(clk), 
+	// 	.resetn(resetn),
+	// 	.enable(enable_draw_hook),
+	// 	.length(rope_len),
+	// 	.degree(degree),
+	// 	.outX(X_out_hook),
+	// 	.outY(Y_out_hook),
+	// 	.color(Color_out_hook),
+	// 	.writeEn(writeEn_hook),
+	// 	.done(draw_hook_done),
+	// 	.START_X(64'd160)
+	// );
 
 	//for 2-player mode
 	wire 	[8:0] X_out_hook1;
@@ -514,7 +514,7 @@ module view(
 		.color(Color_out_hook1),
 		.writeEn(writeEn_hook1),
 		.done(draw_hook_done1),
-		.START_X(64'd77)
+		.START_X(p2 ? 64'd77 : 64'd160)
 	);
 
 
@@ -591,53 +591,76 @@ module view(
 		.time_up(time_up)
 	);
 
-	wire [9:0] rotation_speed, line_speed, endX, endY, degree, draw_stone_flag;
-	wire [9:0]rope_len;
+	wire [9:0] endX, endY, degree, draw_stone_flag;
+	wire [9:0] rope_len;
 	wire [9:0] current_score;
-	wire [31:0]read_data;
-	assign read_data = p2 ? read_data1 : read_data0;
-	assign current_score = p2 ? (current_score1 + current_score2) : current_score0;
+	assign current_score = p2 ? (current_score1 + current_score2) : current_score1;
 
+	//for maps
+	wire read_req_draw, read_req_rope1, read_req_rope2;
+	wire write_req_rope1, write_req_rope2;
+	wire address0, address1, address2;
+	wire [31:0] write_data1, write_data2;
+	wire read_done_draw, read_done_rope1, read_done_rope2;
+	wire write_done_rope1, write_done_rope2;
+	wire [31:0]read_data;
+	assign read_req_draw = draw_stone_flag;
+	assign address0 = stone_count + gold_count + diamond_count;
+
+	MapRam maps(
+		.clock(clk), 
+		.resetn(resetn), 
+		.enable(1),	//Useless
+
+		.read_req_code({read_req_draw, read_req_rope1, read_req_rope2}), 
+		.write_req_code({0, write_req_rope1, write_req_rope2}),
+
+		.address0(address0), 
+		.address1(address1), 
+		.address2(address2),
+		.write_data1(write_data1),
+		.write_data2(write_data2),
+
+		.read_data_done({read_done_draw, read_done_rope1, read_done_rope2}), 
+		.write_data_done({0, read_done_rope1, read_done_rope2}),
+		.data(read_data)
+	);
 
 	wire [31:0] read_data0;
 	wire [9:0] current_score0;
 	wire reset_done;
 
 	//rope ram module instanciation
-	Rope rope0(
-		.clock(clk),
-		.resetn(resetn_rope), 
-		.enable(!p2),
-		.level(level),
+	// Rope rope0(
+	// 	.clock(clk),
+	// 	.resetn(resetn_rope), 
+	// 	.enable(!p2),
+	// 	.level(level),
 		
-		.draw_stone_flag(draw_stone_flag), //on when the previous drawing is in process
-		.draw_index(stone_count + gold_count + diamond_count),
-		.quantity(max_gold+max_diamond+max_stone),
+	// 	.draw_stone_flag(draw_stone_flag), //on when the previous drawing is in process
+	// 	.draw_index(stone_count + gold_count + diamond_count),
+	// 	.quantity(max_gold+max_diamond+max_stone),
 
-		.go_KEY(drop), //physical key for the go input
-		//bomb_KEY,
-		// input bomb_quantity,
+	// 	.go_KEY(drop), //physical key for the go input
 
-		.rotation_speed(rotation_speed),
-		.line_speed(line_speed),
-		.endX(endX), 
-		.endY(endY), 
-		.degree(degree), //not all the output is useful
-		.rope_len(rope_len),
+	// 	.endX(endX), 
+	// 	.endY(endY), 
+	// 	.degree(degree), //not all the output is useful
+	// 	.rope_len(rope_len),
 
-		.data(read_data0),
-		.current_score(current_score0),
-		.reset_done(reset_done),
-		.LEDR(LEDR),
-		.HEX0(HEX0),
-		.HEX1(HEX1),
-		.HEX2(HEX2),
-		.HEX3(HEX3),
-		.HEX4(HEX4),
-		.HEX5(HEX5)
-		// output bomb_use
+	// 	.data(read_data0),
+	// 	.current_score(current_score0),
+	// 	.reset_done(reset_done),
+	// 	.LEDR(LEDR),
+	// 	.HEX0(HEX0),
+	// 	.HEX1(HEX1),
+	// 	.HEX2(HEX2),
+	// 	.HEX3(HEX3),
+	// 	.HEX4(HEX4),
+	// 	.HEX5(HEX5)
+	// 	// output bomb_use
 
- 	);
+ 	// );
 
 
 	//for 2 players mode
@@ -652,14 +675,13 @@ module view(
 	wire [9:0]rope_len1;
 	wire [9:0] current_score1;
 	wire [31:0]read_data1;
-	Rope1 rope1(
+	NewRope rope1(
 		.clock(clk),
 		.resetn(resetn_rope), 
-		.enable(p2),
+		.enable(1),
 			
-		.draw_stone_flag(draw_stone_flag), //on when the previous drawing is in process
-		.draw_index(stone_count + gold_count + diamond_count),
 		.quantity(max_gold+max_diamond+max_stone),
+		.originX(p2 ? 64'd77 : 64'd160),
 
 		.go_KEY(drop), //physical key for the go input
 		//bomb_KEY,
@@ -670,35 +692,30 @@ module view(
 		.degree(degree1), //not all the output is useful
 		.rope_len(rope_len1),
 
-		.data(read_data1),
 		.current_score(current_score1),
-		// output bomb_use
-
-		//Connection to Rope2
-		.second_live(second_live), //Connect to Rope2::live
-		.second_index(second_index), //Connect to Rope2::read_address
-		.second_data_write(second_data_write), //Connect to Rope2::data_write
-		.second_writeEn(second_writeEn), //Connect to Rope2::writeEn
-		.second_read_data(second_read_data) //Connect to Rope2::read_data
-
+		
+		//interface with ram
+		.read_data(read_data),
+		.read_req(read_req_rope1), 
+		.write_req(write_req_rope1),
+		.address(address1),
+		.write_data(write_data1),
+		.read_done(read_done_rope1), 
+		.write_done(write_done_rope1)
  	);
 
 	//Player 2
 	wire [9:0] endX2, endY2, degree2;
 	wire [9:0]rope_len2;
 	wire [9:0] current_score2;
-	Rope2 rope2(
+	NewRope rope2(
 		.clock(clk),
 		.resetn(resetn_rope), 
 		.enable(p2),
 		
-		// .draw_stone_flag(draw_stone_flag), //on when the previous drawing is in process
-		// .draw_index(stone_count + gold_count + diamond_count),
 		.quantity(max_gold+max_diamond+max_stone),
 
 		.go_KEY(drop2), //physical key for the go input
-		//bomb_KEY,
-		// input bomb_quantity,
 
 		.endX(endX2), 
 		.endY(endY2), 
@@ -706,15 +723,15 @@ module view(
 		.rope_len(rope_len2),
 
 		.current_score(current_score2),
-		// output bomb_use
-
-		//Control from rope1
-		.live(second_live),
-		.read_address(second_index),
-		.data_write(second_data_write),
-		.writeEn(second_writeEn),
-		.read_data(second_read_data)
-
+		
+		//interface with ram
+		.read_data(read_data),
+		.read_req(read_req_rope2), 
+		.write_req(write_req_rope2),
+		.address(address2),
+		.write_data(write_data2),
+		.read_done(read_done_rope2), 
+		.write_done(write_done_rope2)
  	);
 
 

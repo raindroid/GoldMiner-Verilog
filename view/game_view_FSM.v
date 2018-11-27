@@ -230,7 +230,7 @@ module game_view_FSM(
 						end // Loop in current state until value is input
                 	DRAW_BACKGROUND_WAIT:begin
 						if ((stone_count == max_stone) & (gold_count == max_gold) & (diamond_count == max_diamond))
-							next_state = (mode) ? DRAW_HOOK1 : DRAW_HOOK;
+							next_state = DRAW_HOOK1;
 						else if((gold_count == max_gold) & (stone_count == max_stone))
 							next_state = DRAW_DIAMOND;
 						else
@@ -275,7 +275,7 @@ module game_view_FSM(
 					end
 					
 					DRAW_HOOK_WAIT1: begin
-					  	next_state = (draw_hook_done1) ? DRAW_HOOK2 : DRAW_HOOK_WAIT1;
+					  	next_state = (draw_hook_done1) ? (mode? DRAW_HOOK2 : DRAW_NUM) : DRAW_HOOK_WAIT1;
 					end
 
 
