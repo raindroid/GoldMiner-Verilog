@@ -613,8 +613,10 @@ module view(
 		.resetn(resetn), 
 		.enable(1),	//Useless
 
-		.read_req_code({read_req_rope2, read_req_rope1, , read_req_draw}), 
-		.write_req_code({write_req_rope2, write_req_rope1, 1'd0}),
+		// .read_req_code({read_req_rope2, read_req_rope1, , read_req_draw}), 
+		// .write_req_code({write_req_rope2, write_req_rope1, 1'd0}),
+		.read_req_code({2'b0, read_req_draw}), 
+		.write_req_code({3'b0}),
 
 		.address0(address0), 
 		.address1(address1), 
@@ -623,8 +625,8 @@ module view(
 		.write_data2(write_data2),
 		.release_resource(release_resource1 | release_resource2),
 
-		.read_data_done({read_done_draw, read_done_rope1, read_done_rope2}), 
-		.write_data_done({write_done_draw, write_done_rope1, write_done_rope2}),
+		.read_data_done({read_done_rope2, read_done_rope1, read_done_draw}), 
+		.write_data_done({write_req_rope2, write_done_rope1, write_done_draw}),
 		.data(read_data)
 	);
 
