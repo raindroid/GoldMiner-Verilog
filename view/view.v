@@ -622,7 +622,7 @@ module view(
 		.write_data2(write_data2),
 
 		.read_data_done({read_done_draw, read_done_rope1, read_done_rope2}), 
-		.write_data_done({1'd0, read_done_rope1, read_done_rope2}),
+		.write_data_done({1'd0, write_done_rope1, write_done_rope2}),
 		.data(read_data)
 	);
 
