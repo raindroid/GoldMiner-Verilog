@@ -30,6 +30,17 @@ module gold_miner(
 		VGA_B,
 		PS2_CLK,
 		PS2_DAT,
+		FPGA_I2C_SCLK,
+		FPGA_I2C_SDAT,
+		AUD_ADCDAT,
+
+		AUD_BCLK,
+		AUD_ADCLRCK,
+		AUD_DACLRCK,
+
+		AUD_XCK,
+		AUD_DACDAT,
+
 		LEDR,
 		HEX0,
 		HEX1,
@@ -43,7 +54,20 @@ module gold_miner(
 		input	[3:0]KEY;
 		input	CLOCK_50;				//	50 MHz
 
+		input				AUD_ADCDAT;
+
 		inout PS2_CLK, PS2_DAT;
+		// Bidirectionals
+		inout				AUD_BCLK;
+		inout				AUD_ADCLRCK;
+		inout				AUD_DACLRCK;
+
+		inout				FPGA_I2C_SDAT;
+
+		// Outputs
+		output				AUD_XCK;
+		output				AUD_DACDAT;
+		output				FPGA_I2C_SCLK;
 		
 		output			VGA_CLK;   				//	VGA Clock
 		output			VGA_HS;					//	VGA H_SYNC
@@ -87,6 +111,22 @@ module gold_miner(
 			.VGA_B(VGA_B),   						//	VGA Blue[9:0]
 			.PS2_CLK(PS2_CLK),
 			.PS2_DAT(PS2_DAT),
+			
+			.AUD_ADCDAT(AUD_ADCDAT),
+
+			// Bidirectionals
+			.AUD_BCLK(AUD_BCLK),
+			.AUD_ADCLRCK(AUD_ADCLRCK),
+			.AUD_DACLRCK(AUD_DACLRCK),
+
+			.FPGA_I2C_SDAT(FPGA_I2C_SDAT),
+
+			// Outputs
+			.AUD_XCK(AUD_XCK),
+			.AUD_DACDAT(AUD_DACDAT),
+
+			.FPGA_I2C_SCLK(FPGA_I2C_SCLK),
+
 			.LEDR(LEDR),
 			.HEX0(HEX0),
 			.HEX1(HEX1),
@@ -96,6 +136,9 @@ module gold_miner(
 			.HEX5(HEX5)
 
 		);
+
+		
+
 	endmodule
 	
 	
@@ -119,6 +162,23 @@ module fill
 	VGA_B,   						//	VGA Blue[9:0]
 	PS2_CLK,
 	PS2_DAT,
+	
+	AUD_ADCDAT,
+
+	// Bidirectionals
+	AUD_BCLK,
+	AUD_ADCLRCK,
+	AUD_DACLRCK,
+
+	FPGA_I2C_SDAT,
+
+	// Outputs
+	AUD_XCK,
+	AUD_DACDAT,
+
+	FPGA_I2C_SCLK,
+
+
 	LEDR,
 	HEX0,
 	HEX1,
@@ -149,6 +209,21 @@ module fill
 
 	inout PS2_CLK;
 	inout PS2_DAT;
+
+	input				AUD_ADCDAT;
+
+	// Bidirectionals
+	inout				AUD_BCLK;
+	inout				AUD_ADCLRCK;
+	inout				AUD_DACLRCK;
+
+	inout				FPGA_I2C_SDAT;
+
+	// Outputs
+	output				AUD_XCK;
+	output				AUD_DACDAT;
+
+	output				FPGA_I2C_SCLK;
 
 	output [9:0] 	LEDR;
 
@@ -306,8 +381,27 @@ module fill
 		
 	end
 
+	//Audio
+	wire enable_audio = 1;
+	audio audio0(
+		.resetn(resetn),
+		.clk(CLOCK_50),
+		.enable(enable_audio),
+		.AUD_ADCDAT(AUD_ADCDAT),
 
+	// Bidirectionals
+		.AUD_BCLK(AUD_BCLK),
+		.AUD_ADCLRCK(AUD_ADCLRCK),
+		.AUD_DACLRCK(AUD_DACLRCK),
 
+		.FPGA_I2C_SDAT(FPGA_I2C_SDAT),
+
+		// Outputs
+		.AUD_XCK(AUD_XCK),
+		.AUD_DACDAT(AUD_DACDAT),
+
+		.FPGA_I2C_SCLK(FPGA_I2C_SCLK)
+);
 
 endmodule
 
