@@ -163,7 +163,7 @@ module game_view_FSM(
 					DRAW_GAMESTART                = 6'd22,
 					DRAW_GAMESTART_WAIT               = 6'd23,
 					 GENERATE_X_Y         = 6'd3,
-					 RESET_DONE           = 6'd36,
+					 //RESET_DONE           = 6'd36,
 					 DRAW_BACKGROUND      = 6'd0,
 					 
 
@@ -213,13 +213,13 @@ module game_view_FSM(
 						next_state = DRAW_GAMESTART_WAIT;
 					 end
 					 DRAW_GAMESTART_WAIT:begin
-					   	next_state = (draw_gamestart_done) ? RESET_DONE : DRAW_GAMESTART_WAIT;
+					   	next_state = (draw_gamestart_done) ? GENERATE_X_Y : DRAW_GAMESTART_WAIT;
 					 end
 					
 					
-					RESET_DONE:begin
-						next_state = (reset_done) ? GENERATE_X_Y : RESET_DONE;
-					end
+					// RESET_DONE:begin
+					// 	next_state = (reset_done) ? GENERATE_X_Y : RESET_DONE;
+					// end
 					
 					GENERATE_X_Y: begin
 						next_state = (go)? DRAW_BACKGROUND : GENERATE_X_Y;

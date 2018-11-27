@@ -95,12 +95,12 @@ module audio(
 
 	reg snd;
 
-	localparam 	do = 2'd0,
-				mi = 2'd1,
-				so = 2'd2,
-				do_high = 2'd3;
-	wire [1:0]input_note; // change to input later !
-	assign input_note[1:0] = SW[1:0];
+	localparam 	do = 3'd1,
+				mi = 3'd2,
+				so = 3'd3,
+				do_high = 3'd4;
+	wire [2:0]input_note; // change to input later !
+	assign input_note[2:0] = SW[2:0];
 	reg [7:0]delay_8_bit;
 	always @(posedge clk)begin
 		case(input_note)
