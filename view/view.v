@@ -608,13 +608,13 @@ module view(
 	assign read_req_draw = draw_stone_flag;
 	assign address0 = stone_count + gold_count + diamond_count;
 
-	initialize_1 initial_1(
-        .address(address0),
-        .clock(clk),
-        .data(0),
-        .wren(0),
-        .q(read_data)
-    );
+	// initialize_1 initial_1(
+    //     .address(address0),
+    //     .clock(clk),
+    //     .data(0),
+    //     .wren(0),
+    //     .q(read_data)
+    // );
 
 	// MapRam maps(
 	// 	.clock(clk), 
@@ -643,36 +643,36 @@ module view(
 	wire reset_done;
 
 	//rope ram module instanciation
-	// Rope rope0(
-	// 	.clock(clk),
-	// 	.resetn(resetn_rope), 
-	// 	.enable(!p2),
-	// 	.level(level),
+	Rope rope0(
+		.clock(clk),
+		.resetn(resetn_rope), 
+		.enable(!p2),
+		.level(level),
 		
-	// 	.draw_stone_flag(draw_stone_flag), //on when the previous drawing is in process
-	// 	.draw_index(stone_count + gold_count + diamond_count),
-	// 	.quantity(max_gold+max_diamond+max_stone),
+		.draw_stone_flag(draw_stone_flag), //on when the previous drawing is in process
+		.draw_index(stone_count + gold_count + diamond_count),
+		.quantity(max_gold+max_diamond+max_stone),
 
-	// 	.go_KEY(drop), //physical key for the go input
+		.go_KEY(drop), //physical key for the go input
 
-	// 	.endX(endX), 
-	// 	.endY(endY), 
-	// 	.degree(degree), //not all the output is useful
-	// 	.rope_len(rope_len),
+		.endX(endX), 
+		.endY(endY), 
+		.degree(degree), //not all the output is useful
+		.rope_len(rope_len),
 
-	// 	.data(read_data0),
-	// 	.current_score(current_score0),
-	// 	.reset_done(reset_done),
-	// 	.LEDR(LEDR),
-	// 	.HEX0(HEX0),
-	// 	.HEX1(HEX1),
-	// 	.HEX2(HEX2),
-	// 	.HEX3(HEX3),
-	// 	.HEX4(HEX4),
-	// 	.HEX5(HEX5)
-	// 	// output bomb_use
+		.data(read_data),
+		.current_score(current_score0),
+		.reset_done(reset_done),
+		.LEDR(LEDR),
+		.HEX0(HEX0),
+		.HEX1(HEX1),
+		.HEX2(HEX2),
+		.HEX3(HEX3),
+		.HEX4(HEX4),
+		.HEX5(HEX5)
+		// output bomb_use
 
- 	// );
+ 	);
 
 
 	//for 2 players mode
