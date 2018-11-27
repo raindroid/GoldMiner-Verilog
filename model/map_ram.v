@@ -36,7 +36,7 @@ module MapRam(
     input [31:0] write_data1, write_data2,
 
     output reg [2:0] read_data_done, write_data_done,
-    output reg[31:0] data
+    output [31:0] data
  );
     
     reg [3:0] address;
