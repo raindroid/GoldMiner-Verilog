@@ -35,7 +35,7 @@ module MapRam(
     input [3:0] address0, address1, address2,
     input [31:0] write_data1, write_data2,
 
-    input release_resource;
+    input release_resource,
 
     output reg [2:0] read_data_done, write_data_done,
     output [31:0] data

@@ -95,6 +95,36 @@ module audio(
 
 	reg snd;
 
+	localparam 	do = 2'd0,
+				mi = 2'd1,
+				so = 2'd2,
+				do_high = 2'd3;
+	wire [1:0]input_note; // change to input later !
+	assign input_note[1:0] = SW[1:0];
+	reg [7:0]delay_8_bit;
+	always @(posedge clk)begin
+		case(input_note)
+			do: begin
+				delay_8_bit = 8'b01011101;
+			end
+
+			mi: begin
+				delay_8_bit = 8'b01001001;
+			end
+
+			so: begin
+				delay_8_bit = 8'b00111110;
+			end
+
+			do_high: begin
+				delay_8_bit = 8'b00101110;
+			end
+
+			default: delay_8_bit = 0;
+		endcase
+	end
+
+
 	always @(posedge clk)
 		if(delay_cnt == delay) begin
 			delay_cnt <= 0;
@@ -102,9 +132,9 @@ module audio(
 		end
 		else delay_cnt <= delay_cnt + 1;
 
-	assign delay = {SW[3:0], 15'd3000};
+	assign delay = {delay_8_bit, 11'd0};
 
-	wire [31:0] sound = (SW == 0) ? 0 : snd ? 32'd10000000 : -32'd10000000;
+	wire [31:0] sound = (delay_8_bit == 0) ? 0 : snd ? 32'd10000000 : -32'd10000000;
 
 
 	assign read_audio_in			= audio_in_available & audio_out_allowed;

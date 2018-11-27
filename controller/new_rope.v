@@ -20,7 +20,7 @@ module NewRope(
     output [3:0] address,
     output reg [31:0] write_data,
     input read_done, write_done,
-    output release_resource,
+    output reg release_resource,
 
     //Test only
     output [9:0]LEDR,
