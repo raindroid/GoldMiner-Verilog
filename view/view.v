@@ -613,8 +613,8 @@ module view(
 		.resetn(resetn), 
 		.enable(1),	//Useless
 
-		.read_req_code({read_req_draw, read_req_rope1, read_req_rope2}), 
-		.write_req_code({1'd0, write_req_rope1, write_req_rope2}),
+		.read_req_code({read_req_rope2, read_req_rope1, , read_req_draw}), 
+		.write_req_code({write_req_rope2, write_req_rope1, 1'd0}),
 
 		.address0(address0), 
 		.address1(address1), 
