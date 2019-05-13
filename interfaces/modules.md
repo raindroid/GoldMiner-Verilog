@@ -1,4 +1,4 @@
-<p style="color: blue;font-size:80%">Version 0.0.2
+<p style="color: blue;font-size:80%">Version 0.0.5
 
 # Gold Miner
 - Main

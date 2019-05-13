@@ -8,3 +8,6 @@ _info
 _vmake
 *.qpg
 *.qtl
+*.bak
+wlft*
+incremental_db
